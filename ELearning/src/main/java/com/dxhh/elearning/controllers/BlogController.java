@@ -1,15 +1,14 @@
 package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.response.ModelResponse;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/lectures/", produces = MediaType.APPLICATION_JSON_VALUE)
-public class LectureController {
+@RequestMapping("/api/blogs/")
+public class BlogController {
     @GetMapping
     public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
         ModelResponse res = new ModelResponse();
