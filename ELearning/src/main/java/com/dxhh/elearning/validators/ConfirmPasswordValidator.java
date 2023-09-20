@@ -1,4 +1,4 @@
-package com.dxhh.elearning.validator;
+package com.dxhh.elearning.validators;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import org.springframework.validation.Errors;
@@ -13,10 +13,10 @@ public class ConfirmPasswordValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterRequest = (UserRegisterRequest) target;
-        if (userRegisterRequest.getConfirmPassword() != null &&
-                userRegisterRequest.getPassword() != null &&
-                !userRegisterRequest.getPassword().equals(userRegisterRequest.getConfirmPassword())) {
-            errors.rejectValue("rePassword", "validate.rePassword.notMatch");
+        if (userRegisterRequest.getConfirmPassword() != null
+                && userRegisterRequest.getPassword() != null
+                && !userRegisterRequest.getPassword().equals(userRegisterRequest.getConfirmPassword())) {
+            errors.rejectValue("confirmPassword", "validator.confirmPassword.notMatch");
         }
     }
 }

@@ -1,11 +1,15 @@
 package com.dxhh.elearning.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ModelResponse {
+    private Integer status;
+    private String msg;
     private Object data;
-    private Long status;
 
 }

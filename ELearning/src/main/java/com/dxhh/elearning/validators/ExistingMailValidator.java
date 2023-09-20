@@ -1,4 +1,4 @@
-package com.dxhh.elearning.validator;
+package com.dxhh.elearning.validators;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.services.UserService;
@@ -24,7 +24,7 @@ public class ExistingMailValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterDTO = (UserRegisterRequest) target;
         if (this.userService.loadUserByEmail(userRegisterDTO.getEmail()).size() > 0) {
-            errors.rejectValue("email", "validate.email.exists");
+            errors.rejectValue("email", "validator.email.exists");
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.dxhh.elearning.controllers;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/api/courses/")
+@RestController
+@RequestMapping("/api/courses/")
 public class CourseController {
 }

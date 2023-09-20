@@ -1,4 +1,4 @@
-package com.dxhh.elearning.validator;
+package com.dxhh.elearning.validators;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.services.UserService;
@@ -22,7 +22,7 @@ public class ExistingUsernameValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterRequest = (UserRegisterRequest) target;
         if (this.userService.getUserByUsername(userRegisterRequest.getUsername()).size() > 0) {
-            errors.rejectValue("username", "validate.username.exists");
+            errors.rejectValue("username", "validator.username.exists");
         }
     }
 }
