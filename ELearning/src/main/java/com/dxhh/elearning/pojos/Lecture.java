@@ -1,21 +1,11 @@
 package com.dxhh.elearning.pojos;
 
+import com.dxhh.elearning.enums.LectureType;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "lecture", catalog = "elearning", schema = "")
@@ -35,9 +25,9 @@ public class Lecture implements Serializable {
     @Lob
     @Column(name = "content")
     private String content;
-    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private String type;
+    private LectureType type;
     @Basic(optional = false)
     @Column(name = "order_index")
     private int orderIndex;
@@ -58,7 +48,7 @@ public class Lecture implements Serializable {
         this.id = id;
     }
 
-    public Lecture(Integer id, String title, String content, String type, int orderIndex) {
+    public Lecture(Integer id, String title, String content, LectureType type, int orderIndex) {
         this.id = id;
         this.title = title;
         this.content = content;

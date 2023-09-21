@@ -121,6 +121,13 @@
 <!--            <artifactId>aws-java-sdk-s3</artifactId>-->
 <!--            <version>1.12.504</version>-->
 <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>

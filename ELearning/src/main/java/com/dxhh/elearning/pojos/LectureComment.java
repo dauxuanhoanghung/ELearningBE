@@ -2,20 +2,9 @@ package com.dxhh.elearning.pojos;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "lecture_comment", catalog = "elearning", schema = "")
@@ -32,8 +21,7 @@ public class LectureComment implements Serializable {
     @Column(name = "text")
     private String text;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Lecture lectureId;

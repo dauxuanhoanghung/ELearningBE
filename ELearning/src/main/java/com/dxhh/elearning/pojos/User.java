@@ -2,20 +2,10 @@ package com.dxhh.elearning.pojos;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "user", catalog = "elearning", schema = "")
@@ -45,7 +35,7 @@ public class User implements Serializable {
     private String avatar;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<LecturerRegistration> lecturerRegistrationSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")

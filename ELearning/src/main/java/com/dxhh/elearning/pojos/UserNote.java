@@ -2,20 +2,9 @@ package com.dxhh.elearning.pojos;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_note", catalog = "elearning", schema = "")
@@ -34,8 +23,7 @@ public class UserNote implements Serializable {
     @Column(name = "note_time")
     private Integer noteTime;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Lecture lectureId;
@@ -48,54 +36,6 @@ public class UserNote implements Serializable {
 
     public UserNote(Integer id) {
         this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNoteText() {
-        return noteText;
-    }
-
-    public void setNoteText(String noteText) {
-        this.noteText = noteText;
-    }
-
-    public Integer getNoteTime() {
-        return noteTime;
-    }
-
-    public void setNoteTime(Integer noteTime) {
-        this.noteTime = noteTime;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Lecture getLectureId() {
-        return lectureId;
-    }
-
-    public void setLectureId(Lecture lectureId) {
-        this.lectureId = lectureId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
     }
 
     @Override
