@@ -26,10 +26,10 @@ public class UserNote implements Serializable {
     private LocalDateTime createdDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Lecture lectureId;
+    private Lecture lecture;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User userId;
+    private User user;
 
     public UserNote() {
     }

@@ -21,7 +21,7 @@ public class LecturerRegistration implements Serializable {
     private LocalDateTime registrationDate;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User userId;
+    private User user;
 
     public LecturerRegistration() {
     }

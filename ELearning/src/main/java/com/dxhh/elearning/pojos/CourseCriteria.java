@@ -21,7 +21,7 @@ public class CourseCriteria implements Serializable {
     private String text;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Course courseId;
+    private Course course;
 
     public CourseCriteria() {
     }

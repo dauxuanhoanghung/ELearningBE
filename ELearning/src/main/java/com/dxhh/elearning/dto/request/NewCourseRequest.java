@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,12 +21,12 @@ public class NewCourseRequest implements Serializable {
     private String description;
     private Double price;
     private MultipartFile backgroundFile;
-    private Date publishDate;
-    private Date createdDate;
+    private LocalDateTime publishDate;
+    private LocalDateTime createdDate;
     private List<String> criteria;
     private List<String> sections;
 
     {
-        createdDate = Date.from(Instant.now());
+        createdDate = LocalDateTime.now();
     }
 }

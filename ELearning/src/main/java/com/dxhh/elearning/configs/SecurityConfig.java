@@ -27,7 +27,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
-    private UserService userDetailsService;
+    private UserService userService;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
@@ -45,7 +45,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;

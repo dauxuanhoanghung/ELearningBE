@@ -25,7 +25,7 @@ public class Section implements Serializable {
     private int orderIndex;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Course courseId;
+    private Course course;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionId")
     private Set<Lecture> lectureSet;
 

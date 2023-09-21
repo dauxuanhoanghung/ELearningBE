@@ -38,11 +38,11 @@ public class Course implements Serializable {
     private LocalDateTime createdDate;
     @OneToMany(mappedBy = "courseId")
     private Set<Voucher> voucherSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<Section> sectionSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<CourseComment> courseCommentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<CourseCriteria> courseCriteriaSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
     private Set<FavoriteCourse> favoriteCourseSet;

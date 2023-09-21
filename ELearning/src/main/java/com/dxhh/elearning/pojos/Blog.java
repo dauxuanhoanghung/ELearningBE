@@ -28,8 +28,8 @@ public class Blog implements Serializable {
     private LocalDateTime publishDate;
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User authorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "blogId")
+    private User author;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "blog")
     private Set<BlogComment> blogCommentSet;
 
     public Blog() {

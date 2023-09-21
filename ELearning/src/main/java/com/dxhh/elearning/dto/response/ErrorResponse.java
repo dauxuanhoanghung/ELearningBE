@@ -11,4 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ErrorResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046846L;
+    private Integer code;
+    private String message;
 }

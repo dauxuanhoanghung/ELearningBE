@@ -1,0 +1,9 @@
+package com.dxhh.elearning.repositories;
+
+import com.dxhh.elearning.pojos.Lecture;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LectureRepository extends JpaRepository<Lecture, Integer> {
+}

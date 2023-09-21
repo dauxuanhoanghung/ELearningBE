@@ -18,16 +18,16 @@ public class CourseComment implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Lob
-    @Column(name = "text")
-    private String text;
+    @Column(name = "content")
+    private String content;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Course courseId;
+    private Course course;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User userId;
+    private User user;
 
     public CourseComment() {
     }

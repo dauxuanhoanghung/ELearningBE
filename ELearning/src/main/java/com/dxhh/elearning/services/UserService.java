@@ -1,9 +1,9 @@
 package com.dxhh.elearning.services;
 
+import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.pojos.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -11,6 +11,6 @@ public interface UserService extends UserDetailsService {
 
     List<?> getUserByUsername(String username);
 
-    User save(User user);
+    User save(UserRegisterRequest userRegister);
 
 }

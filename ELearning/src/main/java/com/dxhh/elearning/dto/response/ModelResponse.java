@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class ModelResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046845L;
     private Integer status;
-    private String msg;
+    private String message;
     private Object data;
 
 }

@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_role", catalog = "elearning", schema = "")
 @Data
+@AllArgsConstructor
 public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,37 +31,13 @@ public class UserRole implements Serializable {
     private Role roleId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User userId;
+    private User user;
 
     public UserRole() {
     }
 
     public UserRole(Integer id) {
         this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Role getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Role roleId) {
-        this.roleId = roleId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
     }
 
     @Override

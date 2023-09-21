@@ -28,7 +28,7 @@ public class Transaction implements Serializable {
     private Course courseId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private User userId;
+    private User user;
 
     public Transaction() {
     }

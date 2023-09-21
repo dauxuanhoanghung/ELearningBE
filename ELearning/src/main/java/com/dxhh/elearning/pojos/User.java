@@ -24,8 +24,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    @Basic(optional = false)
-    @Column(name = "password")
+    @Column(name = "email")
     private String email;
     @Column(name = "first_name")
     private String firstName;
@@ -34,26 +33,25 @@ public class User implements Serializable {
     @Column(name = "avatar")
     private String avatar;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<LecturerRegistration> lecturerRegistrationSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<CourseComment> courseCommentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
-    private Set<Blog> blogSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<BlogComment> blogCommentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<UserRole> userRoleSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<LectureComment> lectureCommentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<FavoriteCourse> favoriteCourseSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<UserNote> userNoteSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<Transaction> transactionSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<LecturerRegistration> lecturerRegistrationSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<CourseComment> courseCommentSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+//    private Set<Blog> blogSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<BlogComment> blogCommentSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<UserRole> userRoleSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<LectureComment> lectureCommentSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<FavoriteCourse> favoriteCourseSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<UserNote> userNoteSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private Set<Transaction> transactionSet;
 
     public User() {
     }
