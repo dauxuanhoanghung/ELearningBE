@@ -1,5 +1,7 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -38,24 +40,24 @@ public class User implements Serializable, UserDetails {
     private String avatar;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<LecturerRegistration> lecturerRegistrationSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<CourseComment> courseCommentSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
-//    private Set<Blog> blogSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<BlogComment> blogCommentSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<UserRole> userRoleSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<LectureComment> lectureCommentSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<FavoriteCourse> favoriteCourseSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<UserNote> userNoteSet;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private Set<Transaction> transactionSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<LecturerRegistration> lecturerRegistrationSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<CourseComment> courseCommentSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+    private Set<Blog> blogSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<BlogComment> blogCommentSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserRole> userRoles;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<LectureComment> lectureCommentSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<FavoriteCourse> favoriteCourseSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<UserNote> userNoteSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Transaction> transactionSet;
 
     public User() {
     }

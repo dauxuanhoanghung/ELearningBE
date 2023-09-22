@@ -32,6 +32,11 @@ public class UserRole implements Serializable {
         this.id = id;
     }
 
+    public UserRole(Role role, User u) {
+        this.roleId = role;
+        this.user = u;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
