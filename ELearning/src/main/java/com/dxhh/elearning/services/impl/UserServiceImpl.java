@@ -17,38 +17,6 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
-
-    @Override
-    public List<?> loadUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
-    }
-
-    @Override
-    public List<?> getUserByUsername(String username) {
-        return this.userRepository.findByUsername(username);
-    }
-
-    @Override
-    public User save(UserRegisterRequest userRegister) {
-        User user = userMapper.toUser(userRegister);
-        user.setPassword(passwordEncoder.encode(userRegister.getPassword()));
-        return this.userRepository.save(user);
-    }
 }

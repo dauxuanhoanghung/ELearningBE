@@ -2,24 +2,22 @@ package com.dxhh.elearning.pojos;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "transaction", catalog = "elearning", schema = "")
 @Data
+@Entity
+@Table(name = "transaction")
 public class Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "amount")
     private BigDecimal amount;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
