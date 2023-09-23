@@ -7,6 +7,7 @@ import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.pojos.UserRole;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.repositories.UserRoleRepository;
+import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,14 +28,16 @@ public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final CloudinaryService cloudinaryService;
+    private final Utils utils;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, CloudinaryService cloudinaryService) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, CloudinaryService cloudinaryService, Utils utils) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.cloudinaryService = cloudinaryService;
+        this.utils = utils;
     }
 
     @Override
@@ -43,18 +45,18 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-    public List<?> loadUserByEmail(String email) {
+    public List<User> loadUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
-    public List<?> getUserByUsername(String username) {
+    public List<User> getUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 
     public User save(UserRegisterRequest userRegister) {
-        User user = userMapper.toUser(userRegister);
+        User user = userMapper.toModel(userRegister);
         user.setPassword(passwordEncoder.encode(userRegister.getPassword()));
-        if (userRegister.getAvatarFile() != null) {
+        if (utils.isNotEmptyFile(userRegister.getAvatarFile())) {
             String url = cloudinaryService.uploadImage(userRegister.getAvatarFile());
             user.setAvatar(url);
         }
@@ -62,7 +64,7 @@ public class UserService implements UserDetailsService {
             user.setAvatar(null);
         }
         Set<UserRole> userRoles = new HashSet<>();
-        Role defaultRole = new Role(2);
+        Role defaultRole = new Role(2, "ROLE_USER");
         userRoles.add(new UserRole(defaultRole, user));
         user.setUserRoles(userRoles);
         User savedUser = userRepository.save(user);

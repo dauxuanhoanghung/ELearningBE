@@ -20,8 +20,8 @@ public class Role implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
-    private Set<UserRole> userRoleSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
+    private Set<UserRole> userRoles;
 
     public Role() {
     }

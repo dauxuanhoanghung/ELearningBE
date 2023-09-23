@@ -23,7 +23,7 @@ public class Transaction implements Serializable {
     private LocalDateTime createdDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Course courseId;
+    private Course course;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;

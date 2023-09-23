@@ -18,7 +18,7 @@ public class FavoriteCourse implements Serializable {
     private Integer id;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Course courseId;
+    private Course course;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;

@@ -37,7 +37,7 @@ public class Lecture implements Serializable {
     private Set<LectureComment> lectureCommentSet;
     @JoinColumn(name = "section_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Section sectionId;
+    private Section section;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
     private Set<UserNote> userNoteSet;
 

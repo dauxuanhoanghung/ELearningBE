@@ -19,7 +19,7 @@ public class UserMapper {
         this.mapper = modelMapper;
     }
 
-    public User toUser(UserRegisterRequest userRegister) {
+    public User toModel(UserRegisterRequest userRegister) {
         User user = mapper.map(userRegister, User.class);
         return user;
     }
@@ -27,7 +27,7 @@ public class UserMapper {
         UserResponse res = mapper.map(user, UserResponse.class);
         List l = new ArrayList<>();
         for (UserRole ur : user.getUserRoles()) {
-            l.add(ur.getRoleId().getName());
+            l.add(ur.getRole().getName());
         }
         res.setRoles(l);
         return res;

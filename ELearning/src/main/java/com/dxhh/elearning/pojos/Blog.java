@@ -25,7 +25,7 @@ public class Blog implements Serializable {
     @Column(name = "content")
     private String content;
     @Column(name = "publish_date")
-    private LocalDateTime publishDate;
+    private LocalDateTime createdDate;
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User author;

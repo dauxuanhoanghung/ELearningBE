@@ -32,7 +32,7 @@ public class Voucher implements Serializable {
     private LocalDateTime createdDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne
-    private Course courseId;
+    private Course course;
 
     public Voucher() {
     }

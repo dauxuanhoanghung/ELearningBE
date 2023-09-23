@@ -36,18 +36,18 @@ public class Course implements Serializable {
     private LocalDateTime publishDate;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-    @OneToMany(mappedBy = "courseId")
-    private Set<Voucher> voucherSet;
+    @OneToMany(mappedBy = "course")
+    private Set<Voucher> vouchers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
-    private Set<Section> sectionSet;
+    private Set<Section> sections;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
-    private Set<CourseComment> courseCommentSet;
+    private Set<CourseComment> courseComments;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
-    private Set<CourseCriteria> courseCriteriaSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private Set<FavoriteCourse> favoriteCourseSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private Set<Transaction> transactionSet;
+    private Set<CourseCriteria> courseCriterias;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
+    private Set<FavoriteCourse> favoriteCourses;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
+    private Set<Transaction> transactions;
 
     public Course() {
     }

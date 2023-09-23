@@ -20,7 +20,7 @@ public class UserRole implements Serializable {
     private Integer id;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Role roleId;
+    private Role role;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
@@ -33,7 +33,7 @@ public class UserRole implements Serializable {
     }
 
     public UserRole(Role role, User u) {
-        this.roleId = role;
+        this.role = role;
         this.user = u;
     }
 

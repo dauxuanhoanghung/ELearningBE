@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,5 +38,26 @@ public class Utils {
             System.out.println(exception.getMessage());
         }
         return null;
+    }
+
+    public boolean isNotEmptyFile(MultipartFile file) {
+        return file != null && !file.isEmpty() && file.getSize() > 0;
+    }
+
+    public boolean isVideoFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return false;
+        }
+
+        String fileName = file.getOriginalFilename();
+        if (fileName != null) {
+            fileName = fileName.toLowerCase();
+            return fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".mov");
+            // Add more video file extensions as needed
+            // You can also check MIME types if available, which is more reliable
+            // Example: file.getContentType() contains "video/"
+        }
+
+        return false;
     }
 }

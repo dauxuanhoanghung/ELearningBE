@@ -26,8 +26,8 @@ public class Section implements Serializable {
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Course course;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionId")
-    private Set<Lecture> lectureSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
+    private Set<Lecture> lectures;
 
     public Section() {
     }

@@ -1,5 +1,6 @@
 package com.dxhh.elearning.services.impl;
 
+import com.dxhh.elearning.dto.request.NewBlogRequest;
 import com.dxhh.elearning.mappers.BlogMapper;
 import com.dxhh.elearning.pojos.Blog;
 import com.dxhh.elearning.repositories.BlogRepository;
@@ -22,33 +23,38 @@ public class BlogServiceImpl implements BlogService {
         this.blogMapper = blogMapper;
     }
 
-    // Create a new blog
-    public Blog createBlog(Blog blog) {
-        return blogRepository.save(blog);
+    @Override
+    public Blog create(NewBlogRequest blog) {
+        return blogRepository.save(blogMapper.toModel(blog));
     }
 
-    public Optional<Blog> getBlogById(Integer id) {
+    @Override
+
+    public Optional<Blog> getById(Integer id) {
         return blogRepository.findById(id);
     }
+    @Override
 
     public List<Blog> getAllBlogs() {
         return blogRepository.findAll();
     }
+    @Override
 
-    public Blog updateBlog(Integer id, Blog updatedBlog) {
+    public Blog update(Integer id, Blog updatedBlog) {
         Optional<Blog> existingBlogOptional = blogRepository.findById(id);
         if (existingBlogOptional.isPresent()) {
             Blog existingBlog = existingBlogOptional.get();
             existingBlog.setTitle(updatedBlog.getTitle());
             existingBlog.setContent(updatedBlog.getContent());
-            existingBlog.setPublishDate(updatedBlog.getPublishDate());
+            existingBlog.setCreatedDate(updatedBlog.getCreatedDate());
             existingBlog.setAuthor(updatedBlog.getAuthor());
             return blogRepository.save(existingBlog);
         }
         return null;
     }
 
-    public boolean deleteBlog(Integer id) {
+    @Override
+    public boolean deleteById(Integer id) {
         Optional<Blog> blogOptional = blogRepository.findById(id);
         if (blogOptional.isPresent()) {
             blogRepository.deleteById(id);

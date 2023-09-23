@@ -26,11 +26,6 @@ public class CloudinaryService {
             Map uploadResult = this.cloudinary.uploader()
                     .upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto",
                             "folder", "DoAn"));
-//            ObjectUtils.asMap(
-//                         // Specify the folder here
-//                        "width", width, // Set the width for resizing
-//                        "height", height // Set the height for resizing
-//            )
             return (String) uploadResult.get("secure_url");
         } catch (IOException ex) {
             Logger.getLogger(CloudinaryService.class.getName()).log(Level.SEVERE, null, ex);

@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +32,9 @@ public class AuthController {
     }
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody UserCredentialRequest request) {
-        authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = userService
                 .loadUserByUsername(request.getUsername());
         if (userDetails != null) {
@@ -43,4 +46,22 @@ public class AuthController {
         else
             return ResponseEntity.status(400).body(new ErrorResponse());
     }
+
+//    @PostMapping("/login-google")
+//    public ResponseEntity<?> addUserInfoGoogleLogin(@AuthenticationPrincipal OAuth2User oauth2User) {
+//
+//        String userEmail = oauth2User.getAttribute("email");
+//        String userName = oauth2User.getAttribute("name");
+//
+//        User user = userService.getByEmail(userEmail);
+//        if (user == null) {
+//            RegisterRequest registerRequest = RegisterRequest.builder()
+//                    .username(userName)
+//                    .email(userEmail)
+//                    .build();
+//
+//            userService.register(registerRequest, null);
+//        }
+//        return ResponseEntity.ok("Đăng nhập thành công");
+//    }
 }
