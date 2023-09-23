@@ -11,5 +11,5 @@ public interface BlogCommentService {
     Optional<BlogComment> getById(Integer id);
     List<BlogComment> getAll();
     BlogComment update(Integer id, BlogCommentRequest updatedCommentRequest);
-    boolean delete(Integer id);
+    boolean deleteById(Integer id);
 }

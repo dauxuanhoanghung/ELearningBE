@@ -32,9 +32,8 @@ public class AuthController {
     }
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody UserCredentialRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = userService
                 .loadUserByUsername(request.getUsername());
         if (userDetails != null) {

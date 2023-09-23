@@ -1,8 +1,10 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.request.BlogCommentRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
-import com.dxhh.elearning.pojos.LectureComment;
-import com.dxhh.elearning.services.LectureCommentService;
+import com.dxhh.elearning.pojos.BlogComment;
+import com.dxhh.elearning.services.BlogCommentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,31 +14,33 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/lecture-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
-public class LectureCommentController {
-    private final LectureCommentService lectureCommentService;
+@RequestMapping(value = "/api/blog-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
+public class BlogCommentController {
+    private final BlogCommentService blogCommentService;
 
-    public LectureCommentController(LectureCommentService lectureCommentService) {
-        this.lectureCommentService = lectureCommentService;
+    @Autowired
+    public BlogCommentController(BlogCommentService blogCommentService) {
+        this.blogCommentService = blogCommentService;
     }
 
+
     @PostMapping
-    public ResponseEntity<ModelResponse> create(@RequestBody LectureComment lectureComment) {
-        LectureComment createdLectureComment = lectureCommentService.save(lectureComment);
+    public ResponseEntity<ModelResponse> create(@RequestBody BlogCommentRequest blogComment) {
+        BlogComment savedBlogComment = blogCommentService.create(blogComment);
         ModelResponse response = new ModelResponse();
         response.setStatus(201);
-        response.setData(createdLectureComment);
+        response.setData(savedBlogComment);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/lecture/{lectureId}")
-    public ResponseEntity<ModelResponse> getCommentByLecture(@PathVariable Integer lectureId) {
-        List<LectureComment> comments = lectureCommentService.getByLectureId(lectureId);
+    @GetMapping("/{blogId}")
+    public ResponseEntity<ModelResponse> getCommentByBlog(@PathVariable("blogId") Integer blogId,
+                                                          @RequestParam Map<String, String> params) {
+        List<BlogComment> comments = blogCommentService.getAll();
 
         ModelResponse response = new ModelResponse();
         response.setStatus(200);
         response.setData(comments);
-
         return ResponseEntity.ok(response);
     }
 
@@ -47,11 +51,10 @@ public class LectureCommentController {
         return ResponseEntity.ok(res);
     }
 
-    // Update a course comment by ID
     @PutMapping("/{commentId}")
     public ResponseEntity<ModelResponse> updateCourseComment( @PathVariable Integer commentId,
-            @RequestBody LectureComment updatedComment) {
-        LectureComment updated = lectureCommentService.update(updatedComment);
+                                                              @RequestBody BlogComment updatedComment) {
+        BlogComment updated = blogCommentService.update(updatedComment.getId(), null);
         ModelResponse response = new ModelResponse();
         if (updated != null) {
             response.setStatus(200);
@@ -59,23 +62,21 @@ public class LectureCommentController {
             return ResponseEntity.ok(response);
         } else {
             response.setStatus(404);
-            response.setMessage("Course comment not found");
+            response.setMessage("Blog comment not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
-    // Delete a course comment by ID
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<ModelResponse> deleteLectureComment(@PathVariable("id") Integer id) {
-        boolean deleted = lectureCommentService.deleteById(id);
-
+        boolean deleted = blogCommentService.deleteById(id);
         ModelResponse response = new ModelResponse();
         if (deleted) {
             response.setStatus(204);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } else {
             response.setStatus(404);
-            response.setMessage("Course comment not found");
+            response.setMessage("Blog comment not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }

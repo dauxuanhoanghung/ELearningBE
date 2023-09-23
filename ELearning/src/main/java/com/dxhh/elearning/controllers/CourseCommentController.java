@@ -56,7 +56,6 @@ public class CourseCommentController {
             @PathVariable Integer commentId,
             @RequestBody CourseComment updatedComment) {
         CourseComment updated = courseCommentService.update(commentId, updatedComment);
-
         ModelResponse response = new ModelResponse();
         if (updated != null) {
             response.setStatus(200);
@@ -64,7 +63,7 @@ public class CourseCommentController {
             return ResponseEntity.ok(response);
         } else {
             response.setStatus(404);
-            response.setMessage("Course comment not found");
+            response.setMessage("Lecture comment not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -73,14 +72,13 @@ public class CourseCommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ModelResponse> deleteCourseComment(@PathVariable Integer commentId) {
         boolean deleted = courseCommentService.deleteById(commentId);
-
         ModelResponse response = new ModelResponse();
         if (deleted) {
             response.setStatus(204);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         } else {
             response.setStatus(404);
-            response.setMessage("Course comment not found");
+            response.setMessage("Lecture comment not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }

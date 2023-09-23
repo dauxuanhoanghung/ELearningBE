@@ -76,7 +76,7 @@ public class BlogCommentServiceImpl implements BlogCommentService {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         Optional<BlogComment> commentOptional = blogCommentRepository.findById(id);
         if (commentOptional.isPresent()) {
             blogCommentRepository.deleteById(id);
