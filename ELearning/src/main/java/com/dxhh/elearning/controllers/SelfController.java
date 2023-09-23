@@ -7,4 +7,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/self/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SelfController {
+
 }
