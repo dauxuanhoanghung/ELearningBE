@@ -6,6 +6,7 @@ import com.dxhh.elearning.dto.response.CourseDetailsResponse;
 import com.dxhh.elearning.dto.response.CourseInfoResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.CourseMapper;
+import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class CourseController {
 
     private final CourseService courseService;
     private final CourseMapper courseMapper;
+    private final UserMapper userMapper;
 
     @Autowired
-    public CourseController(CourseService courseService, CourseMapper courseMapper) {
+    public CourseController(CourseService courseService, CourseMapper courseMapper, UserMapper userMapper) {
         this.courseService = courseService;
         this.courseMapper = courseMapper;
+        this.userMapper = userMapper;
     }
     @GetMapping
     public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
@@ -38,7 +41,9 @@ public class CourseController {
         courseService.findCourses(params).stream().forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
             info.setCountRegistration(courseService.countRegistrationById(c.getId()));
+            info.setUser(userMapper.toResponse(c.getCreator()));
             courses.add(info);
+
         });
         res.setData(courses);
         res.setStatus(200);

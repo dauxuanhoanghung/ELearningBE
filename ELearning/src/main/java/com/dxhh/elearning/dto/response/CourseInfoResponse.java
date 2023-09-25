@@ -14,5 +14,8 @@ public class CourseInfoResponse implements Serializable {
     private Integer id;
     private String name;
     private String description;
+    private String background;
+    private Double price;
     private Long countRegistration;
+    private UserResponse user;
 }

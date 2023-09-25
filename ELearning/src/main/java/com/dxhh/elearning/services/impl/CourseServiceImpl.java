@@ -34,9 +34,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findCourses(Map<String, String> params) {
-
-        // return courseRepository.findBySomeCriteria(params);
-        return null; // Replace with actual implementation
+        return this.courseRepository.findAll();
     }
 
     @Override

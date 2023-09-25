@@ -1,10 +1,7 @@
 package com.dxhh.elearning.pojos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +39,8 @@ public class User implements Serializable, UserDetails {
     private String avatar;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Course> courses;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<LecturerRegistration> lecturerRegistrationSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

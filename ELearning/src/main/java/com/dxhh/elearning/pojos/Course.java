@@ -29,9 +29,9 @@ public class Course implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-    @Basic(optional = false)
-    @Column(name = "creator_id")
-    private int creatorId;
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private User creator;
     @Column(name = "publish_date")
     private LocalDateTime publishDate;
     @Column(name = "created_date")
@@ -56,10 +56,10 @@ public class Course implements Serializable {
         this.id = id;
     }
 
-    public Course(Integer id, String name, int creatorId) {
+    public Course(Integer id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.creatorId = creatorId;
+        this.description = description;
     }
 
     @Override
