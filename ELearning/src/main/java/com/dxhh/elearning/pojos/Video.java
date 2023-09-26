@@ -25,7 +25,7 @@ public class Video implements Serializable {
     private LocalDateTime uploadedDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Lecture lectureId;
+    private Lecture lecture;
 
     public Video() {
     }

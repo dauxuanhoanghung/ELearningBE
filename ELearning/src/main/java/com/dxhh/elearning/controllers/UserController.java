@@ -49,13 +49,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> create(@ModelAttribute UserRegisterRequest userRequest, BindingResult rs) {
         ModelResponse response = new ModelResponse();
-
         if (rs.hasErrors()) {
             return ResponseEntity.badRequest().body("Validation errors");
         }
-
         User user = userService.save(userRequest);
-
         if (user == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User creation failed");
         }

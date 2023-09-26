@@ -16,6 +16,7 @@ public class UserRegisterRequest implements Serializable {
     private String lastName;
     private String email;
     private MultipartFile avatarFile;
+    private String avatar;
     private LocalDateTime createdDate;
 
     {

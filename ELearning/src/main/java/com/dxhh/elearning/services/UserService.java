@@ -9,6 +9,7 @@ import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.repositories.UserRoleRepository;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +43,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        List<User> users = this.getUserByUsername(username);
+        if (users.isEmpty())
+            return null;
+        User user = users.get(0);
+        return user;
     }
 
     public List<User> loadUserByEmail(String email) {
@@ -70,6 +75,10 @@ public class UserService implements UserDetailsService {
         User savedUser = userRepository.save(user);
 
         return userRepository.findById(savedUser.getId()).get();
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
 }
