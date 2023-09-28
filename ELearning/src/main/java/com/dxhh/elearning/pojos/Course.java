@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -36,16 +37,22 @@ public class Course implements Serializable {
     private LocalDateTime publishDate;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
     private Set<Voucher> vouchers;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<Section> sections;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<CourseComment> courseComments;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<CourseCriteria> courseCriterias;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<FavoriteCourse> favoriteCourses;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<Transaction> transactions;
 

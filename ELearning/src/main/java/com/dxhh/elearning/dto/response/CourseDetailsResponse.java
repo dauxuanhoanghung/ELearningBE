@@ -17,8 +17,8 @@ public class CourseDetailsResponse implements Serializable {
     private String description;
     private String background;
     private Double price;
-    private List<?> criterias;
-    private List<?> sections;
+    private List criteria;
+    private List sections;
     private Long countRegistration;
     private UserResponse user;
 }

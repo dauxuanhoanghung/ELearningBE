@@ -1,5 +1,6 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.request.NewLectureRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,8 +45,8 @@ public class LectureController {
     }
 
     @PostMapping
-    public ResponseEntity<ModelResponse> createLecture(@RequestBody Lecture lecture) {
-        Lecture createdLecture = lectureService.create(lecture);
+    public ResponseEntity<ModelResponse> createLecture(@ModelAttribute NewLectureRequest lectureRequest, BindingResult rs) {
+        Lecture createdLecture = lectureService.create(lectureRequest);
         ModelResponse res = new ModelResponse();
         res.setStatus(201); // 201 Created
         res.setData(createdLecture);

@@ -3,12 +3,11 @@ package com.dxhh.elearning.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,12 +19,12 @@ public class NewCourseRequest implements Serializable {
     private String description;
     private Double price;
     private MultipartFile backgroundFile;
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime publishDate;
     private LocalDateTime createdDate;
     private List<String> criteria;
-    private List<String> sections;
-
     {
+        publishDate = LocalDateTime.now();
         createdDate = LocalDateTime.now();
     }
 }
