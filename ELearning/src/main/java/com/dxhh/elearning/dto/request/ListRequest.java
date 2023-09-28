@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ListRequest implements Serializable {
     private static final long serialVersionUID = 5926468583005150709L;
-    private List<NewSectionRequest> sections;
+    private List<NewSectionRequest> sections = new ArrayList<>();
 }

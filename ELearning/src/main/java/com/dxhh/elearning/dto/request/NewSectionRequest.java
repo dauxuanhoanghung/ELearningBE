@@ -15,6 +15,5 @@ public class NewSectionRequest implements Serializable {
     private static final long serialVersionUID = 5926468583005150709L;
     private String sectionName;
     private Integer orderIndex;
-    private List<NewLectureRequest> lectures;
     private Course course;
 }

@@ -1,6 +1,7 @@
 package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.dto.request.NewLectureRequest;
+import com.dxhh.elearning.enums.LectureType;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.repositories.LectureRepository;
@@ -26,6 +27,9 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public Lecture create(NewLectureRequest lectureRequest) {
         Lecture lecture = lectureMapper.toModel(lectureRequest);
+        if (lectureRequest.getType().equals(LectureType.VIDEO)) {
+
+        }
         return lectureRepository.save(lecture);
     }
 

@@ -72,7 +72,7 @@ public class LectureController {
     }
 
     // Delete a lecture by ID
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/{id}/delete")
     public ResponseEntity<ModelResponse> deleteLecture(@PathVariable(name = "id") int id) {
         boolean deleted = lectureService.deleteById(id);
         ModelResponse res = new ModelResponse();

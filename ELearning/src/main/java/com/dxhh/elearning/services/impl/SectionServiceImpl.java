@@ -1,6 +1,7 @@
 package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.dto.request.NewSectionRequest;
+import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.repositories.SectionRepository;
 import com.dxhh.elearning.services.SectionService;

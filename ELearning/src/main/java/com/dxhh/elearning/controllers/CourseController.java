@@ -12,6 +12,7 @@ import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
+import com.dxhh.elearning.services.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,14 +30,16 @@ public class CourseController {
 
     private final CourseService courseService;
     private final LectureService lectureService;
+    private final SectionService sectionService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
 
 
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, CourseMapper courseMapper, UserMapper userMapper) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseMapper courseMapper, UserMapper userMapper) {
         this.courseService = courseService;
         this.lectureService = lectureService;
+        this.sectionService = sectionService;
         this.courseMapper = courseMapper;
         this.userMapper = userMapper;
     }
@@ -93,8 +96,8 @@ public class CourseController {
         }
     }
 
-    @PostMapping("/after-create-course")
-    public ResponseEntity createSection(@ModelAttribute ListRequest request, BindingResult rs) {
+    @PostMapping(value = "/after-create-course", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createSection(@RequestBody ListRequest sections, BindingResult rs) {
         ModelResponse response = new ModelResponse();
         if (rs.hasErrors()) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -102,13 +105,14 @@ public class CourseController {
             response.setData(rs.getAllErrors());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        if (request != null) {
-            request.getSections().forEach(s -> {
-
-                s.getLectures().forEach(l -> lectureService.create(l));
+        if (!sections.getSections().isEmpty()) {
+            List res = new ArrayList<>();
+            sections.getSections().forEach(s -> {
+                res.add(sectionService.createSection(s));
             });
             response.setStatus(HttpStatus.CREATED.value());
             response.setMessage("Course created successfully");
+            response.setData(res);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } else {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
