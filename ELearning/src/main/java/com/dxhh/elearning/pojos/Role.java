@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -20,6 +21,7 @@ public class Role implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
     private Set<UserRole> userRoles;
 

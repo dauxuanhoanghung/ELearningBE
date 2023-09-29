@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,24 +40,33 @@ public class User implements Serializable, UserDetails {
     private String avatar;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
     private Set<Course> courses;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<LecturerRegistration> lecturerRegistrationSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<CourseComment> courseCommentSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private Set<Blog> blogSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<BlogComment> blogCommentSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<LectureComment> lectureCommentSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<FavoriteCourse> favoriteCourseSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<UserNote> userNoteSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Transaction> transactionSet;
 

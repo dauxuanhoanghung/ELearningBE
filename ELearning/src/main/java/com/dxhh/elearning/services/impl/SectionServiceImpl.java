@@ -63,4 +63,9 @@ public class SectionServiceImpl implements SectionService {
     public List<Section> getAllSections() {
         return sectionRepository.findAll();
     }
+
+    @Override
+    public List<Section> getByCourse_Id(Integer courseId) {
+        return sectionRepository.findByCourse_Id(courseId);
+    }
 }

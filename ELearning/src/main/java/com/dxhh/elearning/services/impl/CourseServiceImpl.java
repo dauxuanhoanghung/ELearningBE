@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService {
     public Course save(NewCourseRequest courseRequest) {
         Course newCourse = courseMapper.toModel(courseRequest);
 
-        Set criteria = courseRequest.getCriteria().stream().map(s -> {
+        Set<CourseCriteria> criteria = courseRequest.getCriteria().stream().map(s -> {
             CourseCriteria cri = new CourseCriteria();
             cri.setCourse(newCourse);
             cri.setText(s);

@@ -19,7 +19,6 @@ public class UserRole implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JsonIgnore
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Role role;

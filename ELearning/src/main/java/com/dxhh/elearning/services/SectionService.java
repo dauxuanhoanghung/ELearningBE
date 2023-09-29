@@ -11,4 +11,5 @@ public interface SectionService {
     void deleteSection(Integer sectionId);
     Section getSectionById(Integer sectionId);
     List<Section> getAllSections();
+    List<Section> getByCourse_Id(Integer courseId);
 }

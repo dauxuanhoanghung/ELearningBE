@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -20,6 +21,7 @@ public class CourseComment implements Serializable {
     @Lob
     @Column(name = "content")
     private String content;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")

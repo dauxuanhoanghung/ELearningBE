@@ -3,13 +3,13 @@ package com.dxhh.elearning.controllers;
 import com.dxhh.elearning.dto.request.CourseUpdateRequest;
 import com.dxhh.elearning.dto.request.ListRequest;
 import com.dxhh.elearning.dto.request.NewCourseRequest;
-import com.dxhh.elearning.dto.request.NewSectionRequest;
 import com.dxhh.elearning.dto.response.CourseDetailsResponse;
 import com.dxhh.elearning.dto.response.CourseInfoResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
+import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.SectionService;
@@ -31,15 +31,17 @@ public class CourseController {
     private final CourseService courseService;
     private final LectureService lectureService;
     private final SectionService sectionService;
+    private final CourseCriteriaService courseCriteriaService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
 
 
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseMapper courseMapper, UserMapper userMapper) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;
+        this.courseCriteriaService = courseCriteriaService;
         this.courseMapper = courseMapper;
         this.userMapper = userMapper;
     }
@@ -65,8 +67,9 @@ public class CourseController {
         ModelResponse res = new ModelResponse();
         Course course = courseService.findById(id);
         CourseDetailsResponse response = courseMapper.toDetail(course);
-//        response.setCriterias();
+        response.setUser(userMapper.toResponse(course.getCreator()));
         res.setStatus(200);
+        res.setData(response);
         return ResponseEntity.ok(res);
     }
 
@@ -131,5 +134,21 @@ public class CourseController {
     public ResponseEntity<?> delete(@PathVariable(name = "id") int id) {
         courseService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/get-criteria")
+    public ResponseEntity getCriteriaByCourseId(@PathVariable(name = "id") int id) {
+        ModelResponse res = new ModelResponse();
+        res.setData(courseCriteriaService.getByCourseId(id));
+        res.setStatus(200);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{id}/get-section")
+    public ResponseEntity getSectionByCourseId(@PathVariable(name = "id") int id) {
+        ModelResponse res = new ModelResponse();
+        res.setData(sectionService.getByCourse_Id(id));
+        res.setStatus(200);
+        return ResponseEntity.ok(res);
     }
 }

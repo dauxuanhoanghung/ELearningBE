@@ -33,13 +33,16 @@ public class CourseCommentController {
     }
 
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<ModelResponse> getCommentByCourse(@PathVariable Integer courseId) {
-        List<CourseComment> comments = courseCommentService.getByCourseId(courseId, 0);
+    public ResponseEntity<ModelResponse> getCommentByCourse(@PathVariable Integer courseId,
+                                                            @RequestParam Map<String, String> params) {
+        int page = 0;
+        if (params.containsKey("page"))
+            page = Integer.valueOf(params.get("page"));
+        List<CourseComment> comments = courseCommentService.getByCourseId(courseId, page);
 
         ModelResponse response = new ModelResponse();
         response.setStatus(200);
         response.setData(comments);
-
         return ResponseEntity.ok(response);
     }
 
