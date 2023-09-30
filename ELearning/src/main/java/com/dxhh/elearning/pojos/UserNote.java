@@ -19,7 +19,7 @@ public class UserNote implements Serializable {
     private Integer id;
     @Lob
     @Column(name = "note_text")
-    private String noteText;
+    private String text;
     @Column(name = "note_time")
     private Integer noteTime;
     @Column(name = "created_date")
@@ -30,6 +30,10 @@ public class UserNote implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
+
+    {
+        createdDate = LocalDateTime.now();
+    }
 
     public UserNote() {
     }
