@@ -1,6 +1,7 @@
 package com.dxhh.elearning.mappers;
 
 import com.dxhh.elearning.dto.request.NewLectureRequest;
+import com.dxhh.elearning.dto.response.LectureResponse;
 import com.dxhh.elearning.pojos.Lecture;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -15,5 +16,9 @@ public class LectureMapper {
 
     public Lecture toModel(NewLectureRequest request) {
         return modelMapper.map(request, Lecture.class);
+    }
+
+    public LectureResponse toResponse(Lecture lecture) {
+        return modelMapper.map(lecture, LectureResponse.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -19,6 +20,8 @@ public class CourseCriteria implements Serializable {
     @Lob
     @Column(name = "text")
     private String text;
+
+    @JsonIgnore
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Course course;

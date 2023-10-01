@@ -39,8 +39,10 @@ public class LectureController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ModelResponse> getById(@PathVariable(name = "id") int id) {
+        Lecture lecture = lectureService.getById(id);
         ModelResponse res = new ModelResponse();
         res.setStatus(200);
+        res.setData(lectureMapper.toResponse(lecture));
         return ResponseEntity.ok(res);
     }
 

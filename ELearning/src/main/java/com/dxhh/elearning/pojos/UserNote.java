@@ -23,6 +23,7 @@ public class UserNote implements Serializable {
     @Column(name = "note_time")
     private Integer noteTime;
     @Column(name = "created_date")
+
     private LocalDateTime createdDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)

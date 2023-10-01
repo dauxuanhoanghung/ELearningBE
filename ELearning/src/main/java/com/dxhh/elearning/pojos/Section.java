@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -24,8 +25,10 @@ public class Section implements Serializable {
     @Column(name = "order_index")
     private int orderIndex;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Course course;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
     private Set<Lecture> lectures;
 

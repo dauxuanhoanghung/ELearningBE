@@ -1,6 +1,7 @@
 package com.dxhh.elearning.pojos;
 
 import com.dxhh.elearning.enums.LectureType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -34,11 +35,15 @@ public class Lecture implements Serializable {
     @Basic(optional = false)
     @Column(name = "video_url")
     private String videoUrl;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
     private Set<LectureComment> lectureCommentSet;
+    @JsonIgnore
+
     @JoinColumn(name = "section_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Section section;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
     private Set<UserNote> userNoteSet;
 

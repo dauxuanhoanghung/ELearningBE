@@ -17,5 +17,6 @@ public class LectureResponse implements Serializable {
     private String title;
     private String content;
     private LectureType type;
+    private String videoUrl;
     private int orderIndex;
 }

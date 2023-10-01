@@ -39,6 +39,7 @@ public class UserNoteServiceImpl implements UserNoteService {
 
     @Override
     public UserNote create(UserNote userNote) {
+        userNote.setUser(getCurrentUser());
         return userNoteRepository.save(userNote);
     }
 
