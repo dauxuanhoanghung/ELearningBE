@@ -5,7 +5,9 @@ import com.dxhh.elearning.enums.LectureType;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.repositories.LectureRepository;
+import com.dxhh.elearning.services.AmazonS3Service;
 import com.dxhh.elearning.services.LectureService;
+import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,20 +17,27 @@ import java.util.List;
 @Service
 @Transactional
 public class LectureServiceImpl implements LectureService {
+    private final AmazonS3Service amazonS3Service;
     private final LectureRepository lectureRepository;
     private final LectureMapper lectureMapper;
+    private final Utils utils;
 
     @Autowired
-    public LectureServiceImpl(LectureRepository lectureRepository, LectureMapper lectureMapper) {
+    public LectureServiceImpl(AmazonS3Service amazonS3Service, LectureRepository lectureRepository, LectureMapper lectureMapper, Utils utils) {
+        this.amazonS3Service = amazonS3Service;
         this.lectureRepository = lectureRepository;
         this.lectureMapper = lectureMapper;
+        this.utils = utils;
     }
 
     @Override
     public Lecture create(NewLectureRequest lectureRequest) {
         Lecture lecture = lectureMapper.toModel(lectureRequest);
         if (lectureRequest.getType().equals(LectureType.VIDEO)) {
-
+            if (utils.isVideoFile(lectureRequest.getVideoFile())) {
+                String url = amazonS3Service.uploadFile(utils.multipartToFile(lectureRequest.getVideoFile()));
+                lecture.setVideoUrl(url);
+            }
         }
         return lectureRepository.save(lecture);
     }

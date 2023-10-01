@@ -1,7 +1,6 @@
 package com.dxhh.elearning.dto.response;
 
 import com.dxhh.elearning.enums.LectureType;
-import com.dxhh.elearning.pojos.Video;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +18,4 @@ public class LectureResponse implements Serializable {
     private String content;
     private LectureType type;
     private int orderIndex;
-    private Set<Video> videos;
 }

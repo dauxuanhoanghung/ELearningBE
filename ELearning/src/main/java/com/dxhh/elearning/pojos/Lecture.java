@@ -31,8 +31,9 @@ public class Lecture implements Serializable {
     @Basic(optional = false)
     @Column(name = "order_index")
     private int orderIndex;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
-    private Set<Video> videos;
+    @Basic(optional = false)
+    @Column(name = "video_url")
+    private String videoUrl;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
     private Set<LectureComment> lectureCommentSet;
     @JoinColumn(name = "section_id", referencedColumnName = "id")

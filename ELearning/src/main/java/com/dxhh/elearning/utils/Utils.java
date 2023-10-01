@@ -7,6 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,5 +61,16 @@ public class Utils {
         }
 
         return false;
+    }
+
+    public File multipartToFile(MultipartFile multipartFile) {
+        File file = new File(multipartFile.getOriginalFilename());
+        try (FileOutputStream os = new FileOutputStream(file)) {
+            os.write(multipartFile.getBytes());
+            return file;
+        } catch (Exception err) {
+            System.out.println("Video error");
+        }
+        return null;
     }
 }

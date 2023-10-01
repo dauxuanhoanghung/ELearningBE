@@ -34,8 +34,6 @@ public class CourseController {
     private final CourseCriteriaService courseCriteriaService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
-
-
     @Autowired
     public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper) {
         this.courseService = courseService;
@@ -74,7 +72,7 @@ public class CourseController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ModelResponse> create(@ModelAttribute("course") NewCourseRequest course,
+    public ResponseEntity<ModelResponse> create(@ModelAttribute NewCourseRequest course,
                                                 BindingResult rs) {
         ModelResponse response = new ModelResponse();
         if (rs.hasErrors()) {

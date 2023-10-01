@@ -24,8 +24,6 @@ public class FavoriteController {
     private final CourseService courseService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
-
-
     @Autowired
     public FavoriteController(FavoriteCourseService favoriteCourseService, CourseService courseService, CourseMapper courseMapper, UserMapper userMapper) {
         this.favoriteCourseService = favoriteCourseService;

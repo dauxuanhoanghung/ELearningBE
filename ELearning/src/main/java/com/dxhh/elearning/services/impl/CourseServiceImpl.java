@@ -17,14 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,12 +72,14 @@ public class CourseServiceImpl implements CourseService {
     public Course save(NewCourseRequest courseRequest) {
         Course newCourse = courseMapper.toModel(courseRequest);
 
-        Set<CourseCriteria> criteria = courseRequest.getCriteria().stream().map(s -> {
+        Set<CourseCriteria> criteria = new HashSet<>();
+        List<String> criteriaList = courseRequest.getCriteria();
+        for (String s : criteriaList) {
             CourseCriteria cri = new CourseCriteria();
             cri.setCourse(newCourse);
             cri.setText(s);
-            return cri;
-        }).collect(Collectors.toSet());
+            criteria.add(cri);
+        }
         newCourse.setCourseCriterias(criteria);
         newCourse.setCreator(getCurrentUser());
         if (utils.isNotEmptyFile(courseRequest.getBackgroundFile())) {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDateTime;
 
 @Service
 public class AmazonS3ServiceImpl implements AmazonS3Service {
@@ -24,7 +25,8 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
     @Override
     public String uploadFile(File file) {
-        String path = String.format("images/%s",  file.getName());
+        String path = String.format("%s%s",
+                file.getName().replace(' ', '_'), LocalDateTime.now().toString());
 
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, path, file);
         PutObjectResult result = amazonS3.putObject(putObjectRequest);
