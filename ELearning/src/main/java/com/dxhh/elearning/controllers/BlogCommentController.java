@@ -23,7 +23,6 @@ public class BlogCommentController {
         this.blogCommentService = blogCommentService;
     }
 
-
     @PostMapping
     public ResponseEntity<ModelResponse> create(@RequestBody BlogCommentRequest blogComment) {
         BlogComment savedBlogComment = blogCommentService.create(blogComment);
