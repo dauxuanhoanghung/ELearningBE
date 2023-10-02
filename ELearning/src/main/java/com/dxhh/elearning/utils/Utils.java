@@ -54,10 +54,10 @@ public class Utils {
         String fileName = file.getOriginalFilename();
         if (fileName != null) {
             fileName = fileName.toLowerCase();
-            return fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".mov");
-            // Add more video file extensions as needed
-            // You can also check MIME types if available, which is more reliable
-            // Example: file.getContentType() contains "video/"
+            return fileName.endsWith(".mp4") || fileName.endsWith(".avi")
+                    || fileName.endsWith(".mov") || fileName.endsWith("webm")
+                    || fileName.endsWith(".mkv") || fileName.endsWith(".mk3d")
+                    || fileName.endsWith(".qt");
         }
 
         return false;

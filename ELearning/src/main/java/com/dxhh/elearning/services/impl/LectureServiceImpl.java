@@ -2,29 +2,34 @@ package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.dto.request.NewLectureRequest;
 import com.dxhh.elearning.enums.LectureType;
+import com.dxhh.elearning.enums.UploaderType;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.repositories.LectureRepository;
 import com.dxhh.elearning.services.AmazonS3Service;
 import com.dxhh.elearning.services.LectureService;
+import com.dxhh.elearning.services.YoutubeService;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 
 @Service
 @Transactional
 public class LectureServiceImpl implements LectureService {
     private final AmazonS3Service amazonS3Service;
+    private final YoutubeService youtubeService;
     private final LectureRepository lectureRepository;
     private final LectureMapper lectureMapper;
     private final Utils utils;
 
     @Autowired
-    public LectureServiceImpl(AmazonS3Service amazonS3Service, LectureRepository lectureRepository, LectureMapper lectureMapper, Utils utils) {
+    public LectureServiceImpl(AmazonS3Service amazonS3Service, YoutubeService youtubeService, LectureRepository lectureRepository, LectureMapper lectureMapper, Utils utils) {
         this.amazonS3Service = amazonS3Service;
+        this.youtubeService = youtubeService;
         this.lectureRepository = lectureRepository;
         this.lectureMapper = lectureMapper;
         this.utils = utils;
@@ -35,7 +40,13 @@ public class LectureServiceImpl implements LectureService {
         Lecture lecture = lectureMapper.toModel(lectureRequest);
         if (lectureRequest.getType().equals(LectureType.VIDEO)) {
             if (utils.isVideoFile(lectureRequest.getVideoFile())) {
-                String url = amazonS3Service.uploadFile(utils.multipartToFile(lectureRequest.getVideoFile()));
+                String url = null;
+                File file = utils.multipartToFile(lectureRequest.getVideoFile());
+                if (lectureRequest.getUploaderType().equals(UploaderType.YOUTUBE)) {
+                    url = youtubeService.uploadFile(file, lectureRequest.getTitle(), lectureRequest.getContent());
+                } else {
+                    url = amazonS3Service.uploadFile(file);
+                }
                 lecture.setVideoUrl(url);
             }
         }

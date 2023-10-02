@@ -52,7 +52,7 @@ public class FavoriteController {
         List<CourseInfoResponse> courses = new ArrayList<>();
         favoriteCourses.stream().forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c.getCourse());
-            info.setCountRegistration(courseService.countRegistrationById(c.getCourse().getId()));
+            info.setCountRegistration(courseService.countRegistrationByCourseId(c.getCourse().getId()));
             info.setUser(userMapper.toResponse(c.getCourse().getCreator()));
             courses.add(info);
         });

@@ -4,14 +4,17 @@ import com.dxhh.elearning.dto.request.NewCourseRequest;
 import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.CourseCriteria;
-import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.CourseRepository;
+import com.dxhh.elearning.repositories.LectureRepository;
 import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.utils.Utils;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +25,6 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class CourseServiceImpl implements CourseService {
@@ -31,18 +32,22 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final TransactionRepository courseRegistrationRepository;
+    private final LectureRepository lectureRepository;
     private final CloudinaryService cloudinaryService;
     private final CourseMapper courseMapper;
     private final Utils utils;
+    private final Environment env;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, CloudinaryService cloudinaryService, TransactionRepository courseRegistrationRepository, CourseMapper courseMapper, Utils utils) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, CloudinaryService cloudinaryService, TransactionRepository courseRegistrationRepository, LectureRepository lectureRepository, CourseMapper courseMapper, Utils utils, Environment env) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.cloudinaryService = cloudinaryService;
+        this.lectureRepository = lectureRepository;
         this.courseMapper = courseMapper;
         this.utils = utils;
+        this.env = env;
     }
 
     // Get current user
@@ -59,7 +64,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findCourses(Map<String, String> params) {
-        return this.courseRepository.findAll();
+        int page = 0;
+        if (params.containsKey("page"))
+            page = Integer.valueOf(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        return this.courseRepository.findAll(pageable).getContent();
     }
 
     @Override
@@ -105,8 +116,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Long countRegistrationById(Integer id) {
-        return courseRegistrationRepository.countByCourseId(id);
+    public Long countRegistrationByCourseId(Integer courseId) {
+        return courseRegistrationRepository.countByCourse_Id(courseId);
+    }
+
+    @Override
+    public Long countLecturesByCourseId(Integer courseId) {
+        return lectureRepository.countLecturesBySection_Course_Id(courseId);
     }
 }
 

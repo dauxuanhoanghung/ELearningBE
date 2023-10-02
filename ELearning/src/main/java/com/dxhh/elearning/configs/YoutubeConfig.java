@@ -14,6 +14,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import com.google.api.services.youtube.YouTube;
+import org.springframework.context.annotation.Lazy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +46,7 @@ public class YoutubeConfig {
         return credential;
     }
 
+    @Lazy
     @Bean
     public YouTube getService() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();

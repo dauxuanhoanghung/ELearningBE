@@ -1,6 +1,7 @@
 package com.dxhh.elearning.dto.request;
 
 import com.dxhh.elearning.enums.LectureType;
+import com.dxhh.elearning.enums.UploaderType;
 import com.dxhh.elearning.pojos.Section;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class NewLectureRequest implements Serializable {
     private LectureType type;
     private int orderIndex;
     private Section section;
+    UploaderType uploaderType = UploaderType.YOUTUBE;
     private MultipartFile videoFile;
 }

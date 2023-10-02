@@ -30,27 +30,22 @@ public class LectureCommentController {
     }
 
     @GetMapping("/lecture/{lectureId}")
-    public ResponseEntity<ModelResponse> getCommentByLecture(@PathVariable Integer lectureId) {
-        List<LectureComment> comments = lectureCommentService.getByLectureId(lectureId);
-
+    public ResponseEntity<ModelResponse> getCommentByLecture(@PathVariable Integer lectureId,
+                                                             @RequestParam Map<String, String> params) {
+        int page = 0;
+        if (params.containsKey("page"))
+            page = Integer.valueOf(params.get("page"));
+        List<LectureComment> comments = lectureCommentService.getByLectureId(lectureId, page);
         ModelResponse response = new ModelResponse();
         response.setStatus(200);
         response.setData(comments);
-
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
-        ModelResponse res = new ModelResponse();
-        res.setStatus(200);
-        return ResponseEntity.ok(res);
     }
 
     // Update a course comment by ID
     @PutMapping("/{commentId}")
-    public ResponseEntity<ModelResponse> updateCourseComment( @PathVariable Integer commentId,
-            @RequestBody LectureComment updatedComment) {
+    public ResponseEntity<ModelResponse> updateCourseComment(@PathVariable Integer commentId,
+                                                             @RequestBody LectureComment updatedComment) {
         LectureComment updated = lectureCommentService.update(updatedComment);
         ModelResponse response = new ModelResponse();
         if (updated != null) {

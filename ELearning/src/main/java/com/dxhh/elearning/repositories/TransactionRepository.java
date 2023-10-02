@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
-    Long countByCourseId(Integer courseId);
+    Long countByCourse_Id(Integer courseId);
+    Long countByUser_Id(Integer userId);
 }

@@ -50,7 +50,7 @@ public class CourseController {
         List<CourseInfoResponse> courses = new ArrayList<>();
         courseService.findCourses(params).stream().forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
-            info.setCountRegistration(courseService.countRegistrationById(c.getId()));
+            info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
             info.setUser(userMapper.toResponse(c.getCreator()));
             courses.add(info);
 
@@ -147,6 +147,20 @@ public class CourseController {
         ModelResponse res = new ModelResponse();
         res.setData(sectionService.getByCourse_Id(id));
         res.setStatus(200);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{id}/get-count-lectures")
+    public ResponseEntity getCountLectures(@PathVariable(name = "id") int id) {
+        ModelResponse res = new ModelResponse(200,
+                "Get count successful", courseService.countLecturesByCourseId(id));
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{id}/get-count-registration")
+    public ResponseEntity getCountRegistrations(@PathVariable(name = "id") int id) {
+        ModelResponse res = new ModelResponse(200,
+                "Get count successful", courseService.countRegistrationByCourseId(id));
         return ResponseEntity.ok(res);
     }
 }

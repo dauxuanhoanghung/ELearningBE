@@ -13,7 +13,7 @@ public interface LectureCommentService {
     LectureComment update(LectureComment lectureComment);
     boolean deleteById(Integer id);
     List<LectureComment> getByLecture(Lecture lecture);
-    List<LectureComment> getByLectureId(Integer id);
+    List<LectureComment> getByLectureId(Integer lectureId, int page);
 
 }
 

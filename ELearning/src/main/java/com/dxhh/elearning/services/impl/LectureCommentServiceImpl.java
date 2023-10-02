@@ -5,6 +5,8 @@ import com.dxhh.elearning.pojos.LectureComment;
 import com.dxhh.elearning.repositories.LectureCommentRepository;
 import com.dxhh.elearning.services.LectureCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,10 @@ public class LectureCommentServiceImpl implements LectureCommentService {
     }
 
     @Override
-    public List<LectureComment> getByLectureId(Integer id) {
-        return lectureCommentRepository.findById(id).stream().toList();
+    public List<LectureComment> getByLectureId(Integer lectureId, int page) {
+        int pageNumber = Math.max(page, 0);
+
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        return lectureCommentRepository.findByLecture(new Lecture(lectureId), pageable).getContent();
     }
 }
