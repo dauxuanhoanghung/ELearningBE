@@ -12,4 +12,5 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
     Page<Course> findAll(Pageable pageable);
+    Page<Course> findByCreator_Id(Integer creator, Pageable pageable);
 }

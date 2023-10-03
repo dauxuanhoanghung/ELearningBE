@@ -44,8 +44,7 @@ public class CourseController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
+    private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         List<CourseInfoResponse> courses = new ArrayList<>();
         courseService.findCourses(params).stream().forEach(c -> {
@@ -53,11 +52,14 @@ public class CourseController {
             info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
             info.setUser(userMapper.toResponse(c.getCreator()));
             courses.add(info);
-
         });
         res.setData(courses);
         res.setStatus(200);
-        return ResponseEntity.ok(res);
+        return res;
+    }
+    @GetMapping
+    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
     @GetMapping(path = "/{id}")
@@ -69,6 +71,11 @@ public class CourseController {
         res.setStatus(200);
         res.setData(response);
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping(path = "/my-business")
+    public ResponseEntity<ModelResponse> getByCreator(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

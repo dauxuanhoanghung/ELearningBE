@@ -70,7 +70,12 @@ public class CourseServiceImpl implements CourseService {
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
         Pageable pageable = PageRequest.of(pageNumber, size);
-        return this.courseRepository.findAll(pageable).getContent();
+        List course;
+        if (params.containsKey("business"))
+            course = this.courseRepository.findByCreator_Id(getCurrentUser().getId(), pageable).getContent();
+        else
+            course = this.courseRepository.findAll(pageable).getContent();
+        return course;
     }
 
     @Override
@@ -123,6 +128,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Long countLecturesByCourseId(Integer courseId) {
         return lectureRepository.countLecturesBySection_Course_Id(courseId);
+    }
+
+    @Override
+    public Long countCourses() {
+        return null;
     }
 }
 

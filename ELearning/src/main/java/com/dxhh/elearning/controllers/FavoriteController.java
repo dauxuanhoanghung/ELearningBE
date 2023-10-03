@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -47,7 +48,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/get-favorite-courses")
-    public ResponseEntity<ModelResponse> getFavoriteCoursesByUser() {
+    public ResponseEntity<ModelResponse> getFavoriteCoursesByUser(@RequestParam Map<String, String> params) {
         List<FavoriteCourse> favoriteCourses = favoriteCourseService.getByUser();
         List<CourseInfoResponse> courses = new ArrayList<>();
         favoriteCourses.stream().forEach(c -> {

@@ -14,4 +14,5 @@ public interface CourseService {
     boolean deleteById(Integer id);
     Long countRegistrationByCourseId(Integer id);
     Long countLecturesByCourseId(Integer courseId);
+    Long countCourses();
 }
