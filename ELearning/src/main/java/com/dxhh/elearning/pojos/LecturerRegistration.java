@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -17,11 +18,18 @@ public class LecturerRegistration implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
+    {
+        registrationDate = LocalDateTime.now();
+    }
 
     public LecturerRegistration() {
     }
