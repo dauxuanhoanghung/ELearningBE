@@ -9,6 +9,9 @@ import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.LecturerRegistrationService;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -24,13 +28,15 @@ public class LecturerRegistrationServiceImpl implements LecturerRegistrationServ
     private final LecturerRegistrationRepository lecturerRegistrationRepository;
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+    private final Environment env;
     private final Utils utils;
 
     @Autowired
-    public LecturerRegistrationServiceImpl(LecturerRegistrationRepository lecturerRegistrationRepository, UserRepository userRepository, CloudinaryService cloudinaryService, Utils utils) {
+    public LecturerRegistrationServiceImpl(LecturerRegistrationRepository lecturerRegistrationRepository, UserRepository userRepository, CloudinaryService cloudinaryService, Environment env, Utils utils) {
         this.lecturerRegistrationRepository = lecturerRegistrationRepository;
         this.userRepository = userRepository;
         this.cloudinaryService = cloudinaryService;
+        this.env = env;
         this.utils = utils;
     }
 
@@ -47,8 +53,14 @@ public class LecturerRegistrationServiceImpl implements LecturerRegistrationServ
     }
 
     @Override
-    public List<LecturerRegistration> getAll() {
-        return lecturerRegistrationRepository.findAll();
+    public List<LecturerRegistration> getForm(Map<String, String> params) {
+        int page = 0;
+        if (params.containsKey("page"))
+            page = Integer.valueOf(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        return lecturerRegistrationRepository.findAll(pageable).getContent();
     }
 
     @Override

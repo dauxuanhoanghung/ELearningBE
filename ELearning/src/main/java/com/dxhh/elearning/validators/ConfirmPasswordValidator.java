@@ -1,9 +1,10 @@
 package com.dxhh.elearning.validators;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
+@Component
 public class ConfirmPasswordValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
