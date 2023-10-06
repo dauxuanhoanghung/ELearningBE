@@ -1,5 +1,6 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.request.LectureCommentRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.pojos.LectureComment;
 import com.dxhh.elearning.services.LectureCommentService;
@@ -21,7 +22,7 @@ public class LectureCommentController {
     }
 
     @PostMapping
-    public ResponseEntity<ModelResponse> create(@RequestBody LectureComment lectureComment) {
+    public ResponseEntity<ModelResponse> create(@RequestBody LectureCommentRequest lectureComment) {
         LectureComment createdLectureComment = lectureCommentService.save(lectureComment);
         ModelResponse response = new ModelResponse();
         response.setStatus(201);

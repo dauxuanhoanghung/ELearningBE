@@ -1,15 +1,22 @@
 package com.dxhh.elearning.services.impl;
 
+import com.dxhh.elearning.dto.request.LectureCommentRequest;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.LectureComment;
+import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.LectureCommentRepository;
+import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.LectureCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,14 +24,31 @@ import java.util.List;
 public class LectureCommentServiceImpl implements LectureCommentService {
 
     private final LectureCommentRepository lectureCommentRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LectureCommentServiceImpl(LectureCommentRepository lectureCommentRepository) {
+    public LectureCommentServiceImpl(LectureCommentRepository lectureCommentRepository, UserRepository userRepository) {
         this.lectureCommentRepository = lectureCommentRepository;
+        this.userRepository = userRepository;
+    }
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        List<User> users = this.userRepository.findByUsername(authentication.getName());
+        if (users.isEmpty())
+            return null;
+        return users.get(0);
     }
 
     @Override
-    public LectureComment save(LectureComment lectureComment) {
+    public LectureComment save(LectureCommentRequest request) {
+        LectureComment lectureComment = new LectureComment();
+        lectureComment.setContent(request.getContent());
+        lectureComment.setCreatedDate(LocalDateTime.now());
+        lectureComment.setLecture(request.getLecture());
+        lectureComment.setUser(getCurrentUser());
         return lectureCommentRepository.save(lectureComment);
     }
 

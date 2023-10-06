@@ -15,9 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class LectureCommentRequest implements Serializable {
     private static final long serialVersionUID = 5926468583005150737L;
-    private String text;
+    private String content;
     private Date createdDate;
-    private Lecture lectureId;
+    private Lecture lecture;
 
     {
         createdDate = Date.from(Instant.now());

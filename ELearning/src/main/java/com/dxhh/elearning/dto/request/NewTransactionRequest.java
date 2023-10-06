@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewTransactionRequest {
-    private BigDecimal amount;
     private LocalDateTime createdDate;
     private Course course;
 

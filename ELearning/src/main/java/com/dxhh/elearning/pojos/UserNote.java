@@ -1,5 +1,6 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class UserNote implements Serializable {
     @Column(name = "note_time")
     private Integer noteTime;
     @Column(name = "created_date")
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)

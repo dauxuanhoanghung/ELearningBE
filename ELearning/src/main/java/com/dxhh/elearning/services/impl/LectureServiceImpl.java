@@ -77,4 +77,14 @@ public class LectureServiceImpl implements LectureService {
     public List<Lecture> getByCourseId(Integer courseId) {
         return lectureRepository.findBySectionCourse_Id(courseId);
     }
+
+    @Override
+    public List<Lecture> getBySectionId(Integer sectionId) {
+        return lectureRepository.findBySection_Id(sectionId);
+    }
+
+    @Override
+    public Lecture getFirstLectureOfCourse(Integer courseId) {
+        return lectureRepository.findByOrderIndexAndSection_OrderIndexAndSection_Course_Id(1, 1, courseId).orElse(null);
+    }
 }

@@ -11,4 +11,6 @@ public interface LectureService {
     Lecture update(Lecture lecture);
     boolean deleteById(Integer id);
     List<Lecture> getByCourseId(Integer courseId);
+    List<Lecture> getBySectionId(Integer sectionId);
+    Lecture getFirstLectureOfCourse(Integer courseId);
 }

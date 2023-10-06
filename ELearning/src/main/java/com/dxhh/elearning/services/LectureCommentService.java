@@ -1,5 +1,6 @@
 package com.dxhh.elearning.services;
 
+import com.dxhh.elearning.dto.request.LectureCommentRequest;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.LectureComment;
 
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface LectureCommentService {
 
-    LectureComment save(LectureComment lectureComment);
+    LectureComment save(LectureCommentRequest lectureComment);
     LectureComment getById(Integer id);
     LectureComment update(LectureComment lectureComment);
     boolean deleteById(Integer id);

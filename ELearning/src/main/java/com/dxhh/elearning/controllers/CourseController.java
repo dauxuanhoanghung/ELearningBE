@@ -3,12 +3,13 @@ package com.dxhh.elearning.controllers;
 import com.dxhh.elearning.dto.request.CourseUpdateRequest;
 import com.dxhh.elearning.dto.request.ListRequest;
 import com.dxhh.elearning.dto.request.NewCourseRequest;
-import com.dxhh.elearning.dto.response.CourseDetailsResponse;
-import com.dxhh.elearning.dto.response.CourseInfoResponse;
-import com.dxhh.elearning.dto.response.ModelResponse;
+import com.dxhh.elearning.dto.response.*;
 import com.dxhh.elearning.mappers.CourseMapper;
+import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
+import com.dxhh.elearning.pojos.Lecture;
+import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
@@ -34,14 +35,16 @@ public class CourseController {
     private final CourseCriteriaService courseCriteriaService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
+    private final LectureMapper lectureMapper;
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper, LectureMapper lectureMapper) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;
         this.courseCriteriaService = courseCriteriaService;
         this.courseMapper = courseMapper;
         this.userMapper = userMapper;
+        this.lectureMapper = lectureMapper;
     }
 
     private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
@@ -149,14 +152,6 @@ public class CourseController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("/{id}/get-section")
-    public ResponseEntity getSectionByCourseId(@PathVariable(name = "id") int id) {
-        ModelResponse res = new ModelResponse();
-        res.setData(sectionService.getByCourse_Id(id));
-        res.setStatus(200);
-        return ResponseEntity.ok(res);
-    }
-
     @GetMapping("/{id}/get-count-lectures")
     public ResponseEntity getCountLectures(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
@@ -169,5 +164,29 @@ public class CourseController {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countRegistrationByCourseId(id));
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{id}/get-section")
+    public ResponseEntity getSectionByCourseId(@PathVariable(name = "id") int id) {
+        ModelResponse res = new ModelResponse();
+        res.setData(sectionService.getByCourse_Id(id));
+        res.setStatus(200);
+        return ResponseEntity.ok(res);
+    }
+
+
+    @GetMapping("/{id}/get-section-lectures")
+    public ResponseEntity<ModelResponse> getSectionAndItsLectureByCourseId(@PathVariable(name = "id") int id) {
+        List<Section> sections = sectionService.getByCourse_Id(id);
+        List result = new ArrayList();
+        sections.forEach(s -> {
+            List<LectureResponse> lectures = new ArrayList<>();
+            lectureService.getBySectionId(s.getId()).forEach(l -> {
+                lectures.add(lectureMapper.toResponse(l));
+            });
+            result.add(new SectionResponse(s.getId(), s.getSectionName(), s.getOrderIndex(), lectures));
+        });
+        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
