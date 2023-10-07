@@ -44,7 +44,7 @@ public class LectureServiceImpl implements LectureService {
                 File file = utils.multipartToFile(lectureRequest.getVideoFile());
                 if (lectureRequest.getUploaderType().equals(UploaderType.YOUTUBE)) {
                     url = youtubeService.uploadFile(file, lectureRequest.getTitle(), lectureRequest.getContent());
-                } else {
+                } else if (lectureRequest.getUploaderType().equals(UploaderType.AMAZONS3)) {
                     url = amazonS3Service.uploadFile(file);
                 }
                 lecture.setVideoUrl(url);

@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Configuration
@@ -88,5 +89,10 @@ public class WebAppContextConfig implements WebMvcConfigurer {
     public DateFormat dateFormatter() {
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return formatter;
+    }
+
+    @Bean
+    public DateTimeFormatter dateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
 }
