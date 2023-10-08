@@ -1,5 +1,6 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.response.stats.CountUserAndMonthResponse;
 import com.dxhh.elearning.dto.response.stats.CountUserByRoleResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.dto.response.stats.CourseWithMostLecturesResponse;
@@ -57,6 +58,20 @@ public class StatsController {
     public ResponseEntity<ModelResponse> getCourseByMostRegistration(@RequestParam Map<String, String> params,
                                                                  @RequestParam(required = false, defaultValue = "5") int limit) {
         List<CourseWithMostRegistrationsResponse> results = statsService.countCourseByMostRegistration(limit);
+        ModelResponse res = new ModelResponse(200, "Get OK", results);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/get-number-of-user-by-month")
+    public ResponseEntity<ModelResponse> countNumberOfUserByMonth(@RequestParam(value = "year", required = false, defaultValue = "2023") int year) {
+        List<CountUserAndMonthResponse> results = statsService.countNumberOfUserByMonth(year);
+        ModelResponse res = new ModelResponse(200, "Get OK", results);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/get-user-register-until-month")
+    public ResponseEntity<ModelResponse> countUserRegisterUntilMonth(@RequestParam(value = "year", required = false, defaultValue = "2023") int year) {
+        List<CountUserAndMonthResponse> results = statsService.countUserRegisterUntilMonth(year);
         ModelResponse res = new ModelResponse(200, "Get OK", results);
         return ResponseEntity.ok(res);
     }

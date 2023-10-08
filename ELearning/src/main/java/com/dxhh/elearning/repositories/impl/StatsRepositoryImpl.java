@@ -94,10 +94,21 @@ public class StatsRepositoryImpl implements StatsRepository {
     public List<Object[]> countNumberOfUserByMonth(int year) {
         String jpql = "SELECT FUNCTION('MONTH', u.createdDate) AS month, COUNT(u.id) AS userCount " +
                 "FROM User u " +
-                "WHERE FUNCTION('YEAR', u.createdDate) = :year " +
+                "WHERE FUNCTION('YEAR', u.createdDate) <= :year " +
                 "GROUP BY FUNCTION('MONTH', u.createdDate)";
         TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
         query.setParameter("year", year);
         return query.getResultList();
+    }
+
+    @Override
+    public Long countUserRegisterByMonth(int month, int year) {
+        String jpql = "SELECT COUNT(u) " +
+                "FROM User u " +
+                "WHERE u.createdDate <= FUNCTION('LAST_DAY', CAST(CONCAT(:year, '-', :month, '-01') AS DATE))";
+        TypedQuery<Long> query = entityManager.createQuery(jpql, Long.class);
+        query.setParameter("month", month);
+        query.setParameter("year", year);
+        return query.getSingleResult();
     }
 }

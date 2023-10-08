@@ -13,4 +13,5 @@ public interface StatsRepository {
     List<CourseWithMostLecturesResponse> countMostCourseByMostLecture(int limit);
     List<CourseWithMostRegistrationsResponse> countCourseByMostRegistration(int limit);
     List<Object[]> countNumberOfUserByMonth(int year);
+    Long countUserRegisterByMonth(int month, int year);
 }
