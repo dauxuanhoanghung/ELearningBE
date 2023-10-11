@@ -8,13 +8,13 @@ import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
-import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,6 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/courses/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
-
     private final CourseService courseService;
     private final LectureService lectureService;
     private final SectionService sectionService;
@@ -36,8 +35,10 @@ public class CourseController {
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
     private final LectureMapper lectureMapper;
+    private final Environment env;
+
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper, LectureMapper lectureMapper) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper, LectureMapper lectureMapper, Environment env) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;
@@ -45,6 +46,7 @@ public class CourseController {
         this.courseMapper = courseMapper;
         this.userMapper = userMapper;
         this.lectureMapper = lectureMapper;
+        this.env = env;
     }
 
     private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
@@ -60,6 +62,7 @@ public class CourseController {
         res.setStatus(200);
         return res;
     }
+
     @GetMapping
     public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
@@ -187,6 +190,13 @@ public class CourseController {
             result.add(new SectionResponse(s.getId(), s.getSectionName(), s.getOrderIndex(), lectures));
         });
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/get-total-course-page")
+    public ResponseEntity<ModelResponse> getTotalCoursePage() {
+        Long totalPage = (long) Math.ceil(courseService.countCourses() * 1.0 / env.getProperty("SIZE", Integer.class, 8));
+        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", totalPage);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

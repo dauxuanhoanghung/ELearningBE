@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/users/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-    private final UserService userService; // You should have a UserService to handle user-related logic
+    private final UserService userService;
     private final UserMapper mapper;
     private final EmailService emailService;
     @Autowired
@@ -59,6 +59,22 @@ public class UserController {
         response.setStatus(201);
         response.setData(mapper.toResponse(user));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update-info")
+    public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        ModelResponse response;
+        User user = userService.findOneByUsername(username);
+        User updatedUser = userService.update(user, userRegisterRequest);
+        if (user != null) {
+            response = new ModelResponse(200, "Updated user successful", mapper.toResponse(updatedUser));
+        }
+        else {
+            response = new ModelResponse(404, "User not found", null);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/forgot-password")

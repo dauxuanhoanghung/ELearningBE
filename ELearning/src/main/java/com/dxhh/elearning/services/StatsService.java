@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface StatsService {
     List<CountUserByRoleResponse> countNewUsersByRole(LocalDateTime fromDate, LocalDateTime toDate);
-
     List<CourseWithMostLecturesResponse> countMostCourseByMostLecture(int limit);
     List<CourseWithMostRegistrationsResponse> countCourseByMostRegistration(int limit);
     List<CountUserAndMonthResponse> countNumberOfUserByMonth(int year);

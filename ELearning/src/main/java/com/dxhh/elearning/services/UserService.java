@@ -81,4 +81,22 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByUsername(username);
     }
 
+    public User findOneByUsername(String username) {
+        List<User> users =  userRepository.findByUsername(username);
+        if (users.isEmpty())
+            return null;
+        else
+            return users.get(0);
+    }
+
+    public User update(User user, UserRegisterRequest request) {
+        if (utils.isNotEmptyFile(request.getAvatarFile())) {
+            String url = cloudinaryService.uploadImage(request.getAvatarFile());
+            user.setAvatar(url);
+        }
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        return userRepository.save(user);
+    }
 }

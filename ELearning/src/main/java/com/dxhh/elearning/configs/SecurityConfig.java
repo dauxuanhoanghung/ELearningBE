@@ -66,6 +66,14 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/course-comments/**").authenticated()
+                        .requestMatchers("/api/favorite/**").authenticated()
+                        .requestMatchers("/api/lecture-comments/**").authenticated()
+                        .requestMatchers("/api/lectures/**").authenticated()
+                        .requestMatchers("/api/lecturer-registration/**").authenticated()
+                        .requestMatchers("/api/registration/**").authenticated()
+                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user-notes/**").authenticated()
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -74,19 +82,19 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    public ClientRegistration googleClientRegistration() {
-        return ClientRegistration.withRegistrationId("google")
-                .clientId("281158067602-ojdjfk6tuna36d0lqjhsni8q2ic1l6ec.apps.googleusercontent.com")
-                .clientSecret("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")
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://localhost:8080/login/oauth2/code/{registrationId}")
-                .scope("openid", "profile", "email")
-                .authorizationUri("https://accounts.google.com/o/oauth2/auth")
-                .tokenUri("https://accounts.google.com/o/oauth2/token")
-                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
-                .userNameAttributeName(IdTokenClaimNames.SUB)
-                .clientName("Google")
-                .build();
-    }
+//    @Bean
+//    public ClientRegistration googleClientRegistration() {
+//        return ClientRegistration.withRegistrationId("google")
+//                .clientId("281158067602-ojdjfk6tuna36d0lqjhsni8q2ic1l6ec.apps.googleusercontent.com")
+//                .clientSecret("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")
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .redirectUri("http://localhost:8080/login/oauth2/code/{registrationId}")
+//                .scope("openid", "profile", "email")
+//                .authorizationUri("https://accounts.google.com/o/oauth2/auth")
+//                .tokenUri("https://accounts.google.com/o/oauth2/token")
+//                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
+//                .userNameAttributeName(IdTokenClaimNames.SUB)
+//                .clientName("Google")
+//                .build();
+//    }
 }

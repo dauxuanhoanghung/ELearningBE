@@ -132,7 +132,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Long countCourses() {
-        return null;
+        return courseRepository.count();
     }
 }
 
