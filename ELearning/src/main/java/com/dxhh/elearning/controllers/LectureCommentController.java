@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping(value = "/api/lecture-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LectureCommentController {

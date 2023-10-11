@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/favorite/")
 public class FavoriteController {
@@ -58,7 +58,9 @@ public class FavoriteController {
             courses.add(info);
         });
 
-        ModelResponse response = new ModelResponse(HttpStatus.OK.value(), "Favorite courses retrieved successfully", favoriteCourses);
+        ModelResponse response = new ModelResponse(HttpStatus.OK.value(),
+                "Favorite courses retrieved successfully",
+                favoriteCourses);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

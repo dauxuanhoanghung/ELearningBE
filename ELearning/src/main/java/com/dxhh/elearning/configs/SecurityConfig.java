@@ -62,16 +62,17 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/course-comments/**").authenticated()
-                        .requestMatchers("/api/favorite/**").authenticated()
+//                        .requestMatchers("/api/course-comments/**").authenticated()
+//                        .requestMatchers("/api/favorite/**").authenticated()
                         .requestMatchers("/api/lecture-comments/**").authenticated()
                         .requestMatchers("/api/lectures/**").authenticated()
                         .requestMatchers("/api/lecturer-registration/**").authenticated()
-                        .requestMatchers("/api/registration/**").authenticated()
+//                        .requestMatchers("/api/registration/**").authenticated()
                         .requestMatchers("/api/stats/**").hasRole("ADMIN")
                         .requestMatchers("/api/user-notes/**").authenticated()
                         .anyRequest().permitAll())

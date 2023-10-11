@@ -1,6 +1,7 @@
 package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.configs.VNPayConfig;
+import com.dxhh.elearning.services.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,13 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment/")
 public class PaymentController {
+
+    private final CourseService courseService;
+
+    public PaymentController(CourseService courseService) {
+        this.courseService = courseService;
+    }
+
     @PostMapping("/make")
     public Map<String, String> createPayment(HttpServletRequest request,
                                              @RequestParam(name = "vnp_OrderInfo") String vnp_OrderInfo,

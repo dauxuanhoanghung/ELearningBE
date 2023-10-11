@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/courses/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
@@ -72,8 +72,11 @@ public class CourseController {
     public ResponseEntity<ModelResponse> getById(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
         Course course = courseService.findById(id);
-        CourseDetailsResponse response = courseMapper.toDetail(course);
-        response.setUser(userMapper.toResponse(course.getCreator()));
+        CourseDetailsResponse response = null;
+        if (course != null) {
+            response = courseMapper.toDetail(course);
+            response.setUser(userMapper.toResponse(course.getCreator()));
+        }
         res.setStatus(200);
         res.setData(response);
         return ResponseEntity.ok(res);
