@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class RegistrationController {
     @PostMapping
     public ResponseEntity<ModelResponse> registerCourse(@RequestBody NewTransactionRequest request) {
         Course course = courseService.findById(request.getCourse().getId());
-        if (course.getPrice() > 0) {
+        if (course.getPrice() > 0 && request.getAmount().equals(BigDecimal.valueOf(0))) {
             Map map = new HashMap();
             map.put("nextUrl", "");
             ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Redirect", map);

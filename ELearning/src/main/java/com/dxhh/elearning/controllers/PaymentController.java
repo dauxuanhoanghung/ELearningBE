@@ -49,7 +49,6 @@ public class PaymentController {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_BankCode", "NCB");
-
 //        if (bankcode != null && bankcode.isEmpty()) {
 //        }
 
@@ -95,6 +94,7 @@ public class PaymentController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         vnp_Params.put("redirect_url", paymentUrl);
+        vnp_Params.put("courseId", transactionRequest.getCourse().getId() + "");
 //		return "redirect:" + paymentUrl;
         return vnp_Params;
     }

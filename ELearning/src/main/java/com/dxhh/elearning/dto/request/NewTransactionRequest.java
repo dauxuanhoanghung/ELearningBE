@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class NewTransactionRequest {
     private LocalDateTime createdDate;
     private Course course;
+    private BigDecimal amount = BigDecimal.valueOf(0);
 
     {
         createdDate = LocalDateTime.now();

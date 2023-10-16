@@ -51,10 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction create(NewTransactionRequest newTransactionRequest) {
         Course course = courseRepository.findById(newTransactionRequest.getCourse().getId()).get();
         Transaction transaction = new Transaction();
-        if (course.getPrice() != 0) {
-
-        } else
-            transaction.setAmount(BigDecimal.valueOf(course.getPrice()));
+        transaction.setAmount(newTransactionRequest.getAmount());
         transaction.setCourse(newTransactionRequest.getCourse());
         transaction.setUser(getCurrentUser());
         transaction.setCreatedDate(LocalDateTime.now());

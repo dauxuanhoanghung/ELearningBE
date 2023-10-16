@@ -69,12 +69,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/course-comments/**").authenticated()
 //                        .requestMatchers("/api/favorite/**").authenticated()
-                        .requestMatchers("/api/lecture-comments/**").authenticated()
-                        .requestMatchers("/api/lectures/**").authenticated()
-                        .requestMatchers("/api/lecturer-registration/**").authenticated()
+//                        .requestMatchers("/api/lecture-comments/**").authenticated()
+//                        .requestMatchers("/api/lectures/**").authenticated()
+//                        .requestMatchers("/api/lecturer-registration/**").authenticated()
 //                        .requestMatchers("/api/registration/**").authenticated()
-                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user-notes/**").authenticated()
+//                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/user-notes/**").authenticated()
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
