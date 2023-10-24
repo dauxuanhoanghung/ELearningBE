@@ -6,6 +6,7 @@ import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.EmailService;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.validators.ExistingUsernameValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
     private final EmailService emailService;
+    private final ExistingUsernameValidator usernameValidator;
     @Autowired
-    public UserController(UserService userService, UserMapper mapper, EmailService emailService) {
+    public UserController(UserService userService, UserMapper mapper, EmailService emailService, ExistingUsernameValidator usernameValidator) {
         this.userService = userService;
         this.mapper = mapper;
         this.emailService = emailService;
+        this.usernameValidator = usernameValidator;
     }
     @GetMapping("/current-user")
     public ResponseEntity<ModelResponse> getMyAccount() {
@@ -48,6 +51,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> create(@ModelAttribute UserRegisterRequest userRequest, BindingResult rs) {
+        usernameValidator.validate(userRequest, rs);
         ModelResponse response = new ModelResponse();
         if (rs.hasErrors()) {
             return ResponseEntity.badRequest().body("Validation errors");

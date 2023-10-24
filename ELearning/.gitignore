@@ -33,3 +33,4 @@ src/main/resources/application.properties
 .vscode/
 /src/main/resources/client_secret.json
 /tokens/
+/src/main/resources/application.properties
