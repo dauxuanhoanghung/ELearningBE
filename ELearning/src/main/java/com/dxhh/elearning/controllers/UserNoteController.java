@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-notes/")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserNoteController {
     private final UserNoteService userNoteService;
     private final LectureService lectureService;

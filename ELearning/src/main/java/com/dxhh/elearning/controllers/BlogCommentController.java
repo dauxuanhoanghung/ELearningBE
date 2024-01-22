@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/api/blog-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogCommentController {
@@ -45,15 +45,15 @@ public class BlogCommentController {
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
+    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         res.setStatus(200);
         return ResponseEntity.ok(res);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<ModelResponse> updateCourseComment( @PathVariable Integer commentId,
-                                                              @RequestBody BlogComment updatedComment) {
+    public ResponseEntity<ModelResponse> updateCourseComment(@PathVariable Integer commentId,
+                                                             @RequestBody BlogComment updatedComment) {
         BlogComment updated = blogCommentService.update(updatedComment.getId(), null);
         ModelResponse response = new ModelResponse();
         if (updated != null) {

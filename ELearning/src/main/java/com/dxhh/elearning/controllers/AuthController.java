@@ -1,6 +1,5 @@
 package com.dxhh.elearning.controllers;
 
-import com.dxhh.elearning.dto.request.IdTokenRequest;
 import com.dxhh.elearning.dto.request.UserCredentialRequest;
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.dto.response.ErrorResponse;
@@ -8,21 +7,17 @@ import com.dxhh.elearning.dto.response.JwtResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.jwt.JwtTokenUtils;
 import com.dxhh.elearning.services.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/api/auth/", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AuthController {

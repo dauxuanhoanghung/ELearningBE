@@ -2,9 +2,13 @@ package com.dxhh.elearning.pojos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -14,6 +18,7 @@ import java.util.Set;
 @Data
 public class Course implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,15 +26,13 @@ public class Course implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Column(name = "name")
     private String name;
     @Lob
-    @Column(name = "description")
     private String description;
-    @Column(name = "background")
+    private String subtitle;
     private String background;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "price")
+    private String slug;
+    @Min(value=0)
     private Double price;
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -96,5 +99,5 @@ public class Course implements Serializable {
     public String toString() {
         return "com.dxhh.elearning.pojos.Course[ id=" + id + " ]";
     }
-    
+
 }

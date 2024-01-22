@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "ELearning API", version = "2.0", description = "ElearningAPI"))
+@EnableJpaRepositories
+@EnableTransactionManagement
+@OpenAPIDefinition(info = @Info(title = "ELearning API", version = "3.1.0", description = "ElearningAPI"))
 public class ELearningApplication {
 
     public static void main(String[] args) {

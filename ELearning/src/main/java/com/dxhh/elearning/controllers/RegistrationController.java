@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/registration/")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RegistrationController {
     private final CourseService courseService;
     private final TransactionService transactionService;
@@ -38,8 +38,7 @@ public class RegistrationController {
             map.put("nextUrl", "");
             ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Redirect", map);
             return ResponseEntity.ok(res);
-        }
-        else {
+        } else {
             Transaction transaction = transactionService.create(request);
             Lecture lecture = lectureService.getFirstLectureOfCourse(request.getCourse().getId());
             Map map = new HashMap();

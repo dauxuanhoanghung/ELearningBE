@@ -5,6 +5,9 @@ import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.repositories.SectionRepository;
 import com.dxhh.elearning.services.SectionService;
+import com.dxhh.elearning.specifications.GSpecification;
+import com.dxhh.elearning.specifications.SearchCriteria;
+import com.dxhh.elearning.specifications.SearchOperation;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +69,6 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public List<Section> getByCourse_Id(Integer courseId) {
-        return sectionRepository.findByCourse_Id(courseId);
+        return sectionRepository.findAll(new GSpecification<>(new SearchCriteria("course.id", SearchOperation.EQUAL, courseId)));
     }
 }

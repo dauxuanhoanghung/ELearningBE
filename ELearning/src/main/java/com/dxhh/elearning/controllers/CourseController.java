@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/api/courses/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
@@ -38,7 +38,9 @@ public class CourseController {
     private final Environment env;
 
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper, LectureMapper lectureMapper, Environment env) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService,
+                            CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper,
+                            LectureMapper lectureMapper, Environment env) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;

@@ -1,9 +1,0 @@
-POST http://localhost:8080/api/users/
-Content-Type: multipart/form-data;
-
-username=admin
-firstName=Hung
-lastName=Hoang
-password=123456
-confirmPassword=123456
-email=2051052059hung@ou.edu.vn

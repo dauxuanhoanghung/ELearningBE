@@ -10,7 +10,6 @@
     <class>com.dxhh.elearning.pojos.LectureComment</class>
     <class>com.dxhh.elearning.pojos.CourseComment</class>
     <class>com.dxhh.elearning.pojos.CourseCriteria</class>
-    <class>com.dxhh.elearning.pojos.Video</class>
     <class>com.dxhh.elearning.pojos.Role</class>
     <class>com.dxhh.elearning.pojos.Lecture</class>
     <class>com.dxhh.elearning.pojos.User</class>
