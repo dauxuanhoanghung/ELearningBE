@@ -13,6 +13,8 @@ import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.SectionService;
+import com.dxhh.elearning.utils.Constant;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
+@CrossOrigin
 @RestController
-@RequestMapping(value = "/api/courses/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.COURSES, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
     private final CourseService courseService;
     private final LectureService lectureService;

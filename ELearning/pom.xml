@@ -76,6 +76,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--        </dependency>-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.boot</groupId>-->
         <!--            <artifactId>spring-boot-starter-quartz</artifactId>-->
@@ -121,7 +125,7 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.2.0</version>
         </dependency>
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 &ndash;&gt;-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 &ndash;&gt;-->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
@@ -177,47 +181,47 @@
             <version>1.23.0</version>
         </dependency>
 
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.core</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.asm</artifactId>-->
-<!--                    <version>9.2.0</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.antlr</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.jpa</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.moxy</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>jakarta.persistence</artifactId>-->
-<!--                    <version>2.2.3</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.eclipse.persistence</groupId>-->
-<!--                    <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>-->
-<!--                    <version>2.7.10</version>-->
-<!--                    <scope>provided</scope>-->
-<!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.core</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.asm</artifactId>-->
+        <!--                    <version>9.2.0</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.antlr</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.jpa</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.moxy</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>jakarta.persistence</artifactId>-->
+        <!--                    <version>2.2.3</version>-->
+        <!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.eclipse.persistence</groupId>-->
+        <!--                    <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>-->
+        <!--                    <version>2.7.10</version>-->
+        <!--                    <scope>provided</scope>-->
+        <!--                </dependency>-->
     </dependencies>
 
     <build>

@@ -7,6 +7,7 @@ import com.dxhh.elearning.dto.response.JwtResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.jwt.JwtTokenUtils;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.Date;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping(value = "/api/auth/", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = Routing.AUTH, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;

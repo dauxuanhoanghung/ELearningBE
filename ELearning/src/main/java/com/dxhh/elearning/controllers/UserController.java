@@ -6,6 +6,7 @@ import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.EmailService;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.utils.Routing;
 import com.dxhh.elearning.validators.ExistingUsernameValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping(value = "/api/users/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.USERS, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
     private final EmailService emailService;
     private final ExistingUsernameValidator usernameValidator;
+
     @Autowired
     public UserController(UserService userService, UserMapper mapper, EmailService emailService, ExistingUsernameValidator usernameValidator) {
         this.userService = userService;
@@ -34,6 +36,7 @@ public class UserController {
         this.emailService = emailService;
         this.usernameValidator = usernameValidator;
     }
+
     @GetMapping("/current-user")
     public ResponseEntity<ModelResponse> getMyAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,7 +70,7 @@ public class UserController {
     }
 
     @PutMapping("/update-info")
-    public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest){
+    public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         ModelResponse response;
@@ -75,8 +78,7 @@ public class UserController {
         User updatedUser = userService.update(user, userRegisterRequest);
         if (user != null) {
             response = new ModelResponse(200, "Updated user successful", mapper.toResponse(updatedUser));
-        }
-        else {
+        } else {
             response = new ModelResponse(404, "User not found", null);
         }
         return ResponseEntity.ok(response);

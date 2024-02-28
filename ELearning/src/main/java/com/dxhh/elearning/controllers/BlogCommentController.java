@@ -4,6 +4,7 @@ import com.dxhh.elearning.dto.request.BlogCommentRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.pojos.BlogComment;
 import com.dxhh.elearning.services.BlogCommentService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping(value = "/api/blog-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.BLOG_COMMENTS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogCommentController {
     private final BlogCommentService blogCommentService;
 

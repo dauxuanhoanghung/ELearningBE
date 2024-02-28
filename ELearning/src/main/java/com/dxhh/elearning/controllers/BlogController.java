@@ -5,6 +5,8 @@ import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.BlogMapper;
 import com.dxhh.elearning.pojos.Blog;
 import com.dxhh.elearning.services.BlogService;
+import com.dxhh.elearning.utils.Routing;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/blogs/")
+@RequestMapping(value = Routing.BLOGS, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class BlogController {
 
     private final BlogService blogService;
@@ -25,7 +27,7 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
+    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         res.setStatus(200);
         return ResponseEntity.ok(res);
