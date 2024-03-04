@@ -4,17 +4,19 @@ services:
   app:
     environment:
       SERVER_PORT: ${SERVER_PORT}
+      MYSQL_PASSWORD: ${MY_SQL_ROOT_PASSWORD:-Admin@123}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/elearning
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Admin@123
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
     depends_on:
-      - mysql:
-        condition: service_healthy
+      - mysql
       - redis
 
   mysql:

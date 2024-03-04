@@ -6,6 +6,7 @@ import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.dto.response.stats.CourseWithMostLecturesResponse;
 import com.dxhh.elearning.dto.response.stats.CourseWithMostRegistrationsResponse;
 import com.dxhh.elearning.services.StatsService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RestController
-@RequestMapping("/api/stats/")
+@RequestMapping(value = Routing.STATS)
 public class StatsController {
     private final StatsService statsService;
     private final DateTimeFormatter dateTimeFormat;

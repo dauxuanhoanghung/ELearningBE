@@ -1,5 +1,6 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.utils.Routing;
 import com.dxhh.elearning.utils.VNPayConfig;
 import com.dxhh.elearning.dto.request.NewTransactionRequest;
 import com.dxhh.elearning.pojos.Course;
@@ -13,9 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping("/api/payment/")
+@RequestMapping(value = Routing.PAYMENT)
 public class PaymentController {
 
     private final CourseService courseService;

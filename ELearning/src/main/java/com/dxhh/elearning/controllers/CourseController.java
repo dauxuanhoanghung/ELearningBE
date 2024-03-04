@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(originPatterns = "*")
 @RestController
 @RequestMapping(value = Routing.COURSES, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {

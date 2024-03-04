@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(originPatterns = "*")
 @RestController
 @RequestMapping(value = Routing.BLOGS, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class BlogController {

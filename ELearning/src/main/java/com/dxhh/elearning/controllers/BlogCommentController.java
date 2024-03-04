@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(originPatterns = "*")
 @RestController
 @RequestMapping(value = Routing.BLOG_COMMENTS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogCommentController {

@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = Routing.USER_NOTES, produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin
+@CrossOrigin(originPatterns = "*")
 public class UserNoteController {
     private final UserNoteService userNoteService;
     private final LectureService lectureService;
