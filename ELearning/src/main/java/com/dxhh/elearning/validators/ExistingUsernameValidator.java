@@ -21,7 +21,7 @@ public class ExistingUsernameValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterRequest = (UserRegisterRequest) target;
-        if (this.userService.getUserByUsername(userRegisterRequest.getUsername()).size() > 0) {
+        if (!this.userService.getUserByUsername(userRegisterRequest.getUsername()).isEmpty()) {
             errors.rejectValue("username", "validator.username.exists");
         }
     }

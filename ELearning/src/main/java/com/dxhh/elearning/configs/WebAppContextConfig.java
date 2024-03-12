@@ -14,6 +14,8 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -33,6 +35,11 @@ import java.util.List;
         "com.dxhh.elearning"
 })
 public class WebAppContextConfig implements WebMvcConfigurer {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     @Bean(name = "messageSource")
     public MessageSource getMessageResource() {
         ResourceBundleMessageSource messageResource = new ResourceBundleMessageSource();
@@ -86,8 +93,7 @@ public class WebAppContextConfig implements WebMvcConfigurer {
 
     @Bean
     public DateFormat dateFormatter() {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return formatter;
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
 
     @Bean
