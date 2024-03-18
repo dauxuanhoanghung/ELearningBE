@@ -26,6 +26,9 @@ public class UserNote implements Serializable {
     @Column(name = "created_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
+    @Column(name = "updated_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime updatedDate;
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Lecture lecture;

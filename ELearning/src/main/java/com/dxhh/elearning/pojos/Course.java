@@ -27,13 +27,28 @@ public class Course implements Serializable {
     private Integer id;
     @Basic(optional = false)
     private String name;
-    @Lob
+    @Basic
+    @Column(name = "description", length = -1)
     private String description;
+    @Basic
+    @Column(name = "subtitle", length = 255)
     private String subtitle;
+    @Basic
+    @Column(name = "background")
     private String background;
+    @Basic
+    @Column(name = "preview_video_url", length = -1)
+    private String previewVideoUrl;
+    @Basic
+    @Column(name = "slug")
     private String slug;
     @Min(value=0)
+    @Basic
+    @Column(name = "price", precision = 2)
     private Double price;
+    @Basic
+    @Column(name = "deleted", nullable = false)
+    private boolean isDeleted;
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User creator;
@@ -43,9 +58,10 @@ public class Course implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-    @JsonIgnore
-    @OneToMany(mappedBy = "course")
-    private Set<Voucher> vouchers;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "updated_date", nullable = true)
+    private LocalDateTime updatedDate;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<Section> sections;
@@ -61,6 +77,9 @@ public class Course implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private Set<Transaction> transactions;
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    private Set<Voucher> vouchers;
 
     public Course() {
     }

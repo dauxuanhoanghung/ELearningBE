@@ -39,9 +39,19 @@ public class User implements Serializable, UserDetails {
     private String lastName;
     @Column(name = "avatar")
     private String avatar;
+    @Basic
+    @Column(name = "slug")
+    private String slug;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+    @Basic
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
     private Set<Course> courses;
@@ -71,6 +81,9 @@ public class User implements Serializable, UserDetails {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Transaction> transactionSet;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "payer")
+    private Set<Transaction> paymentTransactions;
 
     public User() {
     }

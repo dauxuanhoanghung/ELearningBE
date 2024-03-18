@@ -25,5 +25,7 @@ public class CourseDetailsResponse implements Serializable {
     private LocalDateTime createdDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime publishDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime updatedDate;
     private UserResponse user;
 }

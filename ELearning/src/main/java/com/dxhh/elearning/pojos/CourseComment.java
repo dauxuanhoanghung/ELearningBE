@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "course_comment", catalog = "elearning", schema = "")
+@Table(name = "course_comment", catalog = "elearning", schema = "elearning")
 @Data
 public class CourseComment implements Serializable {
 
@@ -24,6 +24,9 @@ public class CourseComment implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Course course;

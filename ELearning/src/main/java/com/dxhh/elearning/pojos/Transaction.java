@@ -1,6 +1,7 @@
 package com.dxhh.elearning.pojos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -18,14 +19,26 @@ public class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic
+    @Min(value=0)
+    @Column(name = "original_amount", nullable = false, precision = 2)
+    private BigDecimal originalAmount;
+    @Basic
+    @Min(value=0)
+    @Column(name = "amount", precision = 2)
     private BigDecimal amount;
+    @Basic
+    @Column(name = "code")
+    private String code;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Course course;
+    @ManyToOne
+    @JoinColumn(name = "payer_id", referencedColumnName = "id")
+    private User payer;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
@@ -47,7 +60,6 @@ public class Transaction implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Transaction)) {
             return false;
         }

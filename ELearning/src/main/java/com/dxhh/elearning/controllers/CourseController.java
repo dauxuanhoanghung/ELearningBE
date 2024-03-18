@@ -195,7 +195,7 @@ public class CourseController {
             lectureService.getBySectionId(s.getId()).forEach(l -> {
                 lectures.add(lectureMapper.toResponse(l));
             });
-            result.add(new SectionResponse(s.getId(), s.getSectionName(), s.getOrderIndex(), lectures));
+            result.add(new SectionResponse(s.getId(), s.getName(), s.getOrderIndex(), lectures));
         });
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
         return ResponseEntity.status(HttpStatus.OK).body(res);

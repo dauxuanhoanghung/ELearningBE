@@ -22,12 +22,20 @@ public class Blog implements Serializable {
     @Basic(optional = false)
     @Column(name = "title")
     private String title;
-    @Lob
     @Column(name = "content")
     private String content;
+    @Basic
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "publish_date")
+    private LocalDateTime publishDate;
+    @Basic
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @Basic
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User author;

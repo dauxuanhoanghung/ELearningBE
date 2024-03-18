@@ -29,7 +29,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Section createSection(NewSectionRequest newSectionRequest) {
         Section section = new Section();
-        section.setSectionName(newSectionRequest.getSectionName());
+        section.setName(newSectionRequest.getSectionName());
         section.setOrderIndex(newSectionRequest.getOrderIndex());
         section.setCourse(newSectionRequest.getCourse());
         // You may want to save lectures as well if you have a separate entity for them.
@@ -43,7 +43,7 @@ public class SectionServiceImpl implements SectionService {
         Section section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new EntityNotFoundException("Section not found"));
 
-        section.setSectionName(updatedSection.getSectionName());
+        section.setName(updatedSection.getSectionName());
         section.setOrderIndex(updatedSection.getOrderIndex());
         section.setCourse(updatedSection.getCourse());
         // Update lectures in a similar manner.
