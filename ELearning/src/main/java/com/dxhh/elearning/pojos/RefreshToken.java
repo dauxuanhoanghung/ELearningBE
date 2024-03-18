@@ -1,13 +1,14 @@
 package com.dxhh.elearning.pojos;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "refresh_token", schema = "elearning", catalog = "elearning")
+@Data
 public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

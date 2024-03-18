@@ -73,6 +73,13 @@ public class CourseController {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
+    @GetMapping("/get-total-course-page")
+    public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
+        Long totalPage = (long) Math.ceil(courseService.countCourses() * 1.0 / env.getProperty("SIZE", Integer.class, 8));
+        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", totalPage);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<ModelResponse> getById(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
@@ -201,10 +208,4 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @GetMapping("/get-total-course-page")
-    public ResponseEntity<ModelResponse> getTotalCoursePage() {
-        Long totalPage = (long) Math.ceil(courseService.countCourses() * 1.0 / env.getProperty("SIZE", Integer.class, 8));
-        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", totalPage);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
-    }
 }

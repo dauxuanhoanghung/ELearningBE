@@ -25,7 +25,9 @@ public class Progress {
     @ManyToOne
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     private Lecture lecture;
-
+    {
+        done = false;
+    }
     public Progress() {}
     public Progress(int id) {
         this.id = id;
