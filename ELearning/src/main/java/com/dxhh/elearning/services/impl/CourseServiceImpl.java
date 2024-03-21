@@ -11,15 +11,20 @@ import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.specifications.GSpecification;
+import com.dxhh.elearning.specifications.SearchCriteria;
+import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,17 +69,52 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findCourses(Map<String, String> params) {
-        int page = 0;
-        if (params.containsKey("page"))
-            page = Integer.valueOf(params.get("page"));
+        int page = Integer.valueOf(params.get("page"));
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
         Pageable pageable = PageRequest.of(pageNumber, size);
-        List course;
-        if (params.containsKey("business"))
-            course = this.courseRepository.findByCreator_Id(getCurrentUser().getId(), pageable).getContent();
-        else
-            course = this.courseRepository.findAll(pageable).getContent();
+        List<Course> course;
+
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+
+        if (params.containsKey("name")) {
+            criteriaList.add(new SearchCriteria("name", SearchOperation.LIKE, params.get("name")));
+            criteriaList.add(new SearchCriteria("description", SearchOperation.LIKE, params.get("name")));
+        }
+
+        if (params.containsKey("min")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("min"))));
+        }
+
+        if (params.containsKey("max")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
+        }
+
+        if (params.containsKey("creator_id")) {
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
+        }
+
+        if (params.containsKey("business")) {
+            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId());
+        }
+
+        criteriaList.add(SearchCriteria.builder()
+                .key("publishDate")
+                .operation(SearchOperation.LESS_THAN_OR_EQUAL)
+                .value(LocalDateTime.now())
+                .build());
+
+        Specification<Course> specification = null;
+        for (SearchCriteria searchCriteria : criteriaList) {
+            if (specification == null) {
+                specification = new GSpecification<>(searchCriteria);
+            } else {
+                specification = specification.and(new GSpecification<>(searchCriteria));
+            }
+        }
+
+
+        course = this.courseRepository.findAll(specification, pageable).getContent();
         return course;
     }
 
