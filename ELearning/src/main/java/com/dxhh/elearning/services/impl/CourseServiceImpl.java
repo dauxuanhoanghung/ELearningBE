@@ -95,7 +95,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         if (params.containsKey("business")) {
-            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId());
+            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
         }
 
         criteriaList.add(SearchCriteria.builder()
