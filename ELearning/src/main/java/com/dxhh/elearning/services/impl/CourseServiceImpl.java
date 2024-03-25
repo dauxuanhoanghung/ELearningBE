@@ -69,7 +69,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findCourses(Map<String, String> params) {
-        int page = Integer.valueOf(params.get("page"));
+        int page = Integer.parseInt(params.get("page"));
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
         Pageable pageable = PageRequest.of(pageNumber, size);

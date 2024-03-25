@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 public class PaginationAspect {
 
-    @Pointcut("execution(* *(.., java.util.Map<String,String>, ..))")
+    @Pointcut("execution(* com.dxhh.elearning..*.*(.., java.util.Map<String,String>, ..))")
     public void paginationPointcut() {}
 
     @Before("paginationPointcut()")

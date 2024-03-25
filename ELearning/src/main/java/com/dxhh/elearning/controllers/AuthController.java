@@ -106,4 +106,6 @@ public class AuthController {
         response.setData(mapper.toResponse(user));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+
 }
