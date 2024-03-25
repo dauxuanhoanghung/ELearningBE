@@ -5,12 +5,15 @@ import com.dxhh.elearning.pojos.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService extends UserDetailsService {
-    public List<User> loadUserByEmail(String email);
-    public List<User> getUserByUsername(String username);
-    public User save(UserRegisterRequest userRegister);
-    public boolean existsByUsername(String username);
-    public User findOneByUsername(String username);
-    public User update(User user, UserRegisterRequest request);
+    List<User> loadUserByEmail(String email);
+    List<User> getUserByUsername(String username);
+    User save(UserRegisterRequest userRegister);
+    boolean existsByUsername(String username);
+    User findOneByUsername(String username);
+    User update(User user, UserRegisterRequest request);
+    boolean deleteById(Integer id);
+    Integer count(Map<String, String> params);
 }

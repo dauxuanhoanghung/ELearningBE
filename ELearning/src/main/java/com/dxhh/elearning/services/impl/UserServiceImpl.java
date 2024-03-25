@@ -9,17 +9,21 @@ import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.repositories.UserRoleRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.specifications.GSpecification;
+import com.dxhh.elearning.specifications.SearchCriteria;
+import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service("userService")
 @Transactional
@@ -30,24 +34,35 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CloudinaryService cloudinaryService;
     private final Utils utils;
+    private final DateTimeFormatter formatter;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, CloudinaryService cloudinaryService, Utils utils) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserRoleRepository userRoleRepository,
+                           UserMapper userMapper,
+                           PasswordEncoder passwordEncoder,
+                           CloudinaryService cloudinaryService,
+                           Utils utils,
+                           DateTimeFormatter formatter) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.cloudinaryService = cloudinaryService;
         this.utils = utils;
+        this.formatter = formatter;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<User> users = this.getUserByUsername(username);
-        if (users.isEmpty())
+        try {
+            List<User> users = this.getUserByUsername(username);
+            if (users.isEmpty())
+                return null;
+            return users.get(0);
+        } catch (Exception e) {
             return null;
-        User user = users.get(0);
-        return user;
+        }
     }
 
     public List<User> loadUserByEmail(String email) {
@@ -64,8 +79,7 @@ public class UserServiceImpl implements UserService {
         if (utils.isNotEmptyFile(userRegister.getAvatarFile())) {
             String url = cloudinaryService.uploadImage(userRegister.getAvatarFile());
             user.setAvatar(url);
-        }
-        else {
+        } else {
             user.setAvatar(null);
         }
         Set<UserRole> userRoles = new HashSet<>();
@@ -82,7 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findOneByUsername(String username) {
-        List<User> users =  userRepository.findByUsername(username);
+        List<User> users = userRepository.findByUsername(username);
         if (users.isEmpty())
             return null;
         else
@@ -98,5 +112,36 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         return userRepository.save(user);
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    @Cacheable(cacheNames = "user.count")
+    public Integer count(Map<String, String> params) {
+        try {
+            List<SearchCriteria> criteriaList = new ArrayList<>();
+            if (params.containsKey("startDate")) {
+                LocalDateTime startDate = LocalDateTime.parse(params.get("startDate") + " 00:00:00", formatter);
+                criteriaList.add(new SearchCriteria("createdDate", SearchOperation.GREATER_THAN_OR_EQUAL, startDate));
+            }
+
+            if (params.containsKey("endDate")) {
+                LocalDateTime endDate = LocalDateTime.parse(params.get("endDate") + " 00:00:00", formatter);
+                criteriaList.add(new SearchCriteria("createdDate", SearchOperation.LESS_THAN_OR_EQUAL, endDate));
+            }
+
+            return Math.toIntExact(userRepository.count(GSpecification.toSpecification(criteriaList)));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

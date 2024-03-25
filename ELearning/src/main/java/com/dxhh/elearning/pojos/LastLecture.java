@@ -1,5 +1,9 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +18,8 @@ public class LastLecture {
     @Column(name = "id", nullable = false)
     private Integer id;
     @Basic
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
     @ManyToOne

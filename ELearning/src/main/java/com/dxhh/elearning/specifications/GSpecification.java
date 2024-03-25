@@ -3,6 +3,8 @@ package com.dxhh.elearning.specifications;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
+
 public class GSpecification<T> implements Specification<T> {
 
     private final SearchCriteria criteria;
@@ -37,6 +39,13 @@ public class GSpecification<T> implements Specification<T> {
                 default:
                 return null;
         }
+    }
+
+    public static <T> Specification<T> toSpecification(List<SearchCriteria> criteriaList) {
+        return criteriaList.stream()
+                .map(criteria -> (Specification<T>) new GSpecification<>(criteria))
+                .reduce(Specification::and)
+                .orElse(null);
     }
 
     private <Y> Path<Y> getNestedPath(Root<T> root, String field) {

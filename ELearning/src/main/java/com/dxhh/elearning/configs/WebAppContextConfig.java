@@ -4,6 +4,12 @@ import com.dxhh.elearning.formatters.BlogFormatter;
 import com.dxhh.elearning.formatters.CourseFormatter;
 import com.dxhh.elearning.formatters.LectureFormatter;
 import com.dxhh.elearning.formatters.SectionFormatter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -99,5 +105,25 @@ public class WebAppContextConfig implements WebMvcConfigurer {
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
         return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = JsonMapper.builder() // or different mapper for other format
+                .addModule(new JavaTimeModule())
+                // and possibly other configuration, modules, then:
+                .build();
+        return objectMapper;
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        Jackson2ObjectMapperBuilder builder =
+                new Jackson2ObjectMapperBuilder()
+                        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .serializers(
+                                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")))
+                        .serializationInclusion(JsonInclude.Include.NON_NULL);
+        return new MappingJackson2HttpMessageConverter(builder.build());
     }
 }

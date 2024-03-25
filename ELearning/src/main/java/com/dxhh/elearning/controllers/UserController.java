@@ -11,6 +11,7 @@ import com.dxhh.elearning.validators.ExistingUsernameValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -86,6 +90,17 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ModelResponse> deleteById(@PathVariable("id") Integer id) {
+        ModelResponse response;
+        if (userService.deleteById(id)) {
+            response = new ModelResponse(204, "Deleted user successful", null);
+        } else {
+            response = new ModelResponse(404, "User not found", null);
+        }
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<String> processForgotPassword(HttpServletRequest request, @RequestParam final String email) {
         String token = RandomString.make(45);
@@ -109,5 +124,11 @@ public class UserController {
                 + "<p>Ignore this email if you do remember your password, or you have not make a request</p>";
 
         emailService.sendHtmlEmail(email, subject, content);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> countUsers(@RequestParam Map<String, String> params) {
+        Integer count = userService.count(params);
+        return ResponseEntity.ok(new ModelResponse(200, "Count user", count));
     }
 }
