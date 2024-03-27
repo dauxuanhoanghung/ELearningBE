@@ -57,10 +57,10 @@ public class CourseController {
     private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         List<CourseInfoResponse> courses = new ArrayList<>();
-        courseService.findCourses(params).stream().forEach(c -> {
+        courseService.findCourses(params).forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
             info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
-            info.setUser(userMapper.toResponse(c.getCreator()));
+            info.setUser(userMapper.toResponse(c.getCreator(), false));
             courses.add(info);
         });
         res.setData(courses);
@@ -75,8 +75,13 @@ public class CourseController {
 
     @GetMapping("/get-total-course-page")
     public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
-        Long totalPage = (long) Math.ceil(courseService.countCourses() * 1.0 / env.getProperty("SIZE", Integer.class, 8));
-        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", totalPage);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+
+        Long totalPage = (long) Math.ceil(courseService.count(params) * 1.0 / size);
+        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Total course page", totalPage);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
@@ -163,7 +168,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-criteria")
-    public ResponseEntity getCriteriaByCourseId(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCriteriaByCourseId(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
         res.setData(courseCriteriaService.getByCourseId(id));
         res.setStatus(200);
@@ -171,14 +176,14 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-count-lectures")
-    public ResponseEntity getCountLectures(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCountLectures(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countLecturesByCourseId(id));
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{id}/get-count-registration")
-    public ResponseEntity getCountRegistrations(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCountRegistrations(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countRegistrationByCourseId(id));
         return ResponseEntity.ok(res);

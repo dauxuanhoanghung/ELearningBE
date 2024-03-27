@@ -45,8 +45,6 @@ public class YoutubeServiceImpl implements YoutubeService {
             Video response = request.execute();
             file.delete();
             return String.format("https://www.youtube.com/watch?v=%s", response.getId());
-        } catch (FileNotFoundException e) {
-            return null;
         } catch (IOException e) {
             return null;
         }

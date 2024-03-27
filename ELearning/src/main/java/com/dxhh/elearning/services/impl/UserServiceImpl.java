@@ -15,6 +15,10 @@ import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("userService")
 @Transactional
@@ -35,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final CloudinaryService cloudinaryService;
     private final Utils utils;
     private final DateTimeFormatter formatter;
+    private final Environment env;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -43,7 +49,8 @@ public class UserServiceImpl implements UserService {
                            PasswordEncoder passwordEncoder,
                            CloudinaryService cloudinaryService,
                            Utils utils,
-                           DateTimeFormatter formatter) {
+                           DateTimeFormatter formatter,
+                           Environment env) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.userMapper = userMapper;
@@ -51,6 +58,7 @@ public class UserServiceImpl implements UserService {
         this.cloudinaryService = cloudinaryService;
         this.utils = utils;
         this.formatter = formatter;
+        this.env = env;
     }
 
     @Override
@@ -58,10 +66,21 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> users = this.getUserByUsername(username);
             if (users.isEmpty())
-                return null;
-            return users.get(0);
+                throw new UsernameNotFoundException(username);
+            User user = users.get(0);
+
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .disabled(false)
+                    .accountExpired(false)
+                    .credentialsExpired(false)
+                    .accountLocked(false)
+                    .authorities(userRoleRepository.findByUser(user).stream()
+                            .map(userRole -> userRole.getRole().getName()).toArray(String[]::new))
+                    .build();
         } catch (Exception e) {
-            return null;
+            throw new UsernameNotFoundException("Error occurred while retrieving user: " + e.getMessage());
         }
     }
 
@@ -143,5 +162,28 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    @Override
+    @Cacheable(cacheNames = "user.list")
+    public List<User> findAll(Map<String, String> params) {
+        int page = Integer.parseInt(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+
+        if (params.containsKey("username")) {
+            criteriaList.add(new SearchCriteria("username", SearchOperation.EQUAL, params.get("username")));
+        }
+
+        Specification<User> specification = GSpecification.toSpecification(criteriaList);
+
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        return this.userRepository.findAll(specification, pageable).getContent();
     }
 }

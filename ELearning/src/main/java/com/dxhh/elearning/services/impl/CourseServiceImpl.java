@@ -15,6 +15,7 @@ import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,14 @@ public class CourseServiceImpl implements CourseService {
     private final Environment env;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, CloudinaryService cloudinaryService, TransactionRepository courseRegistrationRepository, LectureRepository lectureRepository, CourseMapper courseMapper, Utils utils, Environment env) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             UserRepository userRepository,
+                             CloudinaryService cloudinaryService,
+                             TransactionRepository courseRegistrationRepository,
+                             LectureRepository lectureRepository,
+                             CourseMapper courseMapper,
+                             Utils utils,
+                             Environment env) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
@@ -68,14 +76,19 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(cacheNames = "course.list")
     public List<Course> findCourses(Map<String, String> params) {
         int page = Integer.parseInt(params.get("page"));
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
-        Pageable pageable = PageRequest.of(pageNumber, size);
+
         List<Course> course;
 
         List<SearchCriteria> criteriaList = new ArrayList<>();
+
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
 
         if (params.containsKey("name")) {
             criteriaList.add(new SearchCriteria("name", SearchOperation.LIKE, params.get("name")));
@@ -113,7 +126,7 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
-
+        Pageable pageable = PageRequest.of(pageNumber, size);
         course = this.courseRepository.findAll(specification, pageable).getContent();
         return course;
     }
@@ -171,8 +184,39 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Long countCourses() {
-        return courseRepository.count();
+    @Cacheable(cacheNames = "course.count")
+    public Long count(Map<String, String> params) {
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+
+        if (params.containsKey("name")) {
+            criteriaList.add(new SearchCriteria("name", SearchOperation.LIKE, params.get("name")));
+            criteriaList.add(new SearchCriteria("description", SearchOperation.LIKE, params.get("name")));
+        }
+
+        if (params.containsKey("min")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("min"))));
+        }
+
+        if (params.containsKey("max")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
+        }
+
+        if (params.containsKey("creator_id")) {
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
+        }
+
+        if (params.containsKey("business")) {
+            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+        }
+
+        criteriaList.add(SearchCriteria.builder()
+                .key("publishDate")
+                .operation(SearchOperation.LESS_THAN_OR_EQUAL)
+                .value(LocalDateTime.now())
+                .build());
+
+        Specification<Course> specification = GSpecification.toSpecification(criteriaList);
+        return courseRepository.count(specification);
     }
 }
 

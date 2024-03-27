@@ -16,6 +16,5 @@ public class CourseFormatter implements Formatter<Course> {
     @Override
     public String print(Course course, Locale locale) {
         return String.valueOf(course.getId());
-
     }
 }
