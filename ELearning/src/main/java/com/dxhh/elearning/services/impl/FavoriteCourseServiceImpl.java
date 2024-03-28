@@ -7,6 +7,7 @@ import com.dxhh.elearning.repositories.FavoriteCourseRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.FavoriteCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,6 +66,7 @@ public class FavoriteCourseServiceImpl implements FavoriteCourseService {
     }
 
     @Override
+    @Cacheable(cacheNames = "wishlist.user")
     public List<FavoriteCourse> getByUser() {
         User user = getCurrentUser();
         return favoriteCourseRepository.findByUser(user);

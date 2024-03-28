@@ -15,6 +15,7 @@ import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
@@ -77,54 +78,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Cacheable(cacheNames = "course.list")
-    public List<Course> findCourses(Map<String, String> params) {
+    public List<Course> findAll(Map<String, String> params) {
         int page = Integer.parseInt(params.get("page"));
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
-
-        List<Course> course;
-
-        List<SearchCriteria> criteriaList = new ArrayList<>();
-
         if (params.containsKey("pageSize")) {
             size = Integer.parseInt(params.get("pageSize"));
         }
-
-        if (params.containsKey("name")) {
-            criteriaList.add(new SearchCriteria("name", SearchOperation.LIKE, params.get("name")));
-            criteriaList.add(new SearchCriteria("description", SearchOperation.LIKE, params.get("name")));
-        }
-
-        if (params.containsKey("min")) {
-            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("min"))));
-        }
-
-        if (params.containsKey("max")) {
-            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
-        }
-
-        if (params.containsKey("creator_id")) {
-            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
-        }
-
-        if (params.containsKey("business")) {
-            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
-        }
-
-        criteriaList.add(SearchCriteria.builder()
-                .key("publishDate")
-                .operation(SearchOperation.LESS_THAN_OR_EQUAL)
-                .value(LocalDateTime.now())
-                .build());
-
-        Specification<Course> specification = null;
-        for (SearchCriteria searchCriteria : criteriaList) {
-            if (specification == null) {
-                specification = new GSpecification<>(searchCriteria);
-            } else {
-                specification = specification.and(new GSpecification<>(searchCriteria));
-            }
-        }
+        List<Course> course;
+        Specification<Course> specification = toSpecification(params);
 
         Pageable pageable = PageRequest.of(pageNumber, size);
         course = this.courseRepository.findAll(specification, pageable).getContent();
@@ -132,6 +94,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(cacheNames = "course.id", key = "id")
     public Course findById(Integer id) {
         Optional<Course> courseOptional = courseRepository.findById(id);
         return courseOptional.orElse(null);
@@ -186,11 +149,25 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Cacheable(cacheNames = "course.count")
     public Long count(Map<String, String> params) {
+        Specification<Course> specification = toSpecification(params);
+        return courseRepository.count(specification);
+    }
+
+    private Specification<Course> toSpecification(Map<String, String> params) {
         List<SearchCriteria> criteriaList = new ArrayList<>();
 
+
+
         if (params.containsKey("name")) {
-            criteriaList.add(new SearchCriteria("name", SearchOperation.LIKE, params.get("name")));
-            criteriaList.add(new SearchCriteria("description", SearchOperation.LIKE, params.get("name")));
+            String nameValue = params.get("name");
+            SearchCriteria nameCriteria = new SearchCriteria("name", SearchOperation.LIKE, nameValue);
+            SearchCriteria descriptionCriteria = new SearchCriteria("description", SearchOperation.LIKE, nameValue);
+
+            List<GSpecification<Course>> orSpecifications = Arrays.asList(
+                    new GSpecification<>(nameCriteria),
+                    new GSpecification<>(descriptionCriteria)
+            );
+            criteriaList.add(new SearchCriteria("", SearchOperation.OR, orSpecifications));
         }
 
         if (params.containsKey("min")) {
@@ -215,8 +192,7 @@ public class CourseServiceImpl implements CourseService {
                 .value(LocalDateTime.now())
                 .build());
 
-        Specification<Course> specification = GSpecification.toSpecification(criteriaList);
-        return courseRepository.count(specification);
+        return GSpecification.toSpecification(criteriaList);
     }
 }
 

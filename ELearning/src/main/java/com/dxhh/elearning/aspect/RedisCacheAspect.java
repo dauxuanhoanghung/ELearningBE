@@ -3,7 +3,6 @@ package com.dxhh.elearning.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -16,14 +15,16 @@ import java.util.TreeMap;
 @Aspect
 @Component
 public class RedisCacheAspect {
+    private final CacheManager cacheManager;
 
-    @Autowired
-    private CacheManager cacheManager;
+    public RedisCacheAspect(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     @Around("@annotation(cacheable)")
     public Object cache(ProceedingJoinPoint joinPoint, Cacheable cacheable) throws Throwable {
         // Generating cache key
-        String cacheKey = generateCacheKey(joinPoint, cacheable.key(), joinPoint.getArgs());
+        String cacheKey = generateCacheKey(joinPoint, cacheable, joinPoint.getArgs());
 
         // Retrieve cache
         Object value = Objects.requireNonNull(cacheManager.getCache(Arrays.toString(cacheable.value()))).get(cacheKey, Object.class);
@@ -40,12 +41,20 @@ public class RedisCacheAspect {
         return result;
     }
 
-    private String generateCacheKey(ProceedingJoinPoint joinPoint, String keyExpression, Object[] args) {
+    private String generateCacheKey(ProceedingJoinPoint joinPoint, Cacheable cacheable, Object[] args) {
         StringBuilder sb = new StringBuilder();
-        sb.append(joinPoint.getSignature().getDeclaringTypeName()).append("::");
-        sb.append(joinPoint.getSignature().getName()).append("::");
 
+        String cacheNames = Arrays.toString(cacheable.cacheNames());
+        if (cacheNames.isEmpty()) {
+            sb.append(joinPoint.getSignature().getDeclaringTypeName()).append("::");
+            sb.append(joinPoint.getSignature().getName()).append("::");
+        }
+        else {
+            sb.append(cacheNames).append("::");
+        }
+        
         // If key expression is provided, use it
+        String keyExpression = cacheable.key();
         if (!keyExpression.isEmpty()) {
             sb.append(keyExpression);
         } else {

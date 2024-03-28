@@ -16,6 +16,7 @@ import java.util.List;
 public class UserMapper {
     private final ModelMapper mapper;
     private final UserRoleRepository userRoleRepository;
+
     @Autowired
     public UserMapper(ModelMapper modelMapper, UserRoleRepository userRoleRepository) {
         this.mapper = modelMapper;
@@ -25,6 +26,7 @@ public class UserMapper {
     public User toModel(UserRegisterRequest userRegister) {
         return mapper.map(userRegister, User.class);
     }
+
     public UserResponse toResponse(User user, boolean showRoles) {
         UserResponse res = UserResponse.builder()
                 .id(Long.valueOf(user.getId()))
@@ -35,6 +37,7 @@ public class UserMapper {
                 .lastName(user.getLastName())
                 .slug(user.getSlug())
                 .build();
+
         if (showRoles) {
             List<String> l = new ArrayList<>();
             for (UserRole ur : userRoleRepository.findByUser(user)) {

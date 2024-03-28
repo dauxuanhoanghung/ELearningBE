@@ -43,8 +43,10 @@ public class YoutubeServiceImpl implements YoutubeService {
             YouTube.Videos.Insert request = youtubeService.videos()
                     .insert("snippet,status", video, mediaContent);
             Video response = request.execute();
-            file.delete();
-            return String.format("https://www.youtube.com/watch?v=%s", response.getId());
+            if (file.delete())
+                return String.format("https://www.youtube.com/watch?v=%s", response.getId());
+            else
+                return null;
         } catch (IOException e) {
             return null;
         }

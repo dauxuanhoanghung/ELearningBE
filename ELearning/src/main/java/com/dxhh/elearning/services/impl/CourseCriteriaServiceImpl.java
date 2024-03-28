@@ -6,6 +6,8 @@ import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,13 @@ public class CourseCriteriaServiceImpl implements CourseCriteriaService {
     }
 
     @Override
+    @Cacheable(cacheNames = "criteria.list", key = "courseId")
     public List<CourseCriteria> getByCourseId(Integer courseId) {
-        return courseCriteriaRepository.findAll(new GSpecification<>(
+        Specification<CourseCriteria> specification = new GSpecification<>(
                 new SearchCriteria("course.id", SearchOperation.EQUAL, courseId)
-        ));
+        );
+
+        return courseCriteriaRepository.findAll(specification);
     }
 
     @Override

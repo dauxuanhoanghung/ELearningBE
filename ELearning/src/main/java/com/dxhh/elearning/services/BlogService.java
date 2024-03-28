@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BlogService {
-    List<Blog> getAllBlogs();
+    List<Blog> findAll();
     Blog create(NewBlogRequest blog);
     Optional<Blog> getById(Integer id);
     Blog update(Integer id, Blog updatedBlog);

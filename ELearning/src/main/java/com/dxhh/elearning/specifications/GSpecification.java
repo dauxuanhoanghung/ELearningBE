@@ -31,15 +31,25 @@ public class GSpecification<T> implements Specification<T> {
                 return builder.greaterThan(getNestedPath(root, criteria.getKey()), (Comparable) criteria.getValue());
             case GREATER_THAN_OR_EQUAL:
                 return builder.greaterThanOrEqualTo(getNestedPath(root, criteria.getKey()), (Comparable) criteria.getValue());
-
             case AND:
                 return builder.and((Predicate[]) criteria.getValue());
             case OR:
-                return builder.or((Predicate[]) criteria.getValue());
-                default:
+                if (criteria.getValue() instanceof Predicate[]) {
+                    return builder.or((Predicate[]) criteria.getValue());
+                } else if (criteria.getValue() instanceof List) {
+                    List<GSpecification<T>> specifications = (List<GSpecification<T>>) criteria.getValue();
+                    return specifications.stream()
+                            .map(spec -> spec.toPredicate(root, query, builder))
+                            .reduce(builder::or)
+                            .orElse(null);
+                } else {
+                    throw new IllegalArgumentException("Invalid value for OR operation: " + criteria.getValue());
+                }
+            default:
                 return null;
         }
     }
+
 
     public static <T> Specification<T> toSpecification(List<SearchCriteria> criteriaList) {
         return criteriaList.stream()

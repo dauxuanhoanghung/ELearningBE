@@ -43,6 +43,17 @@ public class UserController {
         this.usernameValidator = usernameValidator;
     }
 
+    @GetMapping
+    public ResponseEntity<ModelResponse> findAll(@RequestParam Map<String, String> params) {
+        return null;
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        Integer count = userService.count(params);
+        return ResponseEntity.ok(new ModelResponse(200, "Count user", count));
+    }
+
     @GetMapping("/current-user")
     public ResponseEntity<ModelResponse> getMyAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -109,11 +120,12 @@ public class UserController {
             String resetPwUrl = "/reset-password?token=" + token;
 
             sendMail(email, resetPwUrl);
-            return ResponseEntity.ok().body(resetPwUrl);
+            return ResponseEntity.ok(resetPwUrl);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Resource not found with email " + email);
         }
     }
+
 
     public void sendMail(final String email, final String resetPasswordLink) {
         String subject = "Here is the link to reset your password";
@@ -126,9 +138,4 @@ public class UserController {
         emailService.sendHtmlEmail(email, subject, content);
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<ModelResponse> countUsers(@RequestParam Map<String, String> params) {
-        Integer count = userService.count(params);
-        return ResponseEntity.ok(new ModelResponse(200, "Count user", count));
-    }
 }

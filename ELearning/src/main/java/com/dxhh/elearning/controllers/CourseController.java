@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
@@ -57,7 +58,7 @@ public class CourseController {
     private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         List<CourseInfoResponse> courses = new ArrayList<>();
-        courseService.findCourses(params).forEach(c -> {
+        courseService.findAll(params).forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
             info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
             info.setUser(userMapper.toResponse(c.getCreator(), false));
@@ -201,16 +202,19 @@ public class CourseController {
     @GetMapping("/{id}/get-section-lectures")
     public ResponseEntity<ModelResponse> getSectionAndItsLectureByCourseId(@PathVariable(name = "id") int id) {
         List<Section> sections = sectionService.getByCourse_Id(id);
-        List result = new ArrayList();
-        sections.forEach(s -> {
-            List<LectureResponse> lectures = new ArrayList<>();
-            lectureService.getBySectionId(s.getId()).forEach(l -> {
-                lectures.add(lectureMapper.toResponse(l));
-            });
-            result.add(new SectionResponse(s.getId(), s.getName(), s.getOrderIndex(), lectures));
-        });
+        List<SectionResponse> result = sections.stream().map(s -> {
+            List<LectureResponse> lectures = lectureService.getBySectionId(s.getId())
+                    .stream().map(lectureMapper::toResponse).toList();
+            return new SectionResponse(s.getId(), s.getName(), s.getOrderIndex(), lectures);
+        }).toList();
+
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        ModelResponse res = new ModelResponse(200, "Count course", courseService.count(params));
+        return ResponseEntity.ok(res);
+    }
 }

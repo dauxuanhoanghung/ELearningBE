@@ -14,7 +14,9 @@ public final class Routing {
     public static final String BLOG_COMMENTS = PREFIX + "/blog-comments";
     public static final String COURSE_CRITERIA = PREFIX + "/course-criteria";
     public static final String LECTURER_REGISTRATION = PREFIX + "/registration";
+    public static final String PROGRESS = PREFIX + "/progress";
     public static final String PAYMENT = PREFIX + "/payment";
+    public static final String PAYPAL = PREFIX + "/paypal";
     public static final String STATS = PREFIX + "/stats";
     public static final String USER_NOTES = PREFIX + "/user-notes";
     public static final String SELF = PREFIX + "/self";
