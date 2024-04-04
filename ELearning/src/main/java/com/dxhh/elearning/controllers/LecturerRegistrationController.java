@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(originPatterns = "*")
 @RequestMapping(value = "/api/lecturer-registration/", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class LecturerRegistrationController {
 

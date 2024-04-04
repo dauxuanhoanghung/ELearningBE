@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "blog_comment", catalog = "elearning", schema = "")
+@Table(name = "blog_comment", catalog = "elearning", schema = "elearning")
 @Data
 public class BlogComment implements Serializable {
 
@@ -24,11 +24,11 @@ public class BlogComment implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @ManyToOne(optional = false)
     @JoinColumn(name = "blog_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
     private Blog blog;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     public BlogComment() {

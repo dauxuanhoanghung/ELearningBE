@@ -6,16 +6,18 @@ import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.UserNote;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.UserNoteService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user-notes/")
-@CrossOrigin
+@RequestMapping(value = Routing.USER_NOTES, produces = {MediaType.APPLICATION_JSON_VALUE})
+@CrossOrigin(originPatterns = "*")
 public class UserNoteController {
     private final UserNoteService userNoteService;
     private final LectureService lectureService;

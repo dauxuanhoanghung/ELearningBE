@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface CourseService {
-    List<Course> findCourses(Map<String, String> params);
+    List<Course> findAll(Map<String, String> params);
     Course findById(Integer id);
     Course save(NewCourseRequest course);
     Course update(Course course);
     boolean deleteById(Integer id);
     Long countRegistrationByCourseId(Integer id);
     Long countLecturesByCourseId(Integer courseId);
-    Long countCourses();
+    Long count(Map<String, String> params);
 }

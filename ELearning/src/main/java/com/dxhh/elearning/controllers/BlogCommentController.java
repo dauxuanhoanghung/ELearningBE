@@ -4,6 +4,7 @@ import com.dxhh.elearning.dto.request.BlogCommentRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.pojos.BlogComment;
 import com.dxhh.elearning.services.BlogCommentService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/blog-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.BLOG_COMMENTS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogCommentController {
     private final BlogCommentService blogCommentService;
 
@@ -45,15 +46,15 @@ public class BlogCommentController {
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
+    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         res.setStatus(200);
         return ResponseEntity.ok(res);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<ModelResponse> updateCourseComment( @PathVariable Integer commentId,
-                                                              @RequestBody BlogComment updatedComment) {
+    public ResponseEntity<ModelResponse> updateCourseComment(@PathVariable Integer commentId,
+                                                             @RequestBody BlogComment updatedComment) {
         BlogComment updated = blogCommentService.update(updatedComment.getId(), null);
         ModelResponse response = new ModelResponse();
         if (updated != null) {

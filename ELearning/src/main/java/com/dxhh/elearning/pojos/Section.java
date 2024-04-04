@@ -19,8 +19,8 @@ public class Section implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Column(name = "section_name")
-    private String sectionName;
+    @Column(name = "name")
+    private String name;
     @Basic(optional = false)
     @Column(name = "order_index")
     private int orderIndex;
@@ -39,9 +39,9 @@ public class Section implements Serializable {
         this.id = id;
     }
 
-    public Section(Integer id, String sectionName, int orderIndex) {
+    public Section(Integer id, String name, int orderIndex) {
         this.id = id;
-        this.sectionName = sectionName;
+        this.name = name;
         this.orderIndex = orderIndex;
     }
 
@@ -54,7 +54,6 @@ public class Section implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Section)) {
             return false;
         }

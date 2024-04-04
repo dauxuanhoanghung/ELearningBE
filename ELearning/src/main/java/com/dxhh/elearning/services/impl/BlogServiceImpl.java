@@ -6,6 +6,7 @@ import com.dxhh.elearning.pojos.Blog;
 import com.dxhh.elearning.repositories.BlogRepository;
 import com.dxhh.elearning.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
+
     @Autowired
     public BlogServiceImpl(BlogRepository blogRepository, BlogMapper blogMapper) {
         this.blogRepository = blogRepository;
@@ -29,17 +31,18 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-
+    @Cacheable(cacheNames = "blog.id", key = "id")
     public Optional<Blog> getById(Integer id) {
         return blogRepository.findById(id);
     }
-    @Override
 
-    public List<Blog> getAllBlogs() {
+    @Override
+    @Cacheable(cacheNames = "blogs.list")
+    public List<Blog> findAll() {
         return blogRepository.findAll();
     }
-    @Override
 
+    @Override
     public Blog update(Integer id, Blog updatedBlog) {
         Optional<Blog> existingBlogOptional = blogRepository.findById(id);
         if (existingBlogOptional.isPresent()) {

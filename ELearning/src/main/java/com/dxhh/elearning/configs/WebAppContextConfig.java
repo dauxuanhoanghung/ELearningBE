@@ -4,6 +4,12 @@ import com.dxhh.elearning.formatters.BlogFormatter;
 import com.dxhh.elearning.formatters.CourseFormatter;
 import com.dxhh.elearning.formatters.LectureFormatter;
 import com.dxhh.elearning.formatters.SectionFormatter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +20,8 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -33,6 +41,11 @@ import java.util.List;
         "com.dxhh.elearning"
 })
 public class WebAppContextConfig implements WebMvcConfigurer {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     @Bean(name = "messageSource")
     public MessageSource getMessageResource() {
         ResourceBundleMessageSource messageResource = new ResourceBundleMessageSource();
@@ -86,12 +99,31 @@ public class WebAppContextConfig implements WebMvcConfigurer {
 
     @Bean
     public DateFormat dateFormatter() {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return formatter;
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
 
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
         return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = JsonMapper.builder() // or different mapper for other format
+                .addModule(new JavaTimeModule())
+                // and possibly other configuration, modules, then:
+                .build();
+        return objectMapper;
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        Jackson2ObjectMapperBuilder builder =
+                new Jackson2ObjectMapperBuilder()
+                        .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .serializers(
+                                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")))
+                        .serializationInclusion(JsonInclude.Include.NON_NULL);
+        return new MappingJackson2HttpMessageConverter(builder.build());
     }
 }

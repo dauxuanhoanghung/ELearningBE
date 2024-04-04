@@ -1,23 +1,24 @@
 package com.dxhh.elearning.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse implements Serializable {
+    @Serial
     private static final long serialVersionUID = -8091879091924046852L;
     private Long id;
     private String username;
-    private String password;
     private String avatar;
     private String email;
     private String firstName;
     private String lastName;
+    private String slug;
     private List<?> roles;
 }

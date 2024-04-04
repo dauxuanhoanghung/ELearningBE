@@ -6,7 +6,9 @@ import com.dxhh.elearning.pojos.UserNote;
 import com.dxhh.elearning.repositories.UserNoteRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.UserNoteService;
+import com.dxhh.elearning.specifications.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,7 +52,10 @@ public class UserNoteServiceImpl implements UserNoteService {
 
     @Override
     public List<UserNote> findByUser(User user) {
-        return userNoteRepository.findByUser(user);
+        Specification<UserNote> spec = new GSpecification<>(
+                new SearchCriteria("user", SearchOperation.EQUAL, user)
+        );
+        return userNoteRepository.findAll(spec);
     }
 
     @Override

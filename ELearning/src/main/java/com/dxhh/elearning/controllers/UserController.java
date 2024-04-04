@@ -6,10 +6,12 @@ import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.EmailService;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.utils.Routing;
 import com.dxhh.elearning.validators.ExistingUsernameValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +21,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@CrossOrigin
 @RestController
-@RequestMapping(value = "/api/users/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.USERS, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
     private final EmailService emailService;
     private final ExistingUsernameValidator usernameValidator;
+
     @Autowired
     public UserController(UserService userService, UserMapper mapper, EmailService emailService, ExistingUsernameValidator usernameValidator) {
         this.userService = userService;
@@ -33,6 +42,18 @@ public class UserController {
         this.emailService = emailService;
         this.usernameValidator = usernameValidator;
     }
+
+    @GetMapping
+    public ResponseEntity<ModelResponse> findAll(@RequestParam Map<String, String> params) {
+        return null;
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        Integer count = userService.count(params);
+        return ResponseEntity.ok(new ModelResponse(200, "Count user", count));
+    }
+
     @GetMapping("/current-user")
     public ResponseEntity<ModelResponse> getMyAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -66,7 +87,7 @@ public class UserController {
     }
 
     @PutMapping("/update-info")
-    public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest){
+    public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         ModelResponse response;
@@ -74,8 +95,18 @@ public class UserController {
         User updatedUser = userService.update(user, userRegisterRequest);
         if (user != null) {
             response = new ModelResponse(200, "Updated user successful", mapper.toResponse(updatedUser));
+        } else {
+            response = new ModelResponse(404, "User not found", null);
         }
-        else {
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ModelResponse> deleteById(@PathVariable("id") Integer id) {
+        ModelResponse response;
+        if (userService.deleteById(id)) {
+            response = new ModelResponse(204, "Deleted user successful", null);
+        } else {
             response = new ModelResponse(404, "User not found", null);
         }
         return ResponseEntity.ok(response);
@@ -89,11 +120,12 @@ public class UserController {
             String resetPwUrl = "/reset-password?token=" + token;
 
             sendMail(email, resetPwUrl);
-            return ResponseEntity.ok().body(resetPwUrl);
+            return ResponseEntity.ok(resetPwUrl);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Resource not found with email " + email);
         }
     }
+
 
     public void sendMail(final String email, final String resetPasswordLink) {
         String subject = "Here is the link to reset your password";
@@ -105,4 +137,5 @@ public class UserController {
 
         emailService.sendHtmlEmail(email, subject, content);
     }
+
 }

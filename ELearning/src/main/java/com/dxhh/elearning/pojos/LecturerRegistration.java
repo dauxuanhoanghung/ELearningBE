@@ -18,7 +18,6 @@ public class LecturerRegistration implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-
     @Column(name = "image_url")
     private String imageUrl;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")

@@ -1,40 +1,51 @@
 package com.dxhh.elearning.controllers;
 
-import com.dxhh.elearning.dto.request.IdTokenRequest;
 import com.dxhh.elearning.dto.request.UserCredentialRequest;
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.dto.response.ErrorResponse;
 import com.dxhh.elearning.dto.response.JwtResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.jwt.JwtTokenUtils;
+import com.dxhh.elearning.mappers.UserMapper;
+import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.dxhh.elearning.utils.Routing;
+import com.dxhh.elearning.validators.ExistingUsernameValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/auth/", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = Routing.AUTH, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
+    private final ExistingUsernameValidator usernameValidator;
+    private final UserMapper mapper;
+
     @Autowired
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenUtils jwtTokenUtils) {
+    public AuthController(UserService userService,
+                          AuthenticationManager authenticationManager,
+                          JwtTokenUtils jwtTokenUtils,
+                          ExistingUsernameValidator usernameValidator,
+                          UserMapper mapper) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtils = jwtTokenUtils;
+        this.usernameValidator = usernameValidator;
+        this.mapper = mapper;
     }
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody UserCredentialRequest request) {
         authenticationManager.authenticate(
@@ -46,8 +57,7 @@ public class AuthController {
             final Date expirationDate = this.jwtTokenUtils.getExpirationDateFromToken(token);
             String ex = expirationDate.toString();
             return ResponseEntity.ok(new ModelResponse(200, "Auth Successful", new JwtResponse(token, ex)));
-        }
-        else
+        } else
             return ResponseEntity.status(400).body(new ErrorResponse());
     }
 
@@ -80,4 +90,22 @@ public class AuthController {
         }
         return ResponseEntity.ok(res);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@ModelAttribute UserRegisterRequest userRequest, BindingResult rs) {
+        usernameValidator.validate(userRequest, rs);
+        ModelResponse response = new ModelResponse();
+        if (rs.hasErrors()) {
+            return ResponseEntity.badRequest().body("Validation errors");
+        }
+        User user = userService.save(userRequest);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User creation failed");
+        }
+        response.setStatus(201);
+        response.setData(mapper.toResponse(user));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+
 }

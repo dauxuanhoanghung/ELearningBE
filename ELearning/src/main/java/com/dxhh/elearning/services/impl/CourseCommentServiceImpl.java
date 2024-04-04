@@ -5,9 +5,11 @@ import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.CourseCommentRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CourseCommentService;
+import com.dxhh.elearning.specifications.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -69,7 +71,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
             courseCommentRepository.delete(existingComment);
             return true;
         }
-        return false; // Comment not found
+        return false;
     }
 
     @Override
@@ -77,6 +79,10 @@ public class CourseCommentServiceImpl implements CourseCommentService {
         int pageNumber = Math.max(page, 0);
 
         Pageable pageable = PageRequest.of(pageNumber, 10);
-        return courseCommentRepository.findByCourse_Id(courseId, pageable).getContent();
+        Specification<CourseComment> spec = new GSpecification<>(
+                new SearchCriteria("course.id", SearchOperation.EQUAL, courseId)
+        );
+
+        return courseCommentRepository.findAll(spec, pageable).getContent();
     }
 }

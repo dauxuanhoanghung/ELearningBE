@@ -23,7 +23,7 @@ public class ExistingMailValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterDTO = (UserRegisterRequest) target;
-        if (this.userService.loadUserByEmail(userRegisterDTO.getEmail()).size() > 0) {
+        if (!this.userService.loadUserByEmail(userRegisterDTO.getEmail()).isEmpty()) {
             errors.rejectValue("email", "validator.email.exists");
         }
     }

@@ -1,5 +1,6 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.utils.Routing;
 import com.dxhh.elearning.utils.VNPayConfig;
 import com.dxhh.elearning.dto.request.NewTransactionRequest;
 import com.dxhh.elearning.pojos.Course;
@@ -13,8 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping("/api/payment/")
+@RequestMapping(value = Routing.PAYMENT)
 public class PaymentController {
 
     private final CourseService courseService;
@@ -74,15 +76,11 @@ public class PaymentController {
                 //Build hash data
                 hashData.append(fieldName);
                 hashData.append('=');
-                try {
-                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    //Build query
-                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                    query.append('=');
-                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                //Build query
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
+                query.append('=');
+                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
                 if (itr.hasNext()) {
                     query.append('&');
                     hashData.append('&');

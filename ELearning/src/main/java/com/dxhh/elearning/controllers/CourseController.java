@@ -13,6 +13,8 @@ import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.SectionService;
+import com.dxhh.elearning.utils.Constant;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin
+import java.util.stream.Collectors;
+
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/courses/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.COURSES, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
     private final CourseService courseService;
     private final LectureService lectureService;
@@ -38,7 +42,9 @@ public class CourseController {
     private final Environment env;
 
     @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService, CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper, LectureMapper lectureMapper, Environment env) {
+    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService,
+                            CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper,
+                            LectureMapper lectureMapper, Environment env) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;
@@ -52,10 +58,10 @@ public class CourseController {
     private ModelResponse getModelListCoursesResponse(Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         List<CourseInfoResponse> courses = new ArrayList<>();
-        courseService.findCourses(params).stream().forEach(c -> {
+        courseService.findAll(params).forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
             info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
-            info.setUser(userMapper.toResponse(c.getCreator()));
+            info.setUser(userMapper.toResponse(c.getCreator(), false));
             courses.add(info);
         });
         res.setData(courses);
@@ -66,6 +72,18 @@ public class CourseController {
     @GetMapping
     public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
+    }
+
+    @GetMapping("/get-total-page")
+    public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+        Long totalCount = courseService.count(params);
+        Long totalPage = (long) Math.ceil((double) totalCount / size);
+        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Total course page", totalPage);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping(path = "/{id}")
@@ -151,7 +169,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-criteria")
-    public ResponseEntity getCriteriaByCourseId(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCriteriaByCourseId(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
         res.setData(courseCriteriaService.getByCourseId(id));
         res.setStatus(200);
@@ -159,14 +177,14 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-count-lectures")
-    public ResponseEntity getCountLectures(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCountLectures(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countLecturesByCourseId(id));
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{id}/get-count-registration")
-    public ResponseEntity getCountRegistrations(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getCountRegistrations(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countRegistrationByCourseId(id));
         return ResponseEntity.ok(res);
@@ -184,22 +202,19 @@ public class CourseController {
     @GetMapping("/{id}/get-section-lectures")
     public ResponseEntity<ModelResponse> getSectionAndItsLectureByCourseId(@PathVariable(name = "id") int id) {
         List<Section> sections = sectionService.getByCourse_Id(id);
-        List result = new ArrayList();
-        sections.forEach(s -> {
-            List<LectureResponse> lectures = new ArrayList<>();
-            lectureService.getBySectionId(s.getId()).forEach(l -> {
-                lectures.add(lectureMapper.toResponse(l));
-            });
-            result.add(new SectionResponse(s.getId(), s.getSectionName(), s.getOrderIndex(), lectures));
-        });
+        List<SectionResponse> result = sections.stream().map(s -> {
+            List<LectureResponse> lectures = lectureService.getBySectionId(s.getId())
+                    .stream().map(lectureMapper::toResponse).toList();
+            return new SectionResponse(s.getId(), s.getName(), s.getOrderIndex(), lectures);
+        }).toList();
+
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @GetMapping("/get-total-course-page")
-    public ResponseEntity<ModelResponse> getTotalCoursePage() {
-        Long totalPage = (long) Math.ceil(courseService.countCourses() * 1.0 / env.getProperty("SIZE", Integer.class, 8));
-        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", totalPage);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        ModelResponse res = new ModelResponse(200, "Count course", courseService.count(params));
+        return ResponseEntity.ok(res);
     }
 }

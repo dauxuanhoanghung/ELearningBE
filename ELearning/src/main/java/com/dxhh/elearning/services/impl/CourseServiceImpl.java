@@ -11,15 +11,22 @@ import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.specifications.GSpecification;
+import com.dxhh.elearning.specifications.SearchCriteria;
+import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +46,14 @@ public class CourseServiceImpl implements CourseService {
     private final Environment env;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, CloudinaryService cloudinaryService, TransactionRepository courseRegistrationRepository, LectureRepository lectureRepository, CourseMapper courseMapper, Utils utils, Environment env) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             UserRepository userRepository,
+                             CloudinaryService cloudinaryService,
+                             TransactionRepository courseRegistrationRepository,
+                             LectureRepository lectureRepository,
+                             CourseMapper courseMapper,
+                             Utils utils,
+                             Environment env) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
@@ -63,22 +77,24 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findCourses(Map<String, String> params) {
-        int page = 0;
-        if (params.containsKey("page"))
-            page = Integer.valueOf(params.get("page"));
+    @Cacheable(cacheNames = "course.list")
+    public List<Course> findAll(Map<String, String> params) {
+        int page = Integer.parseInt(params.get("page"));
         int pageNumber = Math.max(page, 0);
         int size = env.getProperty("SIZE", Integer.class, 8);
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+        List<Course> course;
+        Specification<Course> specification = toSpecification(params);
+
         Pageable pageable = PageRequest.of(pageNumber, size);
-        List course;
-        if (params.containsKey("business"))
-            course = this.courseRepository.findByCreator_Id(getCurrentUser().getId(), pageable).getContent();
-        else
-            course = this.courseRepository.findAll(pageable).getContent();
+        course = this.courseRepository.findAll(specification, pageable).getContent();
         return course;
     }
 
     @Override
+    @Cacheable(cacheNames = "course.id", key = "id")
     public Course findById(Integer id) {
         Optional<Course> courseOptional = courseRepository.findById(id);
         return courseOptional.orElse(null);
@@ -131,8 +147,52 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Long countCourses() {
-        return courseRepository.count();
+    @Cacheable(cacheNames = "course.count")
+    public Long count(Map<String, String> params) {
+        Specification<Course> specification = toSpecification(params);
+        return courseRepository.count(specification);
+    }
+
+    private Specification<Course> toSpecification(Map<String, String> params) {
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+
+
+
+        if (params.containsKey("name")) {
+            String nameValue = params.get("name");
+            SearchCriteria nameCriteria = new SearchCriteria("name", SearchOperation.LIKE, nameValue);
+            SearchCriteria descriptionCriteria = new SearchCriteria("description", SearchOperation.LIKE, nameValue);
+
+            List<GSpecification<Course>> orSpecifications = Arrays.asList(
+                    new GSpecification<>(nameCriteria),
+                    new GSpecification<>(descriptionCriteria)
+            );
+            criteriaList.add(new SearchCriteria("", SearchOperation.OR, orSpecifications));
+        }
+
+        if (params.containsKey("min")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("min"))));
+        }
+
+        if (params.containsKey("max")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
+        }
+
+        if (params.containsKey("creator_id")) {
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
+        }
+
+        if (params.containsKey("business")) {
+            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+        }
+
+        criteriaList.add(SearchCriteria.builder()
+                .key("publishDate")
+                .operation(SearchOperation.LESS_THAN_OR_EQUAL)
+                .value(LocalDateTime.now())
+                .build());
+
+        return GSpecification.toSpecification(criteriaList);
     }
 }
 

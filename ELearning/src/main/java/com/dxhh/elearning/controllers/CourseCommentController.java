@@ -3,6 +3,7 @@ package com.dxhh.elearning.controllers;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.pojos.CourseComment;
 import com.dxhh.elearning.services.CourseCommentService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/course-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.COURSE_COMMENTS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseCommentController {
     private final CourseCommentService courseCommentService;
 

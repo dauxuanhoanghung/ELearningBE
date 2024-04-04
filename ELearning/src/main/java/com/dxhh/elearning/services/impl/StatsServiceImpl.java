@@ -6,6 +6,7 @@ import com.dxhh.elearning.dto.response.stats.CourseWithMostLecturesResponse;
 import com.dxhh.elearning.dto.response.stats.CourseWithMostRegistrationsResponse;
 import com.dxhh.elearning.repositories.StatsRepository;
 import com.dxhh.elearning.services.StatsService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,21 +27,25 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    @Cacheable(cacheNames = "stats.usersByRole")
     public List<CountUserByRoleResponse> countNewUsersByRole(LocalDateTime fromDate, LocalDateTime toDate) {
         return statsRepository.countNewUsersByRole(fromDate, toDate);
     }
 
     @Override
+    @Cacheable(cacheNames = "stats.courseByLecture")
     public List<CourseWithMostLecturesResponse> countMostCourseByMostLecture(int limit) {
         return statsRepository.countMostCourseByMostLecture(limit);
     }
 
     @Override
+    @Cacheable(cacheNames = "stats.courseByRegistration")
     public List<CourseWithMostRegistrationsResponse> countCourseByMostRegistration(int limit) {
         return statsRepository.countCourseByMostRegistration(limit);
     }
 
     @Override
+    @Cacheable(cacheNames = "stats.user.count")
     public List<CountUserAndMonthResponse> countNumberOfUserByMonth(int year) {
         List<Object[]> results = statsRepository.countNumberOfUserByMonth(year);
         Map<String, Long> userCountsByMonth = new LinkedHashMap<>();
@@ -64,6 +69,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    @Cacheable(cacheNames = "stats.user.register")
     public List<CountUserAndMonthResponse> countUserRegisterUntilMonth(int year) {
         int currentYearValue = LocalDateTime.now().getYear();
         int currentMonthValue = currentYearValue == year ? LocalDateTime.now().getMonthValue() : 12;

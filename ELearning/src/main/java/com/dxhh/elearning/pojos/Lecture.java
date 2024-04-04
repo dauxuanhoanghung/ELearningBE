@@ -16,16 +16,19 @@ public class Lecture implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @Column(name = "title")
     private String title;
     @Basic(optional = false)
-    @Lob
     @Column(name = "content")
     private String content;
+    @Basic
+    @Column(name = "description", length = -1)
+    private String description;
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private LectureType type;
@@ -36,13 +39,13 @@ public class Lecture implements Serializable {
     @Column(name = "video_url")
     private String videoUrl;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
-    private Set<LectureComment> lectureCommentSet;
-    @JsonIgnore
-
     @JoinColumn(name = "section_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Section section;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
+    private Set<LectureComment> lectureCommentSet;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lecture")
     private Set<UserNote> userNoteSet;
