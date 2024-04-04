@@ -74,16 +74,16 @@ public class CourseController {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
-    @GetMapping("/get-total-course-page")
+    @GetMapping("/get-total-page")
     public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
         int size = env.getProperty("SIZE", Integer.class, 8);
         if (params.containsKey("pageSize")) {
             size = Integer.parseInt(params.get("pageSize"));
         }
-
-        Long totalPage = (long) Math.ceil(courseService.count(params) * 1.0 / size);
+        Long totalCount = courseService.count(params);
+        Long totalPage = (long) Math.ceil((double) totalCount / size);
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Total course page", totalPage);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping(path = "/{id}")

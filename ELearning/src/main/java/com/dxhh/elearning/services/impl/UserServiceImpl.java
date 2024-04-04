@@ -19,6 +19,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -137,6 +139,21 @@ public class UserServiceImpl implements UserService {
     public boolean deleteById(Integer id) {
         try {
             userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteCurrent() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        try {
+            User user = userRepository.findById(principal.getId())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + principal.getUsername()));
+
+            userRepository.delete(user);
             return true;
         } catch (Exception e) {
             return false;

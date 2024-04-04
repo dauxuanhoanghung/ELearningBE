@@ -3,7 +3,9 @@ package com.dxhh.elearning.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,22 @@ public class RedisCacheAspect {
 
         return result;
     }
+
+//    @Around("@annotation(cacheEvict)")
+//    public Object cacheDelete(ProceedingJoinPoint joinPoint, CacheEvict cacheEvict) throws Throwable {
+//        // Proceed with method invocation
+//        Object result = joinPoint.proceed();
+//
+//        // Delete cache entries
+//        for (String cacheName : cacheEvict.cacheNames()) {
+//            Cache cache = Objects.requireNonNull(cacheManager.getCache(cacheName));
+//            for (Object key : cache.getNativeCache().keys().stream().filter(k -> k.toString().startsWith(cacheName + "::")).collect(Collectors.toList())) {
+//                cache.evict(key);
+//            }
+//        }
+//
+//        return result;
+//    }
 
     private String generateCacheKey(ProceedingJoinPoint joinPoint, Cacheable cacheable, Object[] args) {
         StringBuilder sb = new StringBuilder();

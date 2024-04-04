@@ -15,6 +15,7 @@ public interface UserService extends UserDetailsService {
     User findOneByUsername(String username);
     User update(User user, UserRegisterRequest request);
     boolean deleteById(Integer id);
+    boolean deleteCurrent();
     Integer count(Map<String, String> params);
     List<User> findAll(Map<String, String> params);
 }
