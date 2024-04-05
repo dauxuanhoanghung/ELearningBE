@@ -5,6 +5,7 @@ import com.dxhh.elearning.pojos.FavoriteCourse;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.FavoriteCourseRepository;
 import com.dxhh.elearning.repositories.UserRepository;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.FavoriteCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,25 +20,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class FavoriteCourseServiceImpl implements FavoriteCourseService {
+public class FavoriteCourseServiceImpl extends CurrentUserService implements FavoriteCourseService {
     private final FavoriteCourseRepository favoriteCourseRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public FavoriteCourseServiceImpl(FavoriteCourseRepository favoriteCourseRepository, UserRepository userRepository) {
+    public FavoriteCourseServiceImpl(FavoriteCourseRepository favoriteCourseRepository,
+                                     UserRepository userRepository) {
+        super(userRepository);
         this.favoriteCourseRepository = favoriteCourseRepository;
-        this.userRepository = userRepository;
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
     }
 
     @Override

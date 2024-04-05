@@ -8,6 +8,7 @@ import com.dxhh.elearning.repositories.BlogCommentRepository;
 import com.dxhh.elearning.repositories.BlogRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.BlogCommentService;
+import com.dxhh.elearning.services.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,22 +20,18 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class BlogCommentServiceImpl implements BlogCommentService {
+public class BlogCommentServiceImpl extends CurrentUserService implements BlogCommentService {
 
     private final BlogCommentRepository blogCommentRepository;
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public BlogCommentServiceImpl(BlogCommentRepository blogCommentRepository, BlogRepository blogRepository, UserRepository userRepository) {
+    public BlogCommentServiceImpl(BlogCommentRepository blogCommentRepository,
+                                  BlogRepository blogRepository,
+                                  UserRepository userRepository) {
+        super(userRepository);
         this.blogCommentRepository = blogCommentRepository;
         this.blogRepository = blogRepository;
-        this.userRepository = userRepository;
-    }
-
-    private User getCurrentUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername()).get(0);
     }
 
     @Override

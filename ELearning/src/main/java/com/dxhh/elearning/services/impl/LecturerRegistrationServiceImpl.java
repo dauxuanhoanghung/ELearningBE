@@ -6,6 +6,7 @@ import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.LecturerRegistrationRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.LecturerRegistrationService;
 import com.dxhh.elearning.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +24,20 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class LecturerRegistrationServiceImpl implements LecturerRegistrationService {
+public class LecturerRegistrationServiceImpl extends CurrentUserService implements LecturerRegistrationService {
 
     private final LecturerRegistrationRepository lecturerRegistrationRepository;
-    private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
     private final Environment env;
     private final Utils utils;
 
     @Autowired
     public LecturerRegistrationServiceImpl(LecturerRegistrationRepository lecturerRegistrationRepository, UserRepository userRepository, CloudinaryService cloudinaryService, Environment env, Utils utils) {
+        super(userRepository);
         this.lecturerRegistrationRepository = lecturerRegistrationRepository;
-        this.userRepository = userRepository;
         this.cloudinaryService = cloudinaryService;
         this.env = env;
         this.utils = utils;
-    }
-
-    // Get current user
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
     }
 
     @Override

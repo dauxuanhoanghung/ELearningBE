@@ -8,11 +8,12 @@ import java.util.Map;
 
 public interface CourseService {
     List<Course> findAll(Map<String, String> params);
+    List<Course> findRegisteredCourses();
     Course findById(Integer id);
     Course save(NewCourseRequest course);
     Course update(Course course);
     boolean deleteById(Integer id);
     Long countRegistrationByCourseId(Integer id);
     Long countLecturesByCourseId(Integer courseId);
-    Long count(Map<String, String> params);
+    Integer count(Map<String, String> params);
 }

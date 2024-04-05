@@ -11,6 +11,7 @@ import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
@@ -34,10 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class CourseServiceImpl implements CourseService {
+public class CourseServiceImpl extends CurrentUserService implements CourseService {
 
     private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
     private final TransactionRepository courseRegistrationRepository;
     private final LectureRepository lectureRepository;
     private final CloudinaryService cloudinaryService;
@@ -54,8 +54,8 @@ public class CourseServiceImpl implements CourseService {
                              CourseMapper courseMapper,
                              Utils utils,
                              Environment env) {
+        super(userRepository);
         this.courseRepository = courseRepository;
-        this.userRepository = userRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.cloudinaryService = cloudinaryService;
         this.lectureRepository = lectureRepository;
@@ -64,17 +64,7 @@ public class CourseServiceImpl implements CourseService {
         this.env = env;
     }
 
-    // Get current user
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
-    }
+
 
     @Override
     @Cacheable(cacheNames = "course.list")
@@ -91,6 +81,11 @@ public class CourseServiceImpl implements CourseService {
         Pageable pageable = PageRequest.of(pageNumber, size);
         course = this.courseRepository.findAll(specification, pageable).getContent();
         return course;
+    }
+
+    @Override
+    public List<Course> findRegisteredCourses() {
+        return null;
     }
 
     @Override
@@ -148,15 +143,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Cacheable(cacheNames = "course.count")
-    public Long count(Map<String, String> params) {
+    public Integer count(Map<String, String> params) {
         Specification<Course> specification = toSpecification(params);
-        return courseRepository.count(specification);
+        return Integer.valueOf(courseRepository.count(specification) + "");
     }
 
     private Specification<Course> toSpecification(Map<String, String> params) {
         List<SearchCriteria> criteriaList = new ArrayList<>();
-
-
 
         if (params.containsKey("name")) {
             String nameValue = params.get("name");
@@ -183,7 +176,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         if (params.containsKey("business")) {
-            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
         }
 
         criteriaList.add(SearchCriteria.builder()
