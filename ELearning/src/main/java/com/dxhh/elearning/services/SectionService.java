@@ -1,6 +1,7 @@
 package com.dxhh.elearning.services;
 
 import com.dxhh.elearning.dto.request.NewSectionRequest;
+import com.dxhh.elearning.dto.response.SectionResponse;
 import com.dxhh.elearning.pojos.Section;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface SectionService {
     Section getSectionById(Integer sectionId);
     List<Section> getAllSections();
     List<Section> getByCourse_Id(Integer courseId);
+    List<SectionResponse> getSectionsAndLecturesByCourseId(Integer courseId);
 }

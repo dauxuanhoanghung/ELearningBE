@@ -74,7 +74,7 @@ public class RedisCacheAspect {
         // If key expression is provided, use it
         String keyExpression = cacheable.key();
         if (!keyExpression.isEmpty()) {
-            sb.append(keyExpression);
+            sb.append(args[0]);
         } else {
             for (Object arg : args) {
                 if (arg instanceof Map) {

@@ -94,7 +94,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Cacheable(cacheNames = "course.id", key = "id")
+    @Cacheable(cacheNames = "course.id", key = "#id")
     public Course findById(Integer id) {
         Optional<Course> courseOptional = courseRepository.findById(id);
         return courseOptional.orElse(null);

@@ -93,6 +93,19 @@ public class CourseController {
         CourseDetailsResponse response = null;
         if (course != null) {
             response = courseMapper.toDetail(course);
+//            response = CourseDetailsResponse.builder()
+//                    .id(course.getId())
+//                    .price(course.getPrice())
+//                    .background(course.getBackground())
+//                    .name(course.getName())
+//                    .description(course.getDescription())
+//                    .user(userMapper.toResponse(course.getCreator()))
+////                    .sections(sectionService.getByCourse_Id(course.getId()))
+//                    .countRegistration(courseService.countRegistrationByCourseId(course.getId()))
+//                    .publishDate(course.getPublishDate())
+//                    .createdDate(course.getCreatedDate())
+//                    .updatedDate(course.getUpdatedDate())
+//                    .build();
             response.setUser(userMapper.toResponse(course.getCreator()));
         }
         res.setStatus(200);
@@ -191,7 +204,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-section")
-    public ResponseEntity getSectionByCourseId(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getSectionByCourseId(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
         res.setData(sectionService.getByCourse_Id(id));
         res.setStatus(200);

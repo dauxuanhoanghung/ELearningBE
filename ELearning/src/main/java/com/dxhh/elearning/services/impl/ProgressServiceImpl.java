@@ -1,9 +1,12 @@
 package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.pojos.Progress;
+import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.ProgressRepository;
 import com.dxhh.elearning.services.ProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +35,10 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public List<Progress> findAll(Map<String, String> params) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        
+
         return repository.findAll();
     }
 
