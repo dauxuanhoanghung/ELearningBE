@@ -62,7 +62,6 @@ public class CourseController {
         List<CourseInfoResponse> courses = new ArrayList<>();
         courseService.findAll(params).forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
-            info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
             info.setUser(userMapper.toResponse(c.getCreator(), false));
             courses.add(info);
         });

@@ -94,6 +94,12 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findByUsername(username);
     }
 
+    @Override
+    public List<User> getTopLecturers(int top) {
+        Pageable pageable = PageRequest.of(0, top);
+        return userRepository.findTopLecturersByCoursesCount(pageable);
+    }
+
     public User save(UserRegisterRequest userRegister) {
         User user = userMapper.toModel(userRegister);
         user.setPassword(passwordEncoder.encode(userRegister.getPassword()));

@@ -54,7 +54,6 @@ public class FavoriteController {
         List<CourseInfoResponse> courses = favoriteCourses.stream()
                 .map(course -> {
                     CourseInfoResponse info = courseMapper.toInfo(course.getCourse());
-                    info.setCountRegistration(courseService.countRegistrationByCourseId(course.getCourse().getId()));
                     info.setUser(userMapper.toResponse(course.getCourse().getCreator()));
                     return info;
                 })

@@ -65,7 +65,6 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
     }
 
 
-
     @Override
     @Cacheable(cacheNames = "course.list")
     public List<Course> findAll(Map<String, String> params) {
@@ -85,6 +84,9 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
 
     @Override
     public List<Course> findRegisteredCourses() {
+        User user = getCurrentUser();
+
+        List course = courseRegistrationRepository.findAll();
         return null;
     }
 
@@ -177,6 +179,10 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
 
         if (params.containsKey("business")) {
             criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+        }
+
+        if (params.containsKey("learning") && !Boolean.parseBoolean(params.get("learning"))) {
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.NOT_EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
         }
 
         criteriaList.add(SearchCriteria.builder()

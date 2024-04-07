@@ -2,6 +2,7 @@ package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
+import com.dxhh.elearning.dto.response.UserResponse;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.EmailService;
@@ -68,6 +69,14 @@ public class UserController {
             }
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/top-lecturers")
+    public ResponseEntity<ModelResponse> getTopLecturers(@RequestParam(required = false, defaultValue = "5") int top) {
+        List<User> users = userService.getTopLecturers(top);
+        List<UserResponse> userResponses = users.stream().map(mapper::toResponse).toList();
+        ModelResponse response = new ModelResponse(200, "Top lecturers", userResponses);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
