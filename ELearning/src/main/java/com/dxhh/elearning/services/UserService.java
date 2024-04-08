@@ -10,13 +10,13 @@ import java.util.Map;
 public interface UserService extends UserDetailsService {
     List<User> findAll(Map<String, String> params);
     List<User> loadUserByEmail(String email);
-    List<User> getUserByUsername(String username);
+    List<User> findByUsername(String username);
     List<User> getTopLecturers(int top);
     User save(UserRegisterRequest userRegister);
     User findOneByUsername(String username);
     User update(User user, UserRegisterRequest request);
     boolean existsByUsername(String username);
     boolean deleteById(Integer id);
-    boolean deleteCurrent();
+    boolean deleteCurrent(String password);
     Integer count(Map<String, String> params);
 }

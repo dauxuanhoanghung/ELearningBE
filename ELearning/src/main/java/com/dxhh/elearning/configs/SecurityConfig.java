@@ -35,8 +35,6 @@ public class SecurityConfig {
         return new JwtRequestFilter();
     }
 
-    ;
-
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -67,13 +65,13 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/course-comments/**").authenticated()
-//                        .requestMatchers("/api/favorite/**").authenticated()
+                        .requestMatchers("/api/favorite/**").authenticated()
 //                        .requestMatchers("/api/lecture-comments/**").authenticated()
 //                        .requestMatchers("/api/lectures/**").authenticated()
 //                        .requestMatchers("/api/lecturer-registration/**").authenticated()
 //                        .requestMatchers("/api/registration/**").authenticated()
-//                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/user-notes/**").authenticated()
+                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user-notes/**").authenticated()
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);

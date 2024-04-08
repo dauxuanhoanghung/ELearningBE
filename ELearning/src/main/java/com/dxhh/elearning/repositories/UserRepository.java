@@ -2,6 +2,7 @@ package com.dxhh.elearning.repositories;
 
 import com.dxhh.elearning.pojos.User;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
+    @EntityGraph(attributePaths = {"userRoles"})
     List<User> findByUsername(String username);
+    @EntityGraph(attributePaths = {"userRoles"})
     List<User> findByEmail(String email);
     @Query("SELECT u " +
             "FROM User u " +

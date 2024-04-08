@@ -7,27 +7,32 @@ import com.dxhh.elearning.repositories.FavoriteCourseRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.FavoriteCourseService;
+import com.dxhh.elearning.specifications.GSpecification;
+import com.dxhh.elearning.specifications.SearchCriteria;
+import com.dxhh.elearning.specifications.SearchOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
 public class FavoriteCourseServiceImpl extends CurrentUserService implements FavoriteCourseService {
     private final FavoriteCourseRepository favoriteCourseRepository;
+    private final Environment env;
 
     @Autowired
     public FavoriteCourseServiceImpl(FavoriteCourseRepository favoriteCourseRepository,
-                                     UserRepository userRepository) {
+                                     UserRepository userRepository,
+                                     Environment env) {
         super(userRepository);
         this.favoriteCourseRepository = favoriteCourseRepository;
+        this.env = env;
     }
 
     @Override
@@ -56,9 +61,31 @@ public class FavoriteCourseServiceImpl extends CurrentUserService implements Fav
     }
 
     @Override
-    @Cacheable(cacheNames = "wishlist.user")
-    public List<FavoriteCourse> getByUser() {
-        User user = getCurrentUser();
-        return favoriteCourseRepository.findByUser(user);
+    public List<FavoriteCourse> getByUser(Map<String, String> params) {
+        int page = Integer.parseInt(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+        Specification<FavoriteCourse> specification = toSpecification(params);
+        Pageable pageable = PageRequest.of(pageNumber, size);
+
+        return favoriteCourseRepository.findAll(specification, pageable).getContent();
+    }
+
+    @Override
+    public Integer countByCurrentUser(Map<String, String> params) {
+        Specification<FavoriteCourse> specification = toSpecification(params);
+        return Math.toIntExact(this.favoriteCourseRepository.count(specification));
+    }
+
+    private Specification<FavoriteCourse> toSpecification(Map<String, String> params) {
+        User user = this.getCurrentUser();
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+
+        criteriaList.add(new SearchCriteria("user.id", SearchOperation.EQUAL, user.getId()));
+
+        return GSpecification.toSpecification(criteriaList);
     }
 }

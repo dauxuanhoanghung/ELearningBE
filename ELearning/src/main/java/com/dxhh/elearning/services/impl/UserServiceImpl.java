@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            List<User> users = this.getUserByUsername(username);
+            List<User> users = this.findByUsername(username);
             if (users.isEmpty())
                 throw new UsernameNotFoundException(username);
             User user = users.get(0);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
                     .accountExpired(false)
                     .credentialsExpired(false)
                     .accountLocked(false)
-                    .authorities(userRoleRepository.findByUser(user).stream()
+                    .authorities(user.getUserRoles().stream()
                             .map(userRole -> userRole.getRole().getName()).toArray(String[]::new))
                     .build();
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public List<User> getUserByUsername(String username) {
+    public List<User> findByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 
@@ -152,13 +152,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteCurrent() {
+    public boolean deleteCurrent(String password) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
+        String hashPassword = principal.getPassword();
         try {
             User user = userRepository.findById(principal.getId())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + principal.getUsername()));
-
             userRepository.delete(user);
             return true;
         } catch (Exception e) {

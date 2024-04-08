@@ -173,6 +173,14 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
             criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
         }
 
+        if (params.containsKey("username")) {
+            criteriaList.add(new SearchCriteria("creator.username", SearchOperation.EQUAL, params.get("username")));
+        }
+
+        if (params.containsKey("slug")) {
+            criteriaList.add(new SearchCriteria("creator.slug", SearchOperation.EQUAL, params.get("slug")));
+        }
+
         if (params.containsKey("creator_id")) {
             criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
         }
