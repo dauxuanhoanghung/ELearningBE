@@ -37,15 +37,34 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
         this.transactionRepository = transactionRepository;
         this.courseRepository = courseRepository;
     }
-    
+
     @Override
     public Transaction create(NewTransactionRequest newTransactionRequest) {
-        Course course = courseRepository.findById(newTransactionRequest.getCourse().getId()).get();
-        Transaction transaction = new Transaction();
-        transaction.setAmount(newTransactionRequest.getAmount());
-        transaction.setCourse(newTransactionRequest.getCourse());
-        transaction.setUser(getCurrentUser());
-        transaction.setCreatedDate(LocalDateTime.now());
+        Optional<Course> optionalCourse = courseRepository.findById(newTransactionRequest.getCourse().getId());
+        Course course = optionalCourse.orElse(null);
+        User currentUser = this.getCurrentUser();
+        User receiver = currentUser;
+
+        if (newTransactionRequest.getUsername() != null && !newTransactionRequest.getUsername().isBlank()) {
+            User u = userRepository.findByUsername(newTransactionRequest.getUsername()).get(0);
+            if (u == null) {
+                return null;
+            }
+            receiver = u;
+        }
+
+        if (course == null) {
+            return null;
+        }
+
+        Transaction transaction = Transaction.builder()
+                .amount(newTransactionRequest.getAmount())
+                .originalAmount(BigDecimal.valueOf(course.getPrice()))
+                .course(course)
+                .payer(currentUser)
+                .user(receiver)
+                .createdDate(LocalDateTime.now())
+                .build();
         return transactionRepository.save(transaction);
     }
 
