@@ -1,14 +1,15 @@
 package com.dxhh.elearning.services.impl;
 
+import com.dxhh.elearning.dto.request.NewTransactionRequest;
 import com.dxhh.elearning.dto.response.CompletedOrder;
 import com.dxhh.elearning.dto.response.PaymentOrder;
+import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.PaypalService;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -36,15 +37,18 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public PaymentOrder createPayment(BigDecimal fee) {
+    public PaymentOrder createPayment(NewTransactionRequest request) {
+        Course course = courseService.findById(request.getCourse().getId());
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
-        AmountWithBreakdown amountBreakdown = new AmountWithBreakdown().currencyCode("USD").value(fee.toString());
+        AmountWithBreakdown amountBreakdown = new AmountWithBreakdown()
+                .currencyCode("USD")
+                .value(String.valueOf(course.getPrice()));
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
-                .returnUrl(env.getProperty("clientUrl") + "/paypal/capture")
-                .cancelUrl(env.getProperty("clientUrl") + "/paypal/cancel");
+                .returnUrl(env.getProperty("clientUrl") + "/payment/paypal/capture")
+                .cancelUrl(env.getProperty("clientUrl") + "/paypal/paypal/cancel");
         orderRequest.applicationContext(applicationContext);
         OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
 
@@ -71,7 +75,7 @@ public class PaypalServiceImpl implements PaypalService {
             if (httpResponse.result().status() != null) {
                 return new CompletedOrder("success", token);
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         return new CompletedOrder("error");
     }

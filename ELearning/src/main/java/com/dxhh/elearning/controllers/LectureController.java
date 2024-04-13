@@ -5,6 +5,7 @@ import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.services.LectureService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-@CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/lectures/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.LECTURES, produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(originPatterns = "*")
 public class LectureController {
 
     private final LectureService lectureService;

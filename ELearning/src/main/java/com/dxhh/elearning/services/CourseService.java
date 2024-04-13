@@ -16,4 +16,5 @@ public interface CourseService {
     Long countRegistrationByCourseId(Integer id);
     Long countLecturesByCourseId(Integer courseId);
     Integer count(Map<String, String> params);
+    Integer incrementCourseCount(Integer courseId);
 }

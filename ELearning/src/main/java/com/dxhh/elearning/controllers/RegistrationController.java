@@ -8,7 +8,9 @@ import com.dxhh.elearning.pojos.Transaction;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.TransactionService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/registration/")
+@RequestMapping(path = Routing.REGISTRATION, produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(originPatterns = "*")
 public class RegistrationController {
     private final CourseService courseService;
@@ -36,7 +38,7 @@ public class RegistrationController {
     public ResponseEntity<ModelResponse> register(@RequestBody NewTransactionRequest request) {
         Course course = courseService.findById(request.getCourse().getId());
         Map<String, Object> map = new HashMap<>();
-        // Redirect to payment page if course is not free
+        // Redirect to payment page if course is not free, if course.price > 0 => has payed
         if (course.getPrice() > 0 && request.getAmount().equals(BigDecimal.valueOf(0))) {
             map.put("nextUrl", "");
             ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Redirect", map);

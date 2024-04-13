@@ -1,14 +1,15 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.utils.Routing;
 import com.dxhh.elearning.utils.VNPayConfig;
 import com.dxhh.elearning.dto.request.NewTransactionRequest;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.services.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -16,18 +17,18 @@ import java.util.*;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = Routing.PAYMENT)
-public class PaymentController {
+@RequestMapping(value = Routing.VNPAY)
+public class VNPayController {
 
     private final CourseService courseService;
 
-    public PaymentController(CourseService courseService) {
+    public VNPayController(CourseService courseService) {
         this.courseService = courseService;
     }
 
     @PostMapping("/make")
-    public Map<String, String> createPayment(HttpServletRequest request,
-                                             @RequestBody NewTransactionRequest transactionRequest
+    public ResponseEntity<ModelResponse> createPayment(HttpServletRequest request,
+                                                       @RequestBody NewTransactionRequest transactionRequest
 //                                             @RequestParam(name = "vnp_BankCode", defaultValue = "NCB") String bankcode
     ) {
         String vnp_Version = "2.1.0";
@@ -45,7 +46,7 @@ public class PaymentController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang "  + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang " + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
@@ -92,8 +93,12 @@ public class PaymentController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         vnp_Params.put("redirect_url", paymentUrl);
-        vnp_Params.put("courseId", transactionRequest.getCourse().getId() + "");
+        vnp_Params.put("courseId", transactionRequest.getCourse().getId().toString());
 //		return "redirect:" + paymentUrl;
-        return vnp_Params;
+
+        return ResponseEntity.ok(ModelResponse.builder()
+                .status(200)
+                .data(vnp_Params)
+                .build());
     }
 }

@@ -150,6 +150,11 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
         return Integer.valueOf(courseRepository.count(specification) + "");
     }
 
+    @Override
+    public Integer incrementCourseCount(Integer courseId) {
+        return courseRepository.incrementCourseCount(courseId);
+    }
+
     private Specification<Course> toSpecification(Map<String, String> params) {
         List<SearchCriteria> criteriaList = new ArrayList<>();
 
