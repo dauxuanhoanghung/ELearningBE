@@ -42,7 +42,7 @@ public class VNPayController {
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
-        vnp_Params.put("vnp_Amount", String.valueOf((course.getPrice().intValue() * 100)));
+        vnp_Params.put("vnp_Amount", String.valueOf((course.getPrice().intValue() * 100 * 25000)));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_Locale", "vn");

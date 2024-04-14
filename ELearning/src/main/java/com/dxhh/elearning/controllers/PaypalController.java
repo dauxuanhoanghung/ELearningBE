@@ -5,6 +5,8 @@ import com.dxhh.elearning.dto.response.CompletedOrder;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.services.PaypalService;
 import com.dxhh.elearning.utils.Routing;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,25 @@ public class PaypalController {
     }
 
     @PostMapping(value = "/capture")
-    public CompletedOrder completePayment(@RequestParam("token") String token) {
-        return paypalService.completePayment(token);
+    public ResponseEntity<ModelResponse> completePayment(@RequestBody Request request) {
+        try {
+            return ResponseEntity.ok(ModelResponse.builder()
+                    .message("Payment completed")
+                    .data(paypalService.completePayment(request.getToken()))
+                    .status(200)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ModelResponse.builder()
+                    .message(e.getMessage())
+                    .status(400)
+                    .build());
+        }
+    }
+
+    @Setter
+    @Getter
+    private static class Request {
+        private String token;
+
     }
 }

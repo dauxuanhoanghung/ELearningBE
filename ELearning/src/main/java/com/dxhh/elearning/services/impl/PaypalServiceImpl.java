@@ -4,9 +4,14 @@ import com.dxhh.elearning.dto.request.NewTransactionRequest;
 import com.dxhh.elearning.dto.response.CompletedOrder;
 import com.dxhh.elearning.dto.response.PaymentOrder;
 import com.dxhh.elearning.pojos.Course;
+import com.dxhh.elearning.pojos.Transaction;
+import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.TransactionRepository;
+import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.PaypalService;
+import com.dxhh.elearning.services.TransactionService;
 import com.paypal.core.PayPalHttpClient;
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
@@ -19,20 +24,23 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class PaypalServiceImpl implements PaypalService {
+public class PaypalServiceImpl extends CurrentUserService implements PaypalService {
 
     private final PayPalHttpClient payPalHttpClient;
     private final CourseService courseService;
-    private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
     private final Environment env;
+
 
     public PaypalServiceImpl(PayPalHttpClient payPalHttpClient,
                              CourseService courseService,
-                             TransactionRepository transactionRepository,
+                             UserRepository userRepository,
+                             TransactionService transactionService,
                              Environment env) {
+        super(userRepository);
         this.payPalHttpClient = payPalHttpClient;
         this.courseService = courseService;
-        this.transactionRepository = transactionRepository;
+        this.transactionService = transactionService;
         this.env = env;
     }
 
@@ -44,7 +52,10 @@ public class PaypalServiceImpl implements PaypalService {
         AmountWithBreakdown amountBreakdown = new AmountWithBreakdown()
                 .currencyCode("USD")
                 .value(String.valueOf(course.getPrice()));
-        PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
+        PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
+                .amountWithBreakdown(amountBreakdown)
+                .referenceId(course.getId().toString()) //pass course id in body request
+                ;
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
                 .returnUrl(env.getProperty("clientUrl") + "/payment/paypal/capture")
@@ -72,7 +83,22 @@ public class PaypalServiceImpl implements PaypalService {
         OrdersCaptureRequest ordersCaptureRequest = new OrdersCaptureRequest(token);
         try {
             HttpResponse<Order> httpResponse = payPalHttpClient.execute(ordersCaptureRequest);
-            if (httpResponse.result().status() != null) {
+            Order order = httpResponse.result();
+            if (order.status() != null) {
+                User user = this.getCurrentUser();
+
+                PurchaseUnit purchaseUnit = order.purchaseUnits().get(0);
+                Capture capture = purchaseUnit.payments().captures().get(0);
+
+                Integer courseId = Integer.valueOf(purchaseUnit.referenceId());
+                BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(capture.amount().value()));
+
+                NewTransactionRequest transactionRequest = NewTransactionRequest.builder()
+                        .amount(amount)
+                        .username(user.getUsername())
+                        .course(new Course(courseId))
+                        .build();
+                transactionService.create(transactionRequest);
                 return new CompletedOrder("success", token);
             }
         } catch (IOException ignored) {
