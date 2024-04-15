@@ -5,7 +5,6 @@ import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.LectureComment;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface LectureCommentService {
 

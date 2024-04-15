@@ -16,7 +16,6 @@ public final class Routing {
     public static final String LECTURER_REGISTRATION = PREFIX + "/lecturer-registration";
     public static final String REGISTRATION = PREFIX + "/registration";
     public static final String PROGRESS = PREFIX + "/progress";
-    public static final String PAYMENT = PREFIX + "/payment";
     public static final String VNPAY = PREFIX + "/vnpay";
     public static final String PAYPAL = PREFIX + "/paypal";
     public static final String STATS = PREFIX + "/stats";

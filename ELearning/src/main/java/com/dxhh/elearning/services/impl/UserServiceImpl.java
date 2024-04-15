@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(cacheNames = "user.count")
     public Integer count(Map<String, String> params) {
+        if (params.isEmpty()) return 0;
         try {
             List<SearchCriteria> criteriaList = new ArrayList<>();
             if (params.containsKey("startDate")) {
