@@ -22,4 +22,5 @@ public class UserNoteResponse implements Serializable {
     private Integer noteTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
+    private LectureResponse lecture;
 }

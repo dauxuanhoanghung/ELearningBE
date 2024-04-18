@@ -4,6 +4,7 @@ import com.dxhh.elearning.dto.request.LectureCommentRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.pojos.LectureComment;
 import com.dxhh.elearning.services.LectureCommentService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping(value = "/api/lecture-comments/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = Routing.LECTURE_COMMENTS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class LectureCommentController {
     private final LectureCommentService lectureCommentService;
 

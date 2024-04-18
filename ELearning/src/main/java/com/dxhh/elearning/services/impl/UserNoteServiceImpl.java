@@ -55,6 +55,12 @@ public class UserNoteServiceImpl extends CurrentUserService implements UserNoteS
     }
 
     @Override
+    public UserNote update(UserNote userNote) {
+//        userNote.setUser(getCurrentUser());
+        return userNoteRepository.save(userNote);
+    }
+
+    @Override
     public boolean deleteById(Integer id) {
         try {
             userNoteRepository.deleteById(id);

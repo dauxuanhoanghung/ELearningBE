@@ -11,5 +11,6 @@ public interface UserNoteService {
     UserNote getById(Integer id);
     List<UserNote> findByUser(User user);
     List<UserNote> findByUserAndLecture(Lecture lecture);
+    UserNote update(UserNote userNote);
     boolean deleteById(Integer id);
 }
