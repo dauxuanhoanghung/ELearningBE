@@ -17,10 +17,12 @@ public class EmailServiceImpl implements EmailService {
     public EmailServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
+
     @Async
     public void sendTextEmail(String to, String subject, String text) {
         sendEmail(to, subject, text, false);
     }
+
     @Async
     public void sendHtmlEmail(String to, String subject, String htmlContent) {
         sendEmail(to, subject, htmlContent, true);

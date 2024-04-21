@@ -17,6 +17,7 @@ public class CourseDetailsResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046851L;
     private Integer id;
     private String name;
+    private String subtitle;
     private String description;
     private String background;
     private Double price;

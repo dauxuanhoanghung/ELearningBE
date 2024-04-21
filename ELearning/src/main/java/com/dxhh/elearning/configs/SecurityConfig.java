@@ -69,11 +69,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/course-comments/**").authenticated()
                         .requestMatchers(
-//                                Routing.PAYMENT + "/**",
-                                Routing.VNPAY,
+                                Routing.VNPAY + "/**",
                                 Routing.USER_NOTES + "/**",
                                 Routing.LECTURES + "/**",
-                                Routing.FAVORITES + "/**"
+                                Routing.FAVORITES + "/**",
+                                Routing.LAST_LECTURE + "/**"
 
                         )
                         .authenticated()
