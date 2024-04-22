@@ -13,7 +13,6 @@ import com.dxhh.elearning.services.CourseCriteriaService;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.SectionService;
-import com.dxhh.elearning.utils.Constant;
 import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
@@ -41,10 +39,14 @@ public class CourseController {
     private final LectureMapper lectureMapper;
     private final Environment env;
 
-    @Autowired
-    public CourseController(CourseService courseService, LectureService lectureService, SectionService sectionService,
-                            CourseCriteriaService courseCriteriaService, CourseMapper courseMapper, UserMapper userMapper,
-                            LectureMapper lectureMapper, Environment env) {
+    public CourseController(CourseService courseService,
+                            LectureService lectureService,
+                            SectionService sectionService,
+                            CourseCriteriaService courseCriteriaService,
+                            CourseMapper courseMapper,
+                            UserMapper userMapper,
+                            LectureMapper lectureMapper,
+                            Environment env) {
         this.courseService = courseService;
         this.lectureService = lectureService;
         this.sectionService = sectionService;
@@ -60,7 +62,6 @@ public class CourseController {
         List<CourseInfoResponse> courses = new ArrayList<>();
         courseService.findAll(params).forEach(c -> {
             CourseInfoResponse info = courseMapper.toInfo(c);
-            info.setCountRegistration(courseService.countRegistrationByCourseId(c.getId()));
             info.setUser(userMapper.toResponse(c.getCreator(), false));
             courses.add(info);
         });
@@ -80,7 +81,7 @@ public class CourseController {
         if (params.containsKey("pageSize")) {
             size = Integer.parseInt(params.get("pageSize"));
         }
-        Long totalCount = courseService.count(params);
+        Integer totalCount = courseService.count(params);
         Long totalPage = (long) Math.ceil((double) totalCount / size);
         ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Total course page", totalPage);
         return ResponseEntity.ok(res);
@@ -93,6 +94,19 @@ public class CourseController {
         CourseDetailsResponse response = null;
         if (course != null) {
             response = courseMapper.toDetail(course);
+//            response = CourseDetailsResponse.builder()
+//                    .id(course.getId())
+//                    .price(course.getPrice())
+//                    .background(course.getBackground())
+//                    .name(course.getName())
+//                    .description(course.getDescription())
+//                    .user(userMapper.toResponse(course.getCreator()))
+////                    .sections(sectionService.getByCourse_Id(course.getId()))
+//                    .countRegistration(courseService.countRegistrationByCourseId(course.getId()))
+//                    .publishDate(course.getPublishDate())
+//                    .createdDate(course.getCreatedDate())
+//                    .updatedDate(course.getUpdatedDate())
+//                    .build();
             response.setUser(userMapper.toResponse(course.getCreator()));
         }
         res.setStatus(200);
@@ -102,6 +116,11 @@ public class CourseController {
 
     @GetMapping(path = "/my-business")
     public ResponseEntity<ModelResponse> getByCreator(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(getModelListCoursesResponse(params));
+    }
+
+    @GetMapping(path ="/my-learning")
+    public ResponseEntity<ModelResponse> getLearningCourse(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
@@ -191,7 +210,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}/get-section")
-    public ResponseEntity getSectionByCourseId(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ModelResponse> getSectionByCourseId(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse();
         res.setData(sectionService.getByCourse_Id(id));
         res.setStatus(200);

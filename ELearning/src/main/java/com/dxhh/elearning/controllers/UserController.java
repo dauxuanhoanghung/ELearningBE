@@ -2,6 +2,7 @@ package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.request.UserRegisterRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
+import com.dxhh.elearning.dto.response.UserResponse;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.services.EmailService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -63,30 +65,22 @@ public class UserController {
                 String username = ((UserDetails) principal).getUsername();
                 ModelResponse res = new ModelResponse();
                 res.setStatus(200);
-                res.setData(mapper.toResponse(userService.getUserByUsername(username).get(0)));
+                res.setData(mapper.toResponse(userService.findByUsername(username).get(0)));
                 return ResponseEntity.ok(res);
             }
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@ModelAttribute UserRegisterRequest userRequest, BindingResult rs) {
-        usernameValidator.validate(userRequest, rs);
-        ModelResponse response = new ModelResponse();
-        if (rs.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation errors");
-        }
-        User user = userService.save(userRequest);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User creation failed");
-        }
-        response.setStatus(201);
-        response.setData(mapper.toResponse(user));
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    @GetMapping("/top-lecturers")
+    public ResponseEntity<ModelResponse> getTopLecturers(@RequestParam(required = false, defaultValue = "5") int top) {
+        List<User> users = userService.getTopLecturers(top);
+        List<UserResponse> userResponses = users.stream().map(mapper::toResponse).toList();
+        ModelResponse response = new ModelResponse(200, "Top lecturers", userResponses);
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update-info")
+    @PutMapping(value = "/update-info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ModelResponse> updateInfo(@ModelAttribute UserRegisterRequest userRegisterRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -105,6 +99,17 @@ public class UserController {
     public ResponseEntity<ModelResponse> deleteById(@PathVariable("id") Integer id) {
         ModelResponse response;
         if (userService.deleteById(id)) {
+            response = new ModelResponse(204, "Deleted user successful", null);
+        } else {
+            response = new ModelResponse(404, "User not found", null);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ModelResponse> deleteCurrent(@RequestPart("password") String password) {
+        ModelResponse response;
+        if (userService.deleteCurrent(password)) {
             response = new ModelResponse(204, "Deleted user successful", null);
         } else {
             response = new ModelResponse(404, "User not found", null);

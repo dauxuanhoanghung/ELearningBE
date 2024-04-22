@@ -7,8 +7,10 @@ import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.FavoriteCourse;
 import com.dxhh.elearning.services.CourseService;
 import com.dxhh.elearning.services.FavoriteCourseService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +21,18 @@ import java.util.Optional;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
-@RequestMapping("/api/favorite/")
+@RequestMapping(path = Routing.FAVORITES, produces = MediaType.APPLICATION_JSON_VALUE)
 public class FavoriteController {
 
     private final FavoriteCourseService favoriteCourseService;
-    private final CourseService courseService;
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
 
     @Autowired
-    public FavoriteController(FavoriteCourseService favoriteCourseService, CourseService courseService, CourseMapper courseMapper, UserMapper userMapper) {
+    public FavoriteController(FavoriteCourseService favoriteCourseService,
+                              CourseMapper courseMapper,
+                              UserMapper userMapper) {
         this.favoriteCourseService = favoriteCourseService;
-        this.courseService = courseService;
         this.courseMapper = courseMapper;
         this.userMapper = userMapper;
     }
@@ -50,11 +52,10 @@ public class FavoriteController {
 
     @GetMapping("/get-list")
     public ResponseEntity<ModelResponse> getListByUser(@RequestParam Map<String, String> params) {
-        List<FavoriteCourse> favoriteCourses = favoriteCourseService.getByUser();
+        List<FavoriteCourse> favoriteCourses = favoriteCourseService.getByUser(params);
         List<CourseInfoResponse> courses = favoriteCourses.stream()
                 .map(course -> {
                     CourseInfoResponse info = courseMapper.toInfo(course.getCourse());
-                    info.setCountRegistration(courseService.countRegistrationByCourseId(course.getCourse().getId()));
                     info.setUser(userMapper.toResponse(course.getCourse().getCreator()));
                     return info;
                 })
@@ -62,6 +63,13 @@ public class FavoriteController {
 
         ModelResponse response = new ModelResponse(HttpStatus.OK.value(),
                 "Favorite courses retrieved successfully", courses);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/get-total-page")
+    public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
+        Integer totalPage = favoriteCourseService.countByCurrentUser(params);
+        ModelResponse response = new ModelResponse(HttpStatus.OK.value(), "Total page retrieved successfully", totalPage);
         return ResponseEntity.ok(response);
     }
 

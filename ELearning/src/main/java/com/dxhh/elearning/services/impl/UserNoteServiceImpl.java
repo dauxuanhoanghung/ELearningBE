@@ -5,6 +5,7 @@ import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.pojos.UserNote;
 import com.dxhh.elearning.repositories.UserNoteRepository;
 import com.dxhh.elearning.repositories.UserRepository;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.UserNoteService;
 import com.dxhh.elearning.specifications.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +20,13 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserNoteServiceImpl implements UserNoteService {
+public class UserNoteServiceImpl extends CurrentUserService implements UserNoteService {
     private final UserNoteRepository userNoteRepository;
-    private final UserRepository userRepository;
 
     @Autowired
     public UserNoteServiceImpl(UserNoteRepository userNoteRepository, UserRepository userRepository) {
+        super(userRepository);
         this.userNoteRepository = userNoteRepository;
-        this.userRepository = userRepository;
-    }
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
     }
 
     @Override
@@ -62,6 +52,12 @@ public class UserNoteServiceImpl implements UserNoteService {
     public List<UserNote> findByUserAndLecture(Lecture lecture) {
         User user = getCurrentUser();
         return userNoteRepository.findByUserAndLecture(user, lecture);
+    }
+
+    @Override
+    public UserNote update(UserNote userNote) {
+//        userNote.setUser(getCurrentUser());
+        return userNoteRepository.save(userNote);
     }
 
     @Override

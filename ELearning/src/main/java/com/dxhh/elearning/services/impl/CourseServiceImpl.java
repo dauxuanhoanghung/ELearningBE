@@ -11,6 +11,7 @@ import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CloudinaryService;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
@@ -34,10 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class CourseServiceImpl implements CourseService {
+public class CourseServiceImpl extends CurrentUserService implements CourseService {
 
     private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
     private final TransactionRepository courseRegistrationRepository;
     private final LectureRepository lectureRepository;
     private final CloudinaryService cloudinaryService;
@@ -54,8 +54,8 @@ public class CourseServiceImpl implements CourseService {
                              CourseMapper courseMapper,
                              Utils utils,
                              Environment env) {
+        super(userRepository);
         this.courseRepository = courseRepository;
-        this.userRepository = userRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.cloudinaryService = cloudinaryService;
         this.lectureRepository = lectureRepository;
@@ -64,17 +64,6 @@ public class CourseServiceImpl implements CourseService {
         this.env = env;
     }
 
-    // Get current user
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
-    }
 
     @Override
     @Cacheable(cacheNames = "course.list")
@@ -94,7 +83,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Cacheable(cacheNames = "course.id", key = "id")
+    public List<Course> findRegisteredCourses() {
+        User user = getCurrentUser();
+
+        List course = courseRegistrationRepository.findAll();
+        return null;
+    }
+
+    @Override
+    @Cacheable(cacheNames = "course.id", key = "#id")
     public Course findById(Integer id) {
         Optional<Course> courseOptional = courseRepository.findById(id);
         return courseOptional.orElse(null);
@@ -148,15 +145,18 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Cacheable(cacheNames = "course.count")
-    public Long count(Map<String, String> params) {
+    public Integer count(Map<String, String> params) {
         Specification<Course> specification = toSpecification(params);
-        return courseRepository.count(specification);
+        return Integer.valueOf(courseRepository.count(specification) + "");
+    }
+
+    @Override
+    public Integer incrementCourseCount(Integer courseId) {
+        return courseRepository.incrementCourseCount(courseId);
     }
 
     private Specification<Course> toSpecification(Map<String, String> params) {
         List<SearchCriteria> criteriaList = new ArrayList<>();
-
-
 
         if (params.containsKey("name")) {
             String nameValue = params.get("name");
@@ -178,12 +178,24 @@ public class CourseServiceImpl implements CourseService {
             criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
         }
 
+        if (params.containsKey("username")) {
+            criteriaList.add(new SearchCriteria("creator.username", SearchOperation.EQUAL, params.get("username")));
+        }
+
+        if (params.containsKey("slug")) {
+            criteriaList.add(new SearchCriteria("creator.slug", SearchOperation.EQUAL, params.get("slug")));
+        }
+
         if (params.containsKey("creator_id")) {
             criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Integer.parseInt(params.get("creator_id"))));
         }
 
         if (params.containsKey("business")) {
-            criteriaList.add(new SearchCriteria("creator", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+        }
+
+        if (params.containsKey("learning") && !Boolean.parseBoolean(params.get("learning"))) {
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.NOT_EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
         }
 
         criteriaList.add(SearchCriteria.builder()

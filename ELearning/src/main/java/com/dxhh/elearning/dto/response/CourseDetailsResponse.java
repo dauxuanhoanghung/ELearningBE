@@ -17,11 +17,12 @@ public class CourseDetailsResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046851L;
     private Integer id;
     private String name;
+    private String subtitle;
     private String description;
     private String background;
     private Double price;
-    private List sections;
-    private Long countRegistration;
+    //    private List sections;
+    private Integer countRegistration;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")

@@ -5,6 +5,7 @@ import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.CourseCommentRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CourseCommentService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.specifications.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,25 +22,15 @@ import java.util.List;
 
 @Service
 @Transactional
-public class CourseCommentServiceImpl implements CourseCommentService {
+public class CourseCommentServiceImpl extends CurrentUserService implements CourseCommentService {
     private final CourseCommentRepository courseCommentRepository;
-    private final UserRepository userRepository;
 
     @Autowired
     public CourseCommentServiceImpl(CourseCommentRepository courseCommentRepository, UserRepository userRepository) {
+        super(userRepository);
         this.courseCommentRepository = courseCommentRepository;
-        this.userRepository = userRepository;
     }
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        List<User> users = this.userRepository.findByUsername(authentication.getName());
-        if (users.isEmpty())
-            return null;
-        return users.get(0);
-    }
+
     @Override
     public CourseComment create(CourseComment courseComment) {
         courseComment.setUser(getCurrentUser());

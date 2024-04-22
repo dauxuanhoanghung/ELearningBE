@@ -3,6 +3,7 @@ package com.dxhh.elearning.configs;
 import com.dxhh.elearning.jwt.JwtAuthenticationEntryPoint;
 import com.dxhh.elearning.jwt.JwtRequestFilter;
 import com.dxhh.elearning.services.UserService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +14,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -29,13 +30,13 @@ public class SecurityConfig {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public JwtRequestFilter jwtRequestFilter() {
         return new JwtRequestFilter();
     }
-
-    ;
 
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -61,19 +62,27 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/course-comments/**").authenticated()
-//                        .requestMatchers("/api/favorite/**").authenticated()
+                        .requestMatchers(
+                                Routing.VNPAY + "/**",
+                                Routing.USER_NOTES + "/**",
+                                Routing.LECTURES + "/**",
+                                Routing.FAVORITES + "/**",
+                                Routing.LAST_LECTURE + "/**"
+
+                        )
+                        .authenticated()
 //                        .requestMatchers("/api/lecture-comments/**").authenticated()
 //                        .requestMatchers("/api/lectures/**").authenticated()
 //                        .requestMatchers("/api/lecturer-registration/**").authenticated()
 //                        .requestMatchers("/api/registration/**").authenticated()
-//                        .requestMatchers("/api/stats/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/user-notes/**").authenticated()
+                        .requestMatchers(Routing.STATS + "/**").hasRole("ADMIN")
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);

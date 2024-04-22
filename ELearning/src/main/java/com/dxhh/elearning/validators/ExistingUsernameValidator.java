@@ -7,12 +7,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 @Component
 public class ExistingUsernameValidator implements Validator {
-    private UserService userService;
+    private final UserService userService;
 
-    public void setUserService(UserService userService) {
+    public ExistingUsernameValidator(UserService userService) {
         this.userService = userService;
     }
-
     @Override
     public boolean supports(Class<?> clazz) {
         return UserRegisterRequest.class.isAssignableFrom(clazz);
@@ -21,7 +20,7 @@ public class ExistingUsernameValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserRegisterRequest userRegisterRequest = (UserRegisterRequest) target;
-        if (!this.userService.getUserByUsername(userRegisterRequest.getUsername()).isEmpty()) {
+        if (!this.userService.findByUsername(userRegisterRequest.getUsername()).isEmpty()) {
             errors.rejectValue("username", "validator.username.exists");
         }
     }

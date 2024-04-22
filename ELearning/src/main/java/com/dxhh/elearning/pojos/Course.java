@@ -49,6 +49,8 @@ public class Course implements Serializable {
     @Basic
     @Column(name = "price", precision = 2)
     private Double price;
+    @Column(name = "count_registration")
+    private Integer countRegistration;
     @Basic
     @Column(name = "deleted", nullable = false)
     private boolean isDeleted;

@@ -20,5 +20,6 @@ public class UserResponse implements Serializable {
     private String firstName;
     private String lastName;
     private String slug;
+    private Integer countCourse;
     private List<?> roles;
 }

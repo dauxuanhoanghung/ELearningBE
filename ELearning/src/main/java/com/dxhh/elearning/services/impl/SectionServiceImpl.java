@@ -1,6 +1,7 @@
 package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.dto.request.NewSectionRequest;
+import com.dxhh.elearning.dto.response.SectionResponse;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.repositories.SectionRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,5 +72,13 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<Section> getByCourse_Id(Integer courseId) {
         return sectionRepository.findAll(new GSpecification<>(new SearchCriteria("course.id", SearchOperation.EQUAL, courseId)));
+    }
+
+    @Override
+    public List<SectionResponse> getSectionsAndLecturesByCourseId(Integer courseId) {
+        List<Section> sections = sectionRepository.findByCourseId(courseId);
+        return sections.stream()
+                .map(SectionResponse::new)
+                .collect(Collectors.toList());
     }
 }

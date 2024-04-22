@@ -6,14 +6,17 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
 @Table(name = "transaction")
 public class Transaction implements Serializable {
@@ -24,11 +27,11 @@ public class Transaction implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic
-    @Min(value=0)
+    @Min(value = 0)
     @Column(name = "original_amount", nullable = false, precision = 2)
     private BigDecimal originalAmount;
     @Basic
-    @Min(value=0)
+    @Min(value = 0)
     @Column(name = "amount", precision = 2)
     private BigDecimal amount;
     @Basic
@@ -49,6 +52,10 @@ public class Transaction implements Serializable {
     @ManyToOne(optional = false)
     private User user;
 
+    {
+        this.createdDate = LocalDateTime.now();
+    }
+
     public Transaction() {
     }
 
@@ -56,6 +63,16 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
+    public Transaction(Integer id, BigDecimal originalAmount, BigDecimal amount, String code, LocalDateTime createdDate, Course course, User payer, User user) {
+        this.id = id;
+        this.originalAmount = originalAmount;
+        this.amount = amount;
+        this.code = code;
+        this.createdDate = createdDate;
+        this.course = course;
+        this.payer = payer;
+        this.user = user;
+    }
 
     @Override
     public int hashCode() {
@@ -80,5 +97,5 @@ public class Transaction implements Serializable {
     public String toString() {
         return "com.dxhh.elearning.pojos.Transaction[ id=" + id + " ]";
     }
-    
+
 }

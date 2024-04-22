@@ -46,6 +46,7 @@ public class UserNote implements Serializable {
 
     {
         createdDate = LocalDateTime.now();
+        updatedDate = LocalDateTime.now();
     }
 
     public UserNote() {
