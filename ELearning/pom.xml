@@ -128,11 +128,16 @@
             <version>0.9.1</version>
         </dependency>
         <!-- Swagger UI -->
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
-<!--            <version>2.1.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 &ndash;&gt;-->
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -146,10 +151,10 @@
             <version>3.1.1</version>
         </dependency>
         <!--Hibernate Map-->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.orm</groupId>-->
+<!--            <artifactId>hibernate-jpamodelgen</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>

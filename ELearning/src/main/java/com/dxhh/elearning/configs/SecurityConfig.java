@@ -82,6 +82,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/api/lecturer-registration/**").authenticated()
 //                        .requestMatchers("/api/registration/**").authenticated()
                         .requestMatchers(Routing.STATS + "/**").hasRole("ADMIN")
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().permitAll())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
