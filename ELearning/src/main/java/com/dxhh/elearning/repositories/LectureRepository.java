@@ -4,6 +4,7 @@ import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer>, JpaS
     Long countLecturesBySection_Course_Id(Integer courseId);
     List<Lecture> findBySection_Id(Integer sectionId);
     Optional<Lecture> findByOrderIndexAndSection_OrderIndexAndSection_Course_Id(Integer orderIndex, Integer sectionIndex, Integer courseId);
+    @Query("SELECT COUNT(l) > 0 FROM Lecture l JOIN l.section s JOIN s.course c WHERE c = :course AND l = :lecture")
+    boolean existsByCourseAndLecture(Course course, Lecture lecture);
 }

@@ -1,9 +1,9 @@
 package com.dxhh.elearning.services.impl;
 
 import com.dxhh.elearning.pojos.LastLecture;
-import com.dxhh.elearning.pojos.Transaction;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.LastLectureRepository;
+import com.dxhh.elearning.repositories.LectureRepository;
 import com.dxhh.elearning.repositories.TransactionRepository;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.services.CurrentUserService;
@@ -11,6 +11,7 @@ import com.dxhh.elearning.services.LastLectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +24,16 @@ public class LastLectureServiceImpl extends CurrentUserService implements LastLe
 
     private final LastLectureRepository lastLectureRepository;
     private final TransactionRepository transactionRepository;
+    private final LectureRepository lectureRepository;
 
     @Autowired
     public LastLectureServiceImpl(LastLectureRepository lastLectureRepository,
                                   TransactionRepository transactionRepository,
-                                  UserRepository userRepository) {
+                                  UserRepository userRepository, LectureRepository lectureRepository) {
         super(userRepository);
         this.lastLectureRepository = lastLectureRepository;
         this.transactionRepository = transactionRepository;
+        this.lectureRepository = lectureRepository;
     }
 
     @Override
@@ -39,9 +42,12 @@ public class LastLectureServiceImpl extends CurrentUserService implements LastLe
 
         // Check if the user has registered for the course
         boolean isUserRegistered = transactionRepository.existsByUserAndCourse(user, lastLecture.getCourse());
-        if (!isUserRegistered) {
-            return null;
-        }
+        if (!isUserRegistered)
+            throw new AccessDeniedException("User is not registered for the course");
+
+        boolean isLectureBelongsToCourse = lectureRepository.existsByCourseAndLecture(lastLecture.getCourse(), lastLecture.getLecture());
+        if (!isLectureBelongsToCourse)
+            throw new IllegalArgumentException("Lecture does not belong to the course");
 
         LastLecture existingOne = lastLectureRepository.findByUserAndCourse(user, lastLecture.getCourse())
                 .orElseGet(LastLecture::new);
