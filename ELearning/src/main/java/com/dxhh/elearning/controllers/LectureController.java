@@ -6,6 +6,10 @@ import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.utils.Routing;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,10 +42,16 @@ public class LectureController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ModelResponse> getById(@PathVariable(name = "id") int id) {
-        Lecture lecture = lectureService.getById(id);
+    @GetMapping(path = "/{id}/course/{courseId}")
+    public ResponseEntity<ModelResponse> getById(@PathVariable(name = "id") Integer id,
+                                                 @PathVariable(name = "courseId") Integer courseId) {
+        Lecture lecture = lectureService.getById(id, courseId);
         ModelResponse res = new ModelResponse();
+        if (lecture == null) {
+            res.setStatus(404);
+            res.setMessage("Lecture not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
         res.setStatus(200);
         res.setData(lectureMapper.toResponse(lecture));
         return ResponseEntity.ok(res);
