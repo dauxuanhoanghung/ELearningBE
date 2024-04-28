@@ -61,8 +61,8 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public Lecture getById(Integer id, Integer courseId) {
-        boolean isLectureInCourse = !lectureRepository.existsByCourseAndLecture(new Course(courseId), new Lecture(id));
-        if (isLectureInCourse)
+        boolean isLectureInCourse = lectureRepository.existsByCourseAndLecture(new Course(courseId), new Lecture(id));
+        if (!isLectureInCourse)
             throw new IllegalArgumentException("Lecture not found in course");
 
         return lectureRepository.findById(id).orElse(null);

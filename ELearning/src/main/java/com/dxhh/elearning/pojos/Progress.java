@@ -1,13 +1,18 @@
 package com.dxhh.elearning.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class Progress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,19 +24,26 @@ public class Progress {
     @Basic
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
     @ManyToOne
     @JoinColumn(name = "lecture_id", referencedColumnName = "id")
     private Lecture lecture;
+
     {
         done = false;
+        createdDate = LocalDateTime.now();
     }
-    public Progress() {}
+
+    public Progress() {
+    }
+
     public Progress(int id) {
         this.id = id;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
