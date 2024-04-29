@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
-    @EntityGraph(attributePaths = {"userRoles"})
+    @EntityGraph(value = "User.AllData", type = EntityGraph.EntityGraphType.LOAD)
     List<User> findByUsername(String username);
     @EntityGraph(attributePaths = {"userRoles"})
     List<User> findByEmail(String email);

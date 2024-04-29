@@ -4,6 +4,7 @@ import com.dxhh.elearning.dto.request.NewLectureRequest;
 import com.dxhh.elearning.enums.LectureType;
 import com.dxhh.elearning.enums.UploaderType;
 import com.dxhh.elearning.mappers.LectureMapper;
+import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.repositories.LectureRepository;
 import com.dxhh.elearning.services.AmazonS3Service;
@@ -55,7 +56,16 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public Lecture getById(Integer id) {
-        return lectureRepository.findById(id).get();
+        return lectureRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Lecture getById(Integer id, Integer courseId) {
+        boolean isLectureInCourse = lectureRepository.existsByCourseAndLecture(new Course(courseId), new Lecture(id));
+        if (!isLectureInCourse)
+            throw new IllegalArgumentException("Lecture not found in course");
+
+        return lectureRepository.findById(id).orElse(null);
     }
 
     @Override

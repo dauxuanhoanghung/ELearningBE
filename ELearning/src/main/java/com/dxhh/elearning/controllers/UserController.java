@@ -38,7 +38,10 @@ public class UserController {
     private final ExistingUsernameValidator usernameValidator;
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper, EmailService emailService, ExistingUsernameValidator usernameValidator) {
+    public UserController(UserService userService,
+                          UserMapper mapper,
+                          EmailService emailService,
+                          ExistingUsernameValidator usernameValidator) {
         this.userService = userService;
         this.mapper = mapper;
         this.emailService = emailService;
@@ -47,7 +50,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ModelResponse> findAll(@RequestParam Map<String, String> params) {
-        return null;
+        List<User> users = userService.findAll(params);
+        ModelResponse response = ModelResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Get list users successful")
+                .data(users.stream().map(mapper::toResponse).toList())
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/count")

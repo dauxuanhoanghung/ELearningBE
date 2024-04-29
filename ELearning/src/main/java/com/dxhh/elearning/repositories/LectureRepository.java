@@ -13,10 +13,16 @@ import java.util.Optional;
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Integer>, JpaSpecificationExecutor<Lecture> {
     List<Lecture> findBySectionCourse(Course course);
+
     List<Lecture> findBySectionCourse_Id(Integer courseId);
+
     Long countLecturesBySection_Course_Id(Integer courseId);
+
     List<Lecture> findBySection_Id(Integer sectionId);
+
     Optional<Lecture> findByOrderIndexAndSection_OrderIndexAndSection_Course_Id(Integer orderIndex, Integer sectionIndex, Integer courseId);
+
     @Query("SELECT COUNT(l) > 0 FROM Lecture l JOIN l.section s JOIN s.course c WHERE c = :course AND l = :lecture")
     boolean existsByCourseAndLecture(Course course, Lecture lecture);
+
 }

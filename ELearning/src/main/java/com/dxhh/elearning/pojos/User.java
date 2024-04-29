@@ -17,6 +17,14 @@ import java.util.Set;
 @Entity
 @Table(name = "user", catalog = "elearning", schema = "")
 @Data
+@NamedEntityGraph(name = "User.AllData", attributeNodes = {
+        @NamedAttributeNode("userRoles"),
+        @NamedAttributeNode(value = "userRoles", subgraph = "roles")
+}, subgraphs = {
+        @NamedSubgraph(name = "roles", attributeNodes = {
+                @NamedAttributeNode("role")
+        })
+})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
