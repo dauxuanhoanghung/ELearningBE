@@ -27,9 +27,11 @@ public class NewCourseRequest implements Serializable {
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime publishDate;
     private LocalDateTime createdDate;
+    private Integer countRegistration;
     private List<String> criteria;
 
     {
+        countRegistration = 0;
         publishDate = LocalDateTime.now();
         createdDate = LocalDateTime.now();
     }

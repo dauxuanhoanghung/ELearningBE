@@ -1,5 +1,6 @@
 package com.dxhh.elearning.services.impl;
 
+import com.dxhh.elearning.dto.request.CourseUpdateRequest;
 import com.dxhh.elearning.dto.request.NewCourseRequest;
 import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.pojos.Course;
@@ -16,22 +17,19 @@ import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
 import com.dxhh.elearning.specifications.SearchOperation;
 import com.dxhh.elearning.utils.Utils;
-import jakarta.persistence.criteria.Predicate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -103,14 +101,16 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
 
         Set<CourseCriteria> criteria = new HashSet<>();
         List<String> criteriaList = courseRequest.getCriteria();
-        for (String s : criteriaList) {
-            CourseCriteria cri = new CourseCriteria();
-            cri.setCourse(newCourse);
-            cri.setText(s);
-            criteria.add(cri);
+        for (String criteriaText : criteriaList) {
+            try {
+                criteriaText = URLDecoder.decode(criteriaText, StandardCharsets.UTF_8);
+            } catch (Exception ignored) {
+            }
+            criteria.add(new CourseCriteria(newCourse, criteriaText));
         }
         newCourse.setCourseCriterias(criteria);
         newCourse.setCreator(getCurrentUser());
+        newCourse.setUpdatedDate(courseRequest.getCreatedDate());
         if (utils.isNotEmptyFile(courseRequest.getBackgroundFile())) {
             String url = cloudinaryService.uploadImage(courseRequest.getBackgroundFile());
             newCourse.setBackground(url);
@@ -119,8 +119,22 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
     }
 
     @Override
-    public Course update(Course course) {
-        return courseRepository.save(course);
+    public Course update(CourseUpdateRequest course) {
+        Course updated = courseRepository.findById(course.getId())
+                .orElseThrow(() -> new IllegalStateException("Course not found"));
+
+        updated.setPrice(course.getPrice());
+        updated.setDescription(course.getDescription());
+        updated.setSubtitle(course.getSubtitle());
+        updated.setName(course.getName());
+        updated.setUpdatedDate(LocalDateTime.now());
+        if (utils.isNotEmptyFile(course.getBackgroundFile())) {
+            String url = cloudinaryService.uploadImage(course.getBackgroundFile());
+            updated.setBackground(url);
+        }
+
+
+        return courseRepository.save(updated);
     }
 
     @Override

@@ -80,4 +80,14 @@ public class RegistrationController {
                 .build();
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping
+    public ResponseEntity<ModelResponse> getAll(@RequestParam Map<String, String> params) {
+        ModelResponse res = ModelResponse.builder()
+                .data(transactionService.getAll(params))
+                .status(HttpStatus.OK.value())
+                .message("Get all registrations success")
+                .build();
+        return ResponseEntity.ok(res);
+    }
 }

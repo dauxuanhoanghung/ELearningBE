@@ -73,8 +73,10 @@ public class SecurityConfig {
                                 Routing.USER_NOTES + "/**",
                                 Routing.LECTURES + "/**",
                                 Routing.FAVORITES + "/**",
-                                Routing.LAST_LECTURE + "/**"
-
+                                Routing.LAST_LECTURE + "/**",
+                                Routing.PROGRESS + "/**",
+                                Routing.VNPAY + "/**",
+                                Routing.PAYPAL + "/**"
                         )
                         .authenticated()
 //                        .requestMatchers("/api/lecture-comments/**").authenticated()

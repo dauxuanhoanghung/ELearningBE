@@ -1,14 +1,17 @@
 package com.dxhh.elearning.pojos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "course_criteria", catalog = "elearning", schema = "")
-@Data
 public class CourseCriteria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +34,11 @@ public class CourseCriteria implements Serializable {
 
     public CourseCriteria(Integer id) {
         this.id = id;
+    }
+
+    public CourseCriteria(Course course, String text) {
+        this.course = course;
+        this.text = text;
     }
 
     @Override

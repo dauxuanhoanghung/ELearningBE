@@ -1,11 +1,12 @@
 package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.request.NewTransactionRequest;
-import com.dxhh.elearning.dto.response.CompletedOrder;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.services.PaypalService;
 import com.dxhh.elearning.utils.Routing;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +55,9 @@ public class PaypalController {
 
     @Setter
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     private static class Request {
         private String token;
-
     }
 }
