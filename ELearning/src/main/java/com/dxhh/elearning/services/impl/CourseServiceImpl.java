@@ -205,7 +205,8 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
         }
 
         if (params.containsKey("business")) {
-            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
+            User currentUser = getCurrentUser();
+            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(currentUser.getId())));
         }
 
         if (params.containsKey("learning") && !Boolean.parseBoolean(params.get("learning"))) {

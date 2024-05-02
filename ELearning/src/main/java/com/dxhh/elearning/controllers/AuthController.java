@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Map;
 
 @CrossOrigin(originPatterns = "*")
 @RestController
@@ -61,19 +62,6 @@ public class AuthController {
             return ResponseEntity.status(400).body(new ErrorResponse());
     }
 
-    //handles google authentication callback
-//    @PostMapping("/login-google")
-//    public ResponseEntity LoginWithGoogleOauth2(@RequestBody IdTokenRequest requestBody, HttpServletResponse response) {
-//        String authToken = userService.loginOAuthGoogle(requestBody);
-//        final ResponseCookie cookie = ResponseCookie.from("AUTH-TOKEN", authToken)
-//                .httpOnly(true)
-//                .maxAge(7 * 24 * 3600)
-//                .path("/")
-//                .secure(false)
-//                .build();
-//        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-//        return ResponseEntity.ok().build();
-//    }
     @PostMapping("/login-google")
     public ResponseEntity<ModelResponse> loginGoogle(@ModelAttribute UserRegisterRequest request) {
         ModelResponse res = new ModelResponse();
@@ -107,5 +95,12 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> request) {
 
+        final String token = request.get("refreshToken");
+        final Date expirationDate = this.jwtTokenUtils.getExpirationDateFromToken(token);
+        String ex = expirationDate.toString();
+        return ResponseEntity.ok(new ModelResponse(200, "Auth Successful", new JwtResponse(token, ex)));
+    }
 }
