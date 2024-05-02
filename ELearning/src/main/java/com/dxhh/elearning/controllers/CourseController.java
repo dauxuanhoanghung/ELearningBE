@@ -94,19 +94,6 @@ public class CourseController {
         CourseDetailsResponse response = null;
         if (course != null) {
             response = courseMapper.toDetail(course);
-//            response = CourseDetailsResponse.builder()
-//                    .id(course.getId())
-//                    .price(course.getPrice())
-//                    .background(course.getBackground())
-//                    .name(course.getName())
-//                    .description(course.getDescription())
-//                    .user(userMapper.toResponse(course.getCreator()))
-////                    .sections(sectionService.getByCourse_Id(course.getId()))
-//                    .countRegistration(courseService.countRegistrationByCourseId(course.getId()))
-//                    .publishDate(course.getPublishDate())
-//                    .createdDate(course.getCreatedDate())
-//                    .updatedDate(course.getUpdatedDate())
-//                    .build();
             response.setUser(userMapper.toResponse(course.getCreator()));
         }
         res.setStatus(200);
@@ -119,7 +106,7 @@ public class CourseController {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
-    @GetMapping(path ="/my-learning")
+    @GetMapping(path = "/my-learning")
     public ResponseEntity<ModelResponse> getLearningCourse(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
@@ -151,7 +138,7 @@ public class CourseController {
     }
 
     @PostMapping(value = "/after-create-course", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createSection(@RequestBody ListRequest sections, BindingResult rs) {
+    public ResponseEntity<?> createSection(@RequestBody ListRequest sections, BindingResult rs) {
         ModelResponse response = new ModelResponse();
         if (rs.hasErrors()) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -178,7 +165,12 @@ public class CourseController {
 
     @PutMapping(path = "/update")
     public ResponseEntity<?> update(@ModelAttribute CourseUpdateRequest courseRequest, BindingResult rs) {
-        return null;
+        Course updated = courseService.update(courseRequest);
+        return ResponseEntity.ok(ModelResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Course updated successfully id=" + courseRequest.getId())
+                .data(courseMapper.toDetail(updated))
+                .build());
     }
 
     @DeleteMapping(path = "/{id}/delete")

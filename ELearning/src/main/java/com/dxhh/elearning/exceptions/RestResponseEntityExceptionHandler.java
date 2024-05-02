@@ -26,7 +26,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .build());
     }
 
-    @ExceptionHandler({ AccessDeniedException.class })
+    @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ModelResponse> handleAccessDeniedException(
             Exception ex, WebRequest request) {
         return ResponseEntity.ok().body(ModelResponse.builder()

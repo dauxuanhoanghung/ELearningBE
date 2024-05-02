@@ -1,5 +1,6 @@
 package com.dxhh.elearning.services;
 
+import com.dxhh.elearning.dto.request.CourseUpdateRequest;
 import com.dxhh.elearning.dto.request.NewCourseRequest;
 import com.dxhh.elearning.pojos.Course;
 
@@ -11,7 +12,7 @@ public interface CourseService {
     List<Course> findRegisteredCourses();
     Course findById(Integer id);
     Course save(NewCourseRequest course);
-    Course update(Course course);
+    Course update(CourseUpdateRequest course);
     boolean deleteById(Integer id);
     Long countRegistrationByCourseId(Integer id);
     Long countLecturesByCourseId(Integer courseId);

@@ -6,10 +6,6 @@ import com.dxhh.elearning.mappers.LectureMapper;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.utils.Routing;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @RequestMapping(value = Routing.LECTURES, produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(originPatterns = "*")
@@ -28,13 +25,14 @@ public class LectureController {
     private final LectureMapper lectureMapper;
 
     @Autowired
-    public LectureController(LectureService lectureService, LectureMapper lectureMapper) {
+    public LectureController(LectureService lectureService,
+                             LectureMapper lectureMapper) {
         this.lectureService = lectureService;
         this.lectureMapper = lectureMapper;
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params){
+    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
         ModelResponse res = new ModelResponse();
         List<Lecture> lectures = lectureService.getByCourseId(Integer.valueOf(params.get("courseId")));
         res.setStatus(200);
@@ -58,18 +56,18 @@ public class LectureController {
     }
 
     @PostMapping
-    public ResponseEntity<ModelResponse> createLecture(@ModelAttribute NewLectureRequest lectureRequest, BindingResult rs) {
+    public ResponseEntity<ModelResponse> create(@ModelAttribute NewLectureRequest lectureRequest, BindingResult rs) {
         Lecture createdLecture = lectureService.create(lectureRequest);
-        ModelResponse res = new ModelResponse();
-        res.setStatus(201); // 201 Created
-        res.setData(createdLecture);
+        ModelResponse res = ModelResponse.builder()
+                .status(201)
+                .message("Created a lecture successfully")
+                .data(lectureMapper.toResponse(createdLecture))
+                .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<ModelResponse> updateLecture(
-            @PathVariable(name = "id") int id,
-            @RequestBody Lecture updatedLecture) {
+    public ResponseEntity<ModelResponse> update(@PathVariable(name = "id") int id, @RequestBody Lecture updatedLecture) {
         Lecture updated = lectureService.update(updatedLecture);
         if (updated != null) {
             ModelResponse res = new ModelResponse();

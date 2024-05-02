@@ -11,12 +11,16 @@ import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -25,14 +29,18 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
 
     private final TransactionRepository transactionRepository;
     private final CourseRepository courseRepository;
+    private final Environment env;
+
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository,
                                   CourseRepository courseRepository,
-                                  UserRepository userRepository) {
+                                  UserRepository userRepository,
+                                  Environment env) {
         super(userRepository);
         this.transactionRepository = transactionRepository;
         this.courseRepository = courseRepository;
+        this.env = env;
     }
 
     @Override
@@ -94,7 +102,21 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
     }
 
     @Override
-    public List<Transaction> getAll() {
-        return transactionRepository.findAll();
+    public List<Transaction> getAll(Map<String, String> params) {
+        int page = Integer.parseInt(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
+        if (params.containsKey("pageSize")) {
+            size = Integer.parseInt(params.get("pageSize"));
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber, size);
+
+        if (!params.containsKey("admin")) {
+            User user = getCurrentUser();
+            return transactionRepository.findByUser_Id(user.getId(), pageable).getContent();
+        }
+
+        return transactionRepository.findAll(pageable).getContent();
     }
 }
