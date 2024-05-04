@@ -137,32 +137,6 @@ public class CourseController {
         }
     }
 
-    @PostMapping(value = "/after-create-course", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createSection(@RequestBody ListRequest sections, BindingResult rs) {
-        ModelResponse response = new ModelResponse();
-        if (rs.hasErrors()) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("Validation errors");
-            response.setData(rs.getAllErrors());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-        if (!sections.getSections().isEmpty()) {
-            List res = new ArrayList<>();
-            sections.getSections().forEach(s -> {
-                res.add(sectionService.createSection(s));
-            });
-            response.setStatus(HttpStatus.CREATED.value());
-            response.setMessage("Course created successfully");
-            response.setData(res);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } else {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMessage("Failed to create section");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
     @PutMapping(path = "/update")
     public ResponseEntity<?> update(@ModelAttribute CourseUpdateRequest courseRequest, BindingResult rs) {
         Course updated = courseService.update(courseRequest);
@@ -203,24 +177,11 @@ public class CourseController {
 
     @GetMapping("/{id}/get-section")
     public ResponseEntity<ModelResponse> getSectionByCourseId(@PathVariable(name = "id") int id) {
-        ModelResponse res = new ModelResponse();
-        res.setData(sectionService.getByCourse_Id(id));
-        res.setStatus(200);
-        return ResponseEntity.ok(res);
-    }
-
-
-    @GetMapping("/{id}/get-section-lectures")
-    public ResponseEntity<ModelResponse> getSectionAndItsLectureByCourseId(@PathVariable(name = "id") int id) {
-        List<Section> sections = sectionService.getByCourse_Id(id);
-        List<SectionResponse> result = sections.stream().map(s -> {
-            List<LectureResponse> lectures = lectureService.getBySectionId(s.getId())
-                    .stream().map(lectureMapper::toResponse).toList();
-            return new SectionResponse(s.getId(), s.getName(), s.getOrderIndex(), lectures);
-        }).toList();
-
-        ModelResponse res = new ModelResponse(HttpStatus.OK.value(), "Get success", result);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.ok(ModelResponse.builder()
+                .status(200)
+                .data(sectionService.getByCourse_Id(id))
+                .message("Get section by course id: " + id)
+                .build());
     }
 
     @GetMapping("/count")

@@ -86,7 +86,7 @@ public class RedisCacheAspect {
                     // Sort the map keys
                     Map<String, String> sortedParams = new TreeMap<>(map);
                     sb.append(sortedParams);
-                } else {
+                } else if (arg != null){
                     sb.append(arg.toString());
                 }
             }

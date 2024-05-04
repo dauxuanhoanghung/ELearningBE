@@ -7,6 +7,7 @@ import com.dxhh.elearning.pojos.LecturerRegistration;
 import com.dxhh.elearning.services.EmailService;
 import com.dxhh.elearning.services.LecturerRegistrationService;
 import com.dxhh.elearning.services.UserRoleService;
+import com.dxhh.elearning.utils.Routing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(originPatterns = "*")
-@RequestMapping(value = "/api/lecturer-registration/", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = Routing.LECTURER_REGISTRATION, produces = {MediaType.APPLICATION_JSON_VALUE})
 public class LecturerRegistrationController {
 
     private final LecturerRegistrationService lecturerRegistrationService;

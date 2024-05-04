@@ -23,7 +23,7 @@ FROM openjdk:17-jdk-alpine as production
 
 # Set the working directory in the container
 WORKDIR /app
-# Expose the port that the application will run on
+# Expose the port that the application will run ona
 EXPOSE ${SERVER_PORT:-8080}
 # Copy the tokens folder from the host to the container during build
 COPY tokens/ tokens
