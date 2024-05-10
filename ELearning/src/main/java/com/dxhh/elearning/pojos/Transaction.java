@@ -37,6 +37,8 @@ public class Transaction implements Serializable {
     @Basic
     @Column(name = "code")
     private String code;
+    @Column(name = "method")
+    private String method;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
@@ -63,11 +65,12 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
-    public Transaction(Integer id, BigDecimal originalAmount, BigDecimal amount, String code, LocalDateTime createdDate, Course course, User payer, User user) {
+    public Transaction(Integer id, BigDecimal originalAmount, BigDecimal amount, String code, String method, LocalDateTime createdDate, Course course, User payer, User user) {
         this.id = id;
         this.originalAmount = originalAmount;
         this.amount = amount;
         this.code = code;
+        this.method = method;
         this.createdDate = createdDate;
         this.course = course;
         this.payer = payer;

@@ -13,4 +13,6 @@ public interface SectionRepository extends JpaRepository<Section, Integer>, JpaS
 
     @EntityGraph(attributePaths = {"lectures"})
     List<Section> findByCourseId(Integer courseId);
+
+    Integer countByCourseId(Integer courseId);
 }

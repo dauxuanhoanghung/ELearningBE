@@ -66,6 +66,8 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
                 .amount(newTransactionRequest.getAmount())
                 .originalAmount(BigDecimal.valueOf(course.getPrice()))
                 .course(course)
+                .code(newTransactionRequest.getCode())
+                .method(newTransactionRequest.getMethod())
                 .payer(currentUser)
                 .user(receiver)
                 .createdDate(LocalDateTime.now())
@@ -118,5 +120,10 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
         }
 
         return transactionRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public Integer count(Map<String, String> params) {
+        return 0;
     }
 }

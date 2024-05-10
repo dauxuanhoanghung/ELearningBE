@@ -32,9 +32,8 @@ public class SectionServiceImpl implements SectionService {
     public Section createSection(NewSectionRequest newSectionRequest) {
         Section section = new Section();
         section.setName(newSectionRequest.getName());
-        section.setOrderIndex(newSectionRequest.getOrderIndex());
+        section.setOrderIndex(sectionRepository.countByCourseId(newSectionRequest.getCourse().getId()) + 1);
         section.setCourse(newSectionRequest.getCourse());
-
         return sectionRepository.save(section);
     }
 

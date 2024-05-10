@@ -18,4 +18,6 @@ public interface TransactionService {
     Transaction getById(Integer transactionId);
 
     List<Transaction> getAll(Map<String, String> params);
+
+    Integer count(Map<String, String> params);
 }

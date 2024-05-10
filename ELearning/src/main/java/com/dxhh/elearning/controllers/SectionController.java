@@ -1,8 +1,10 @@
 package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.request.ListRequest;
+import com.dxhh.elearning.dto.request.NewSectionRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.dto.response.SectionResponse;
+import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.services.SectionService;
 import com.dxhh.elearning.utils.Routing;
 import org.springframework.http.HttpStatus;
@@ -61,5 +63,19 @@ public class SectionController {
                 .data(null)
                 .build());
 
+    }
+
+    @PostMapping
+    public ResponseEntity<ModelResponse> createSection(@RequestBody NewSectionRequest section) {
+        Section res = sectionService.createSection(section);
+        ModelResponse response = ModelResponse.builder()
+                .message("Section created successfully")
+                .status(201)
+                .data(SectionResponse.builder()
+                        .id(res.getId())
+                        .name(res.getName())
+                        .orderIndex(res.getOrderIndex()).build())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
