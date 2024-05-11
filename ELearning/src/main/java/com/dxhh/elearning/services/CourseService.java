@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface CourseService {
     List<Course> findAll(Map<String, String> params);
-    List<Course> findRegisteredCourses();
+    List<Course> findRegisteredCourses(Map<String, String> params);
     Course findById(Integer id);
     Course save(NewCourseRequest course);
     Course update(CourseUpdateRequest course);

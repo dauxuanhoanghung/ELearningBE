@@ -124,6 +124,10 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
 
     @Override
     public Integer count(Map<String, String> params) {
-        return 0;
+        if (!params.containsKey("admin")) {
+            User user = getCurrentUser();
+            return Math.toIntExact(transactionRepository.countByUser_Id(user.getId()));
+        }
+        return Math.toIntExact(transactionRepository.count());
     }
 }

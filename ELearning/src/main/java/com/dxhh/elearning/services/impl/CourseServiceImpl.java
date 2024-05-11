@@ -5,6 +5,7 @@ import com.dxhh.elearning.dto.request.NewCourseRequest;
 import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.CourseCriteria;
+import com.dxhh.elearning.pojos.Transaction;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.CourseRepository;
 import com.dxhh.elearning.repositories.LectureRepository;
@@ -81,11 +82,15 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
     }
 
     @Override
-    public List<Course> findRegisteredCourses() {
+    public List<Course> findRegisteredCourses(Map<String, String> params) {
+        int page = Integer.parseInt(params.get("page"));
+        int pageNumber = Math.max(page, 0);
+        int size = env.getProperty("SIZE", Integer.class, 8);
         User user = getCurrentUser();
 
-        List course = courseRegistrationRepository.findAll();
-        return null;
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        List<Transaction> courses = courseRegistrationRepository.findByUser_Id(user.getId(), pageable).getContent();
+        return courses.stream().map(Transaction::getCourse).toList();
     }
 
     @Override
@@ -207,10 +212,6 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
         if (params.containsKey("business")) {
             User currentUser = getCurrentUser();
             criteriaList.add(new SearchCriteria("creator.id", SearchOperation.EQUAL, Objects.requireNonNull(currentUser.getId())));
-        }
-
-        if (params.containsKey("learning") && !Boolean.parseBoolean(params.get("learning"))) {
-            criteriaList.add(new SearchCriteria("creator.id", SearchOperation.NOT_EQUAL, Objects.requireNonNull(getCurrentUser()).getId()));
         }
 
         criteriaList.add(SearchCriteria.builder()
