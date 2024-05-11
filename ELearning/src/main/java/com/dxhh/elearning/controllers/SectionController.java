@@ -1,13 +1,19 @@
 package com.dxhh.elearning.controllers;
 
+import com.dxhh.elearning.dto.request.ListRequest;
+import com.dxhh.elearning.dto.request.NewSectionRequest;
 import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.dto.response.SectionResponse;
+import com.dxhh.elearning.pojos.Section;
 import com.dxhh.elearning.services.SectionService;
 import com.dxhh.elearning.utils.Routing;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(originPatterns = "*")
@@ -29,5 +35,47 @@ public class SectionController {
                 .data(sections)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/create-batch", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createSection(@RequestBody ListRequest sections, BindingResult rs) {
+        if (rs.hasErrors()) {
+            return ResponseEntity.ok(ModelResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message("Validation errors")
+                    .data(rs.getAllErrors())
+                    .build());
+        }
+        if (!sections.getSections().isEmpty()) {
+            List res = new ArrayList<>();
+            sections.getSections().forEach(s -> {
+                res.add(sectionService.createSection(s));
+            });
+            ModelResponse response = new ModelResponse();
+            response.setStatus(HttpStatus.CREATED.value());
+            response.setMessage("Course created successfully");
+            response.setData(res);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
+        return ResponseEntity.ok(ModelResponse.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message("Failed to create section")
+                .data(null)
+                .build());
+
+    }
+
+    @PostMapping
+    public ResponseEntity<ModelResponse> createSection(@RequestBody NewSectionRequest section) {
+        Section res = sectionService.createSection(section);
+        ModelResponse response = ModelResponse.builder()
+                .message("Section created successfully")
+                .status(201)
+                .data(SectionResponse.builder()
+                        .id(res.getId())
+                        .name(res.getName())
+                        .orderIndex(res.getOrderIndex()).build())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

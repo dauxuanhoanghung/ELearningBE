@@ -67,7 +67,7 @@ public class StatsController {
     }
 
     @GetMapping("/user-by-month")
-    public ResponseEntity<ModelResponse> countNumberOfUserByMonth(@RequestParam(value = "year", required = false, defaultValue = "2023") int year) {
+    public ResponseEntity<ModelResponse> countNumberOfUserByMonth(@RequestParam(value = "year", required = false, defaultValue = "2024") int year) {
         List<CountUserAndMonthResponse> results = statsService.countNumberOfUserByMonth(year);
         ModelResponse res = new ModelResponse(200, "Get OK", results);
         return ResponseEntity.ok(res);

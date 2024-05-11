@@ -9,16 +9,19 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewTransactionRequest {
     private LocalDateTime createdDate;
-    private Course course;
     private BigDecimal amount = BigDecimal.valueOf(0);
+    private String code;
+    private String method;
     // username of receiver
     private String username;
+    private Course course;
+
 
     {
         createdDate = LocalDateTime.now();

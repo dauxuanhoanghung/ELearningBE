@@ -1,7 +1,11 @@
 package com.dxhh.elearning.controllers;
 
 import com.dxhh.elearning.dto.request.NewTransactionRequest;
+import com.dxhh.elearning.dto.response.CourseDetailsResponse;
+import com.dxhh.elearning.dto.response.CourseInfoResponse;
 import com.dxhh.elearning.dto.response.ModelResponse;
+import com.dxhh.elearning.mappers.CourseMapper;
+import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.Transaction;
@@ -15,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,13 +31,19 @@ public class RegistrationController {
     private final CourseService courseService;
     private final TransactionService transactionService;
     private final LectureService lectureService;
+    private final UserMapper userMapper;
+    private final CourseMapper courseMapper;
 
     public RegistrationController(CourseService courseService,
                                   TransactionService transactionService,
-                                  LectureService lectureService) {
+                                  LectureService lectureService,
+                                  UserMapper userMapper,
+                                  CourseMapper courseMapper) {
         this.courseService = courseService;
         this.transactionService = transactionService;
         this.lectureService = lectureService;
+        this.userMapper = userMapper;
+        this.courseMapper = courseMapper;
     }
 
     @PostMapping
@@ -72,9 +84,15 @@ public class RegistrationController {
     }
 
     @GetMapping("/get-registered-courses")
-    public ResponseEntity<ModelResponse> getRegisteredCourses() {
+    public ResponseEntity<ModelResponse> getRegisteredCourses(Map<String, String> params) {
+        List<Course> transactions = courseService.findRegisteredCourses(params);
+
         ModelResponse res = ModelResponse.builder()
-                .data(courseService.findRegisteredCourses())
+                .data(transactions.stream().map(transaction -> {
+                    CourseDetailsResponse courseInfoResponse = courseMapper.toDetail(transaction);
+                    courseInfoResponse.setUser(userMapper.toResponse(transaction.getCreator(), false));
+                    return courseInfoResponse;
+                }).toList())
                 .status(HttpStatus.OK.value())
                 .message("Get registered courses success")
                 .build();
@@ -82,11 +100,22 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> getAll(@RequestParam Map<String, String> params) {
+    public ResponseEntity<ModelResponse> getList(@RequestParam Map<String, String> params) {
+        List<Course> courses = courseService.findRegisteredCourses(params);
         ModelResponse res = ModelResponse.builder()
                 .data(transactionService.getAll(params))
                 .status(HttpStatus.OK.value())
                 .message("Get all registrations success")
+                .build();
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        ModelResponse res = ModelResponse.builder()
+                .data(transactionService.count(params))
+                .status(HttpStatus.OK.value())
+                .message("Count registrations success")
                 .build();
         return ResponseEntity.ok(res);
     }

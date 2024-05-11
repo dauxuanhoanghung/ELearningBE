@@ -45,8 +45,8 @@ public class FavoriteController {
                     HttpStatus.CREATED.value(), "Favorite course created successfully", createdFavoriteCourse);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } else {
-            ModelResponse response = new ModelResponse(HttpStatus.NO_CONTENT.value(), "Delete OK", null);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+            ModelResponse response = new ModelResponse(HttpStatus.NO_CONTENT.value(), "Remove from wishlist", null);
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -70,6 +70,13 @@ public class FavoriteController {
     public ResponseEntity<ModelResponse> getTotalPage(@RequestParam Map<String, String> params) {
         Integer totalPage = favoriteCourseService.countByCurrentUser(params);
         ModelResponse response = new ModelResponse(HttpStatus.OK.value(), "Total page retrieved successfully", totalPage);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/count")
+    public ResponseEntity<ModelResponse> count(@RequestParam Map<String, String> params) {
+        Integer count = favoriteCourseService.countByCurrentUser(params);
+        ModelResponse response = new ModelResponse(HttpStatus.OK.value(), "Count retrieved successfully", count);
         return ResponseEntity.ok(response);
     }
 
