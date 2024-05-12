@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh """
                     cd ${WORKSPACE}/ELearning
-                    docker compose -f compose.yml build
+                    sudo docker compose -f compose.yml build
                 """
             }
         }
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sh """
                     cd ${WORKSPACE}/ELearning
-                    docker compose -f compose.yml down
+                    sudo docker compose -f compose.yml down
                 """
             }
         }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh """
                     cd ${WORKSPACE}/ELearning
-                    docker compose -f compose.yml up -d
+                    sudo docker compose -f compose.yml up -d
                 """
             }
         }
