@@ -25,31 +25,28 @@ pipeline {
 
         stage('Build Docker Compose') {
             steps {
-                script {
-                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
-                        sh 'sudo docker compose build'
-                    }
-                }
+                sh """
+                    cd ${WORKSPACE}/ELearning
+                    docker compose -f compose.yml build
+                """
             }
         }
 
         stage('Stop Old Containers') {
             steps {
-                script {
-                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
-                        sh 'sudo docker compose down'
-                    }
-                }
+                sh """
+                    cd ${WORKSPACE}/ELearning
+                    docker compose -f compose.yml down
+                """
             }
         }
 
         stage('Run Docker Compose') {
             steps {
-                script {
-                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
-                        sh 'sudo docker compose up -d'
-                    }
-                }
+                sh """
+                    cd ${WORKSPACE}/ELearning
+                    docker compose -f compose.yml up -d
+                """
             }
         }
 
