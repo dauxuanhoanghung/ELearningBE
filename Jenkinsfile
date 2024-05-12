@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker Compose') {
             steps {
                 script {
-                    docker.withDockerCompose('-f ELearning/compose.yml') {
+                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
                         sh 'sudo docker compose build'
                     }
                 }
@@ -36,7 +36,7 @@ pipeline {
         stage('Stop Old Containers') {
             steps {
                 script {
-                    docker.withDockerCompose('-f ELearning/compose.yml') {
+                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
                         sh 'sudo docker compose down'
                     }
                 }
@@ -46,7 +46,7 @@ pipeline {
         stage('Run Docker Compose') {
             steps {
                 script {
-                    docker.withDockerCompose('-f ELearning/compose.yml') {
+                    docker.withDockerCompose(options: '-f ELearning/compose.yml') {
                         sh 'sudo docker compose up -d'
                     }
                 }
