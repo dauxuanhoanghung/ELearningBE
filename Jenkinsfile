@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     docker.withDockerCompose('-f ELearning/compose.yml') {
-                        sh 'docker compose build'
+                        sh 'sudo docker compose build'
                     }
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     docker.withDockerCompose('-f ELearning/compose.yml') {
-                        sh 'docker compose down'
+                        sh 'sudo docker compose down'
                     }
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     docker.withDockerCompose('-f ELearning/compose.yml') {
-                        sh 'docker compose up -d'
+                        sh 'sudo docker compose up -d'
                     }
                 }
             }
@@ -56,7 +56,7 @@ pipeline {
         stage('Clean up old images') {
             steps {
                 script {
-                    sh 'docker images prune --filter "until=24h"'
+                    sh 'sudo docker images prune --filter "until=24h"'
                 }
             }
         }
