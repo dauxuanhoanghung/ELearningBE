@@ -18,7 +18,7 @@ pipeline {
                     sudo cp -f /home/ubuntu/private-scp/secret/application.properties ${WORKSPACE}/ELearning/src/main/resources/
 
                     # Copy client_secrets.json
-                    sudo cp -f /home/ubuntu/private-scp/secret/client_secrets.json ${WORKSPACE}/ELearning/src/main/resources/
+                    sudo cp -f /home/ubuntu/private-scp/secret/client_secret.json ${WORKSPACE}/ELearning/src/main/resources/
                 """
             }
         }
