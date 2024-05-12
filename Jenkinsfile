@@ -12,13 +12,13 @@ pipeline {
             steps {
                 sh """
                     # Copy tokens folder
-                    cp -rf ~/private-scp/secret/tokens/ ${WORKSPACE}/ELearning/
+                    cp -rf /home/ubuntu/private-scp/secret/tokens/ ${WORKSPACE}/ELearning/
 
                     # Copy application.properties
-                    cp -f ~/private-scp/secret/application.properties ${WORKSPACE}/ELearning/src/main/resources/
+                    cp -f /home/ubuntu/private-scp/secret/application.properties ${WORKSPACE}/ELearning/src/main/resources/
 
                     # Copy client_secrets.json
-                    cp -f ~/private-scp/secret/client_secrets.json ${WORKSPACE}/ELearning/src/main/resources/
+                    cp -f /home/ubuntu/private-scp/secret/client_secrets.json ${WORKSPACE}/ELearning/src/main/resources/
                 """
             }
         }
