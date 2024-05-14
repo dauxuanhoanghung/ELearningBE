@@ -8,6 +8,7 @@ import com.dxhh.elearning.pojos.UserRole;
 import com.dxhh.elearning.repositories.UserRepository;
 import com.dxhh.elearning.repositories.UserRoleRepository;
 import com.dxhh.elearning.services.CloudinaryService;
+import com.dxhh.elearning.services.CurrentUserService;
 import com.dxhh.elearning.services.UserService;
 import com.dxhh.elearning.specifications.GSpecification;
 import com.dxhh.elearning.specifications.SearchCriteria;
@@ -34,8 +35,7 @@ import java.util.stream.Collectors;
 
 @Service("userService")
 @Transactional
-public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+public class UserServiceImpl extends CurrentUserService implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                            Utils utils,
                            DateTimeFormatter formatter,
                            Environment env) {
-        this.userRepository = userRepository;
+        super(userRepository);
         this.userRoleRepository = userRoleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -186,6 +186,16 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    @Override
+    public User changePassword(String password, String newPassword) {
+        User user = getCurrentUser();
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            return userRepository.save(user);
+        }
+        return null;
     }
 
     @Override

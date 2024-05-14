@@ -19,4 +19,6 @@ public interface UserService extends UserDetailsService {
     boolean deleteById(Integer id);
     boolean deleteCurrent(String password);
     Integer count(Map<String, String> params);
+
+    User changePassword(String password, String newPassword);
 }
