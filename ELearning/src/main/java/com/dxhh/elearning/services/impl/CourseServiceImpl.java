@@ -177,8 +177,8 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
     private Specification<Course> toSpecification(Map<String, String> params) {
         List<SearchCriteria> criteriaList = new ArrayList<>();
 
-        if (params.containsKey("name")) {
-            String nameValue = params.get("name");
+        if (params.containsKey("kw")) {
+            String nameValue = params.get("kw");
             SearchCriteria nameCriteria = new SearchCriteria("name", SearchOperation.LIKE, nameValue);
             SearchCriteria descriptionCriteria = new SearchCriteria("description", SearchOperation.LIKE, nameValue);
 
@@ -189,12 +189,12 @@ public class CourseServiceImpl extends CurrentUserService implements CourseServi
             criteriaList.add(new SearchCriteria("", SearchOperation.OR, orSpecifications));
         }
 
-        if (params.containsKey("min")) {
-            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("min"))));
+        if (params.containsKey("from")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.GREATER_THAN_OR_EQUAL, Double.parseDouble(params.get("from"))));
         }
 
-        if (params.containsKey("max")) {
-            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("max"))));
+        if (params.containsKey("to")) {
+            criteriaList.add(new SearchCriteria("price", SearchOperation.LESS_THAN_OR_EQUAL, Double.parseDouble(params.get("to"))));
         }
 
         if (params.containsKey("username")) {
