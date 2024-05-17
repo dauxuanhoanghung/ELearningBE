@@ -1,5 +1,6 @@
 package com.dxhh.elearning.services.impl;
 
+import com.dxhh.elearning.pojos.Course;
 import com.dxhh.elearning.pojos.LastLecture;
 import com.dxhh.elearning.pojos.User;
 import com.dxhh.elearning.repositories.LastLectureRepository;
@@ -62,7 +63,8 @@ public class LastLectureServiceImpl extends CurrentUserService implements LastLe
 
     @Override
     public LastLecture findByCourseId(Integer courseId) {
-        return lastLectureRepository.findByCourseId(courseId).orElse(null);
+        User user = getCurrentUser();
+        return lastLectureRepository.findByUserAndCourse(user, new Course(courseId)).orElse(null);
     }
 
     @Override

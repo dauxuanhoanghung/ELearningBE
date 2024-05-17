@@ -7,9 +7,11 @@ import com.dxhh.elearning.dto.response.ModelResponse;
 import com.dxhh.elearning.mappers.CourseMapper;
 import com.dxhh.elearning.mappers.UserMapper;
 import com.dxhh.elearning.pojos.Course;
+import com.dxhh.elearning.pojos.LastLecture;
 import com.dxhh.elearning.pojos.Lecture;
 import com.dxhh.elearning.pojos.Transaction;
 import com.dxhh.elearning.services.CourseService;
+import com.dxhh.elearning.services.LastLectureService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.TransactionService;
 import com.dxhh.elearning.utils.Routing;
@@ -31,17 +33,19 @@ public class RegistrationController {
     private final CourseService courseService;
     private final TransactionService transactionService;
     private final LectureService lectureService;
+    private final LastLectureService lastLectureService;
     private final UserMapper userMapper;
     private final CourseMapper courseMapper;
 
     public RegistrationController(CourseService courseService,
                                   TransactionService transactionService,
-                                  LectureService lectureService,
+                                  LectureService lectureService, LastLectureService lastLectureService,
                                   UserMapper userMapper,
                                   CourseMapper courseMapper) {
         this.courseService = courseService;
         this.transactionService = transactionService;
         this.lectureService = lectureService;
+        this.lastLectureService = lastLectureService;
         this.userMapper = userMapper;
         this.courseMapper = courseMapper;
     }
@@ -71,8 +75,14 @@ public class RegistrationController {
         Map<String, Object> map = new HashMap<>();
         Transaction transaction = transactionService.getByCurrentUserAndCourse(courseId);
         if (transaction != null) {
-            Lecture lecture = lectureService.getFirstLectureOfCourse(courseId);
-            map.put("nextUrl", lecture.getId());
+            LastLecture lastLecture = lastLectureService.findByCourseId(courseId);
+            if (lastLecture != null) {
+                map.put("nextUrl", lastLecture.getLecture().getId());
+            }
+            else {
+                Lecture lecture = lectureService.getFirstLectureOfCourse(courseId);
+                map.put("nextUrl", lecture.getId());
+            }
         }
         map.put("transaction", transaction);
         ModelResponse res = ModelResponse.builder()

@@ -71,7 +71,7 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<ModelResponse> retrieveAll(@RequestParam Map<String, String> params) {
+    public ResponseEntity<ModelResponse> getList(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(getModelListCoursesResponse(params));
     }
 
@@ -165,13 +165,6 @@ public class CourseController {
     public ResponseEntity<ModelResponse> getCountLectures(@PathVariable(name = "id") int id) {
         ModelResponse res = new ModelResponse(200,
                 "Get count successful", courseService.countLecturesByCourseId(id));
-        return ResponseEntity.ok(res);
-    }
-
-    @GetMapping("/{id}/get-count-registration")
-    public ResponseEntity<ModelResponse> getCountRegistrations(@PathVariable(name = "id") int id) {
-        ModelResponse res = new ModelResponse(200,
-                "Get count successful", courseService.countRegistrationByCourseId(id));
         return ResponseEntity.ok(res);
     }
 
