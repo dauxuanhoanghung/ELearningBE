@@ -1,13 +1,13 @@
 ﻿# ************************************************************
 # Sequel Ace SQL dump
-# Version 20064
+# Version 20067
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # Host: localhost (MySQL 8.3.0)
 # Database: elearning
-# Generation Time: 2024-04-23 17:06:08 +0000
+# Generation Time: 2024-05-17 16:22:27 +0000
 # ************************************************************
 
 
@@ -87,7 +87,7 @@ CREATE TABLE `course` (
   KEY `idx_course_price` (`price`),
   KEY `idx_course_name_price` (`name`,`price`),
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
@@ -95,16 +95,18 @@ LOCK TABLES `course` WRITE;
 INSERT INTO `course` (`id`, `name`, `description`, `subtitle`, `background`, `preview_video_url`, `slug`, `price`, `deleted`, `count_registration`, `creator_id`, `publish_date`, `created_date`, `updated_date`)
 VALUES
 	(1,'Get Started with Git/Github','This course is for starter to begin learning Git/Github','Get Started with Git/Github','https://techvccloud.mediacdn.vn/280518386289090560/2021/3/2/023-1614681588418717257234-0-0-767-1366-crop-16146815915111444794187.png',NULL,'get-started-with-git-github',10.00,b'0',1,1,'2023-09-24 17:00:00','2023-09-25 14:28:54','2024-04-13 18:00:16'),
-	(2,'Python Master','Python beginner to Master','Python beginner to Master','https://res.cloudinary.com/dexvnphga/image/upload/v1696154801/DoAn/jhxbq4hmbwlzxe7v4ue6.png',NULL,'python-master',0.00,b'0',1,1,'2023-09-30 17:00:00','2023-10-01 10:06:39','2024-04-07 14:41:45'),
-	(3,'ReactJS Net Ninja Course','ReactJS  beginner to Master','ReactJS beginner to Master','https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200309202057/How-To-Learn-ReactJS-A-Complete-Guide-For-Beginners.jpg',NULL,'reactjs-net-ninja-course',0.00,b'0',1,1,'2023-09-24 17:00:00','2023-09-25 14:28:54','2024-04-10 09:40:12'),
-	(4,'Vue JS 3 Tutorial for Beginners - Net Ninja','Vue JS 3 Tutorial for Beginners','Vue JS 3 Tutorial for Beginners, FROM ZERO TO HERO','https://d2ms8rpfqc4h24.cloudfront.net/Introduction_to_Vue_JS_959ca27287.jpg',NULL,'vue-js-3-tutorial-net-ninja',0.00,b'0',0,1,'2023-11-24 17:00:00','2023-11-24 17:00:00','2023-11-24 17:00:00'),
+	(2,'Python Master','Python beginner to Master','Python beginner to Master','https://res.cloudinary.com/dexvnphga/image/upload/v1696154801/DoAn/jhxbq4hmbwlzxe7v4ue6.png',NULL,'python-master',0.00,b'0',2,1,'2023-09-30 17:00:00','2023-10-01 10:06:39','2024-05-11 06:41:41'),
+	(3,'ReactJS Net Ninja Course','ReactJS  beginner to Master','ReactJS beginner to Master','https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200309202057/How-To-Learn-ReactJS-A-Complete-Guide-For-Beginners.jpg',NULL,'reactjs-net-ninja-course',0.00,b'0',2,1,'2023-09-24 17:00:00','2023-09-25 14:28:54','2024-05-14 15:25:50'),
+	(4,'Vue JS 3 Tutorial for Beginners - Net Ninja','Vue JS 3 Tutorial for Beginners','Vue JS 3 Tutorial for Beginners, FROM ZERO TO HERO','https://d2ms8rpfqc4h24.cloudfront.net/Introduction_to_Vue_JS_959ca27287.jpg',NULL,'vue-js-3-tutorial-net-ninja',0.00,b'0',1,1,'2023-11-24 17:00:00','2023-11-24 17:00:00','2024-04-30 07:25:27'),
 	(5,'JS Course for Beginners','JS Course','JS Course','https://res.cloudinary.com/dexvnphga/image/upload/v1697727137/DoAn/yjzacqm7zgc1o6qqiphi.jpg',NULL,'js-course-for-beginners',10.00,b'0',2,2,'2023-10-18 17:00:00','2023-10-19 14:52:15','2024-04-14 16:47:26'),
 	(6,'Angular 2 Tutorial with Net Ninja','Yo gang, welcome to your very first Angular 2 tutorial for beginners... Angular 2 is one of the most popular JavaScript frameworks for creating dynamic web applications, and comes hot on the tail of it\'s incredibly popular predecessor, Angular 1. A lot has changed since then, so through this ng2 series, I\'ll be guiding you through how to create a we app from scratch, and teaching you the core essentials along the way...','Angular 2 Tutorial','https://miro.medium.com/v2/resize:fit:1400/1*4hhei-6UcZ1OFUG7-Z_vjw.jpeg',NULL,'angular-2-tutorial-with-net-ninja',0.00,b'0',0,2,'2023-11-25 17:00:00','2023-11-25 17:00:00','2023-11-25 17:00:00'),
-	(7,'Python Tkinter GUI','Python Tkinter GUI','Python Tkinter GUI','https://i.ytimg.com/vi/YBvFcvisxxM/maxresdefault.jpg',NULL,'python-tkinter-gui',0.00,b'0',0,5,'2023-11-25 17:00:00','2023-11-25 17:00:00','2023-11-25 17:00:00'),
+	(7,'Python Tkinter GUI','Python Tkinter GUI','Python Tkinter GUI','https://i.ytimg.com/vi/YBvFcvisxxM/maxresdefault.jpg',NULL,'python-tkinter-gui',0.00,b'0',1,5,'2023-11-25 17:00:00','2023-11-25 17:00:00','2024-05-14 15:28:05'),
 	(8,'ElectronJS Tutorial','In this ElectronJS Tutorial, we learn what is electron js and why we use it. Make Desktop software with HTML, CSS, JS','Electron js tutorial for beginners','https://i.ytimg.com/vi/sJFuMKPfpfs/sddefault.jpg',NULL,'electronjs-tutorial',0.00,b'0',1,5,'2023-12-05 17:00:00','2023-12-04 17:00:00','2024-04-12 08:39:12'),
 	(9,'Python Selenium','This selenium tutorial is designed for beginners to learn how to use the python selenium module to perform web scraping, web testing and create website bots. Selenium is an automation framework that allows you to interact with websites using something called a web driver.','Selenium with Python','https://blog.testproject.io/wp-content/uploads/2020/06/16-06-A.jpg',NULL,'python-selenium',0.00,b'0',0,2,'2023-12-05 17:00:00','2023-12-05 17:00:00','2023-11-25 17:00:00'),
 	(10,'NodeJS Express MongoDB Tutorial 2023','This is a complete NodeJS masterclass 12-hour, with ExpressJS, MongoDB, Mongoose, and other MERN stack elements. #nodejs #expressjs #mongodb #reactjs ','MERN stack. MongoDB ExpressJS. NodeJS','https://i.ytimg.com/vi/VT20NTbn6U4/maxresdefault.jpg',NULL,'node-expressjs-mongodb-tutorial-2023',0.00,b'0',0,1,'2023-12-05 17:00:00','2023-12-05 17:00:00','2023-11-25 17:00:00'),
-	(11,'Rails 6 for Beginners','This is a complete Rails 6 for beginners','Rails 6 for Beginners','https://i.ytimg.com/vi/F-eI4MXnyPA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBQ98wPnb0rsj1tG3t6yC0eE6MvOg',NULL,'rails-6-for-beginners',0.00,b'0',0,1,'2023-12-05 17:00:00','2023-12-05 17:00:00','2023-11-25 17:00:00');
+	(11,'Rails 6 for Beginners','This is a complete Rails 6 for beginners','Rails 6 for Beginners','https://i.ytimg.com/vi/F-eI4MXnyPA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBQ98wPnb0rsj1tG3t6yC0eE6MvOg',NULL,'rails-6-for-beginners',0.00,b'0',0,1,'2023-12-05 17:00:00','2023-12-05 17:00:00','2023-11-25 17:00:00'),
+	(19,'Basketball','Basketball','Basketball','https://res.cloudinary.com/dexvnphga/image/upload/v1714575317/DoAn/qpp7k1un3iwha2bkolci.png',NULL,NULL,0.00,b'0',0,1,'2024-05-01 21:54:47','2024-05-01 21:55:16','2024-05-01 21:55:16'),
+	(20,'Sprite','aAAA','Football is a good sport game play.','https://res.cloudinary.com/dexvnphga/image/upload/v1714575670/DoAn/hdbdbt1xx8wwrcdgre3k.jpg',NULL,NULL,0.00,b'0',0,1,'2024-05-01 22:00:37','2024-05-01 22:01:08','2024-05-10 22:19:33');
 
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -127,7 +129,7 @@ CREATE TABLE `course_comment` (
   KEY `idx_course_comment_course_id` (`course_id`),
   CONSTRAINT `course_comment_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `course_comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `course_comment` WRITE;
 /*!40000 ALTER TABLE `course_comment` DISABLE KEYS */;
@@ -137,7 +139,10 @@ VALUES
 	(1,1,1,'This course is OK','2023-09-29 13:41:54','2024-03-12 15:33:11'),
 	(2,1,1,'This course is perfect to practice with Git and Github','2023-09-29 13:50:39','2024-03-12 15:33:11'),
 	(3,2,2,'This course is OK','2023-10-15 12:57:09','2024-03-12 15:33:11'),
-	(4,2,1,'This course is good','2023-10-15 12:57:51','2024-03-12 15:33:11');
+	(4,2,1,'This course is good','2023-10-15 12:57:51','2024-03-12 15:33:11'),
+	(5,7,7,'The best choice for pythn beginner, let choose it','2024-05-11 13:33:25',NULL),
+	(6,8,7,'If you want to learn how to create a desktop app, let choose it','2024-05-11 13:34:11',NULL),
+	(7,2,1,'Oh, this course has noproblem','2024-05-12 20:00:15',NULL);
 
 /*!40000 ALTER TABLE `course_comment` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -155,7 +160,7 @@ CREATE TABLE `course_criteria` (
   PRIMARY KEY (`id`),
   KEY `idx_course_criteria_course_id` (`course_id`),
   CONSTRAINT `course_criteria_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `course_criteria` WRITE;
 /*!40000 ALTER TABLE `course_criteria` DISABLE KEYS */;
@@ -207,7 +212,9 @@ VALUES
 	(43,10,'Absolutely NO understanding of Node or back-end development is required! I take you from beginner to advanced developer!'),
 	(44,10,'Basic understanding of JavaScript is required (the course contains a section about asynchronous JavaScript with promises and async/await in case you need to get up to speed)'),
 	(45,10,'Basic understanding of HTML is a plus (only for final part of the course), but NOT a must'),
-	(46,10,'Any computer and OS will work — Windows, macOS or Linux');
+	(46,10,'Any computer and OS will work — Windows, macOS or Linux'),
+	(48,19,'Basketball'),
+	(49,19,'Basketball');
 
 /*!40000 ALTER TABLE `course_criteria` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -227,14 +234,17 @@ CREATE TABLE `favorite_course` (
   KEY `course_id` (`course_id`),
   CONSTRAINT `favorite_course_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `favorite_course_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `favorite_course` WRITE;
 /*!40000 ALTER TABLE `favorite_course` DISABLE KEYS */;
 
 INSERT INTO `favorite_course` (`id`, `user_id`, `course_id`)
 VALUES
-	(1,1,1);
+	(6,1,7),
+	(7,1,20),
+	(10,1,1),
+	(11,7,5);
 
 /*!40000 ALTER TABLE `favorite_course` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -258,16 +268,21 @@ CREATE TABLE `last_lecture` (
   CONSTRAINT `last_lecture_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL,
   CONSTRAINT `last_lecture_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE SET NULL,
   CONSTRAINT `last_lecture_ibfk_3` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `last_lecture` WRITE;
 /*!40000 ALTER TABLE `last_lecture` DISABLE KEYS */;
 
 INSERT INTO `last_lecture` (`id`, `user_id`, `course_id`, `lecture_id`, `updated_date`)
 VALUES
-	(1,1,1,4,'2024-04-22 22:36:18'),
+	(1,1,1,3,'2024-04-30 21:54:00'),
 	(3,1,2,1,'2024-04-22 22:55:21'),
-	(4,1,3,10,'2024-04-22 23:11:24');
+	(4,1,3,17,'2024-05-17 23:14:30'),
+	(5,1,4,49,'2024-05-17 00:47:03'),
+	(6,1,8,113,'2024-05-12 18:37:41'),
+	(7,7,2,1,'2024-05-11 13:41:41'),
+	(8,7,3,9,'2024-05-14 22:25:50'),
+	(9,7,7,82,'2024-05-15 00:18:21');
 
 /*!40000 ALTER TABLE `last_lecture` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -291,7 +306,7 @@ CREATE TABLE `lecture` (
   PRIMARY KEY (`id`),
   KEY `section_id` (`section_id`),
   CONSTRAINT `lecture_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `lecture` WRITE;
 /*!40000 ALTER TABLE `lecture` DISABLE KEYS */;
@@ -494,7 +509,13 @@ VALUES
 	(198,'[OLD] Rails for Beginners Part 40: OmniAuth CSRF Protection','[OLD] Rails for Beginners Part 40: OmniAuth CSRF Protection',NULL,268,'VIDEO','https://www.youtube.com/watch?v=NDxvUeseqXk',32,23),
 	(199,'Part 41: Next Steps','Part 41: Next Steps',NULL,128,'VIDEO','https://www.youtube.com/watch?v=ZxuUAUQGdN8',33,23),
 	(200,'How to build a Multithreaded HTTP Server in Ruby from Scratch  Preview','How to build a Multithreaded HTTP Server in Ruby from Scratch  Preview',NULL,286,'VIDEO','https://www.youtube.com/watch?v=6Zpq7R51Rfs',34,23),
-	(201,'HTTP Server from Scratch: Rack & Rails Support  Preview','HTTP Server from Scratch: Rack & Rails Support  Preview',NULL,144,'VIDEO','https://www.youtube.com/watch?v=XmpP5IQy-gI',35,23);
+	(201,'HTTP Server from Scratch: Rack & Rails Support  Preview','HTTP Server from Scratch: Rack & Rails Support  Preview',NULL,144,'VIDEO','https://www.youtube.com/watch?v=XmpP5IQy-gI',35,23),
+	(202,'ABC','ABCSK',NULL,0,'TEXT',NULL,1,27),
+	(203,'GOGO','GOGO',NULL,0,'VIDEO',NULL,1,26),
+	(204,'GOGO','GOGO',NULL,0,'VIDEO','https://www.youtube.com/watch?v=TUCUUaOUz-s',2,26),
+	(205,'ABC','ABCHS',NULL,0,'VIDEO','https://www.youtube.com/watch?v=A-EN7_aXpEo',3,26),
+	(206,'ABSk','AJCKSJ',NULL,19,'VIDEO','https://www.youtube.com/watch?v=AKp0xU_2OA8',1,28),
+	(207,'Lecture 2','Lecture 2',NULL,8,'VIDEO','https://www.youtube.com/watch?v=Q0TPFyfmIhk',2,28);
 
 /*!40000 ALTER TABLE `lecture` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -563,14 +584,14 @@ CREATE TABLE `lecturer_registration` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `lecturer_registration_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `lecturer_registration` WRITE;
 /*!40000 ALTER TABLE `lecturer_registration` DISABLE KEYS */;
 
 INSERT INTO `lecturer_registration` (`id`, `image_url`, `user_id`, `registration_date`)
 VALUES
-	(1,'https://res.cloudinary.com/dexvnphga/image/upload/v1697375659/DoAn/w3rcpsaaiwh4drmc0oel.png',5,'2023-10-15 13:14:18');
+	(7,'https://res.cloudinary.com/dexvnphga/image/upload/v1715519723/DoAn/ufbve2ys5vjtrlxpcws5.png',7,'2024-05-12 20:15:21');
 
 /*!40000 ALTER TABLE `lecturer_registration` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -592,8 +613,18 @@ CREATE TABLE `progress` (
   KEY `progress_ibfk_2_idx` (`lecture_id`),
   CONSTRAINT `progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL,
   CONSTRAINT `progress_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+LOCK TABLES `progress` WRITE;
+/*!40000 ALTER TABLE `progress` DISABLE KEYS */;
+
+INSERT INTO `progress` (`id`, `user_id`, `lecture_id`, `done`, `created_date`)
+VALUES
+	(1,1,1,b'1','2024-04-29 04:10:47'),
+	(2,1,2,b'1','2024-04-29 04:11:01');
+
+/*!40000 ALTER TABLE `progress` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table role
@@ -633,7 +664,7 @@ CREATE TABLE `section` (
   PRIMARY KEY (`id`),
   KEY `course_id` (`course_id`),
   CONSTRAINT `section_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `section` WRITE;
 /*!40000 ALTER TABLE `section` DISABLE KEYS */;
@@ -662,7 +693,11 @@ VALUES
 	(20,10,'Practice',3),
 	(21,11,'Introduction & Setup',1),
 	(22,11,'The Ruby Programming Language',2),
-	(23,11,'Practicing',3);
+	(23,11,'Practicing',3),
+	(26,19,'Start',1),
+	(27,19,'Basketball',2),
+	(28,20,'Get started',1),
+	(29,20,'Practice with me',2);
 
 /*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -682,6 +717,7 @@ CREATE TABLE `transaction` (
   `course_id` int NOT NULL,
   `payer_id` int DEFAULT NULL,
   `user_id` int DEFAULT NULL,
+  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `course_id` (`course_id`),
   KEY `transaction_ibfk_3_idx` (`payer_id`),
@@ -689,18 +725,22 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL,
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `transaction_ibfk_3` FOREIGN KEY (`payer_id`) REFERENCES `user` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
 
-INSERT INTO `transaction` (`id`, `original_amount`, `amount`, `code`, `created_date`, `course_id`, `payer_id`, `user_id`)
+INSERT INTO `transaction` (`id`, `original_amount`, `amount`, `code`, `created_date`, `course_id`, `payer_id`, `user_id`, `method`)
 VALUES
-	(1,0.00,0.00,NULL,'2023-10-16 07:31:01',2,1,1),
-	(2,0.00,10000.00,NULL,'2023-10-16 07:31:01',1,1,1),
-	(3,0.00,0.00,NULL,'2024-04-10 00:05:41',3,1,1),
-	(4,0.00,0.00,NULL,'2024-04-12 15:39:13',8,1,1),
-	(5,10.00,10.00,NULL,'2024-04-14 23:47:27',5,1,1);
+	(1,0.00,0.00,NULL,'2023-10-16 07:31:01',2,1,1,NULL),
+	(2,0.00,10000.00,NULL,'2023-10-16 07:31:01',1,1,1,NULL),
+	(3,0.00,0.00,NULL,'2024-04-10 00:05:41',3,1,1,NULL),
+	(4,0.00,0.00,NULL,'2024-04-12 15:39:13',8,1,1,NULL),
+	(5,10.00,10.00,NULL,'2024-04-14 23:47:27',5,1,1,NULL),
+	(6,0.00,0.00,NULL,'2024-04-30 14:25:27',4,1,1,NULL),
+	(7,0.00,0.00,NULL,'2024-05-11 13:41:41',2,7,7,NULL),
+	(8,0.00,0.00,NULL,'2024-05-14 22:25:50',3,7,7,NULL),
+	(9,0.00,0.00,NULL,'2024-05-14 22:28:06',7,7,7,NULL);
 
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -740,7 +780,7 @@ VALUES
 	(4,'username1','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username1@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
 	(5,'hoang105244826892173847958','$2a$10$aSrk7.iNZVVNeco6.GM0R.f3nwZ94BUjWY6Yv74lGMmRCgiW/l4aq','Hùng','Hoàng','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','qthcsdlhung2059@gmail.com',NULL,'2023-10-15 13:08:52','2024-03-12 14:59:26',b'0'),
 	(6,'username2','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
-	(7,'username3','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username3@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
+	(7,'username3','$2a$10$EvvQWCc8kPpXX92ED6qgpu3D5qsnxqNnyEy9CU2oNWxzu0e4/P17q','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username3@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
 	(8,'username4','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username4@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
 	(9,'username5','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username5@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
 	(10,'username6','$2a$10$YnbMwn5GzsZ0Q0zKFvoKRuwgArCbDW3nlcc.XTpYTa.jJOGYp3VXa','User','Name','https://res.cloudinary.com/dexvnphga/image/upload/v1697019049/DoAn/nz9a7vdxefn7a6uf7v27.png','username6@gmail.com',NULL,'2023-08-26 15:26:10','2024-03-12 14:59:26',b'0'),
@@ -782,7 +822,7 @@ VALUES
 	(2,1,3,'Note here',3,'2023-10-15 13:04:21','2024-03-12 15:18:42'),
 	(3,1,3,'The map of git',67,'2024-04-20 15:01:41','2024-04-20 15:01:41'),
 	(4,1,1,'Add note',2,'2023-10-20 07:29:45','2024-03-12 15:18:42'),
-	(9,1,9,'ABCs',132,'2024-04-18 14:55:16',NULL),
+	(9,1,9,'Note here',132,'2024-05-12 20:08:35','2024-05-12 20:08:35'),
 	(10,1,17,'ABC Update',13,'2024-04-18 15:51:41',NULL),
 	(11,1,17,'Test Update',91,'2024-04-18 15:57:32','2024-04-18 15:57:32');
 
@@ -804,7 +844,7 @@ CREATE TABLE `user_role` (
   KEY `role_id` (`role_id`),
   CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
@@ -820,7 +860,15 @@ VALUES
 	(7,2,3),
 	(8,5,2),
 	(9,5,3),
-	(10,14,2);
+	(10,14,2),
+	(11,10,2),
+	(12,6,2),
+	(13,7,2),
+	(14,8,2),
+	(15,9,2),
+	(16,11,2),
+	(17,12,2),
+	(18,13,2);
 
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
