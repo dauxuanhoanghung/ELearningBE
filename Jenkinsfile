@@ -53,7 +53,7 @@ pipeline {
         stage('Clean up old images') {
             steps {
                 script {
-                    sh 'sudo docker images prune --filter "until=24h"'
+                    sh 'sudo docker image prune --filter "until=24h"'
                 }
             }
         }

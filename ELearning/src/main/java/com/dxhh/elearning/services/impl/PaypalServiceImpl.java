@@ -99,7 +99,7 @@ public class PaypalServiceImpl extends CurrentUserService implements PaypalServi
                         .course(new Course(courseId))
                         .build();
                 transactionService.create(transactionRequest);
-                return new CompletedOrder("success", token);
+                return new CompletedOrder("success", token, courseId);
             }
         } catch (IOException ignored) {
         }
