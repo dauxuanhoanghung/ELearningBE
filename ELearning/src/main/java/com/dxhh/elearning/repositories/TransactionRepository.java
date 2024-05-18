@@ -13,6 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer>, JpaSpecificationExecutor<Transaction> {
+    Optional<Transaction> findByUser_EmailAndCourse_Id(String email, Integer courseId);
+
     Long countByCourse_Id(Integer courseId);
 
     Long countByUser_Id(Integer userId);

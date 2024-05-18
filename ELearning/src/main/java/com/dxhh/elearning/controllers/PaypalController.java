@@ -56,6 +56,7 @@ public class PaypalController {
             Map<String, Object> res = new HashMap<>();
             res.put("lecture", lecture);
             res.put("courseId", order.getCourseId());
+            res.put("payeeEmail", order.getPayeeEmail());
             return ResponseEntity.ok(ModelResponse.builder()
                     .message("Payment completed")
                     .data(res)

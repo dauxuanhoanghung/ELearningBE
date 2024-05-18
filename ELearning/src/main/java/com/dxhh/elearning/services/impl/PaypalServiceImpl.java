@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class PaypalServiceImpl extends CurrentUserService implements PaypalService {
@@ -54,8 +55,11 @@ public class PaypalServiceImpl extends CurrentUserService implements PaypalServi
                 .value(String.valueOf(course.getPrice()));
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
                 .amountWithBreakdown(amountBreakdown)
-                .referenceId(course.getId().toString()) //pass course id in body request
-                ;
+                .customId(request.getPayeeEmail())
+                .payee((new Payee()).email(request.getPayeeEmail()))
+                .description(request.getPayeeEmail())
+                .referenceId(course.getId().toString() + "|" + request.getPayeeEmail()); //pass course id in body request
+
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
                 .returnUrl(env.getProperty("clientUrl") + "/payment/paypal/capture")
@@ -90,16 +94,22 @@ public class PaypalServiceImpl extends CurrentUserService implements PaypalServi
                 PurchaseUnit purchaseUnit = order.purchaseUnits().get(0);
                 Capture capture = purchaseUnit.payments().captures().get(0);
 
-                Integer courseId = Integer.valueOf(purchaseUnit.referenceId());
+                String referenceId = purchaseUnit.referenceId();
+                String[] split = referenceId.split("\\|");
+                String payeeEmail = null;
+                Integer courseId = Integer.valueOf(split[0]);
+                if (split.length > 1 && !Objects.equals(split[1], "null")) {
+                    payeeEmail = split[1];
+                }
                 BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(capture.amount().value()));
 
                 NewTransactionRequest transactionRequest = NewTransactionRequest.builder()
                         .amount(amount)
-                        .username(user.getUsername())
+                        .payeeEmail(payeeEmail)
                         .course(new Course(courseId))
                         .build();
                 transactionService.create(transactionRequest);
-                return new CompletedOrder("success", token, courseId);
+                return new CompletedOrder("success", token, courseId, payeeEmail);
             }
         } catch (IOException ignored) {
         }

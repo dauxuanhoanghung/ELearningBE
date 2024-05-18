@@ -10,6 +10,7 @@ public class CompletedOrder {
     private String status;
     private String payId;
     private Integer courseId;
+    private String payeeEmail;
 
     public CompletedOrder(String status) {
         this.status = status;
