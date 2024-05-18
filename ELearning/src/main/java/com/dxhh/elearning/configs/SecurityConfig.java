@@ -69,20 +69,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/course-comments/**").authenticated()
                         .requestMatchers(
-                                Routing.VNPAY + "/**",
                                 Routing.USER_NOTES + "/**",
                                 Routing.LECTURES + "/**",
                                 Routing.FAVORITES + "/**",
                                 Routing.LAST_LECTURE + "/**",
                                 Routing.PROGRESS + "/**",
+                                Routing.REGISTRATION + "/**",
+                                Routing.SELF + "/**",
                                 Routing.VNPAY + "/**",
                                 Routing.PAYPAL + "/**"
                         )
                         .authenticated()
 //                        .requestMatchers("/api/lecture-comments/**").authenticated()
-//                        .requestMatchers("/api/lectures/**").authenticated()
 //                        .requestMatchers("/api/lecturer-registration/**").authenticated()
-//                        .requestMatchers("/api/registration/**").authenticated()
                         .requestMatchers(Routing.STATS + "/**").hasRole("ADMIN")
                         .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().permitAll())
