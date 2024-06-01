@@ -20,6 +20,7 @@ public class NewTransactionRequest {
     private String method;
     // username of receiver
     private String username;
+    private String payeeEmail;
     private Course course;
 
 

@@ -11,6 +11,8 @@ public interface TransactionService {
 
     Transaction getByCurrentUserAndCourse(Integer courseId);
 
+    Transaction getByUserEmailAndCourseId(Map<String, String> request);
+
     Transaction update(Integer transactionId, NewTransactionRequest updatedTransaction);
 
     void delete(Integer transactionId);

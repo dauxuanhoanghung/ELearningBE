@@ -15,6 +15,7 @@ import com.dxhh.elearning.services.LastLectureService;
 import com.dxhh.elearning.services.LectureService;
 import com.dxhh.elearning.services.TransactionService;
 import com.dxhh.elearning.utils.Routing;
+import com.itextpdf.text.pdf.qrcode.Mode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,37 @@ public class RegistrationController {
                 .message("Get course has been registered or not success - course: " + courseId)
                 .status(HttpStatus.OK.value())
                 .data(map)
+                .build();
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * Get registration by user email and course id
+     * @param request { "email": "email", "courseId": "courseId" }
+     * @return if transaction is null --> user not found
+     *        if transaction.id == 0 --> user has not registered this course
+     *        transaction.id > 0 --> user has registered course
+     */
+    @PostMapping("/get-by-email-and-course-id")
+    public ResponseEntity<ModelResponse> getByUserEmailAndCourseId(@RequestBody Map<String, String> request) {
+        Transaction transaction = transactionService.getByUserEmailAndCourseId(request);
+        if (transaction == null) {
+            ModelResponse res = ModelResponse.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message("Get registration by user email and course id failed")
+                    .build();
+            return ResponseEntity.ok(res);
+        }
+        if (transaction.getId() != 0) {
+            return ResponseEntity.ok(ModelResponse.builder()
+                    .status(HttpStatus.CREATED.value())
+                    .message("Get registration by user email and course id failed")
+                    .build());
+        }
+        ModelResponse res = ModelResponse.builder()
+                .data(transaction)
+                .status(HttpStatus.OK.value())
+                .message("User has not registered this course")
                 .build();
         return ResponseEntity.ok(res);
     }

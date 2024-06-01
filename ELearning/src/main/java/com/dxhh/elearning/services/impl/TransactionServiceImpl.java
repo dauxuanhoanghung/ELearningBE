@@ -50,12 +50,12 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
         User currentUser = this.getCurrentUser();
         User receiver = currentUser;
 
-        if (newTransactionRequest.getUsername() != null && !newTransactionRequest.getUsername().isBlank()) {
-            User u = userRepository.findByUsername(newTransactionRequest.getUsername()).get(0);
-            if (u == null) {
+        if (newTransactionRequest.getPayeeEmail() != null && !newTransactionRequest.getPayeeEmail().isBlank()) {
+            List<User> users = userRepository.findByEmail(newTransactionRequest.getPayeeEmail());
+            if (users.isEmpty()) {
                 return null;
             }
-            receiver = u;
+            receiver = users.get(0);
         }
 
         if (course == null) {
@@ -81,6 +81,21 @@ public class TransactionServiceImpl extends CurrentUserService implements Transa
         assert user != null;
         Optional<Transaction> existingRegister = transactionRepository.findByUser_IdAndCourse_Id(user.getId(), courseId);
         return existingRegister.orElse(null);
+    }
+
+    @Override
+    public Transaction getByUserEmailAndCourseId(Map<String, String> request) {
+        Integer courseId = Integer.parseInt(request.get("courseId"));
+        String userEmail = request.get("email");
+        List<User> users = userRepository.findByEmail(userEmail);
+        if (users.isEmpty()) {
+            return null;
+        }
+        User user = users.get(0);
+        Transaction transaction = transactionRepository
+                .findByUser_EmailAndCourse_Id(userEmail, courseId)
+                .orElse(new Transaction(0));
+        return transaction;
     }
 
     @Override
