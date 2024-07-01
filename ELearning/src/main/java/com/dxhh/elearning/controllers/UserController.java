@@ -152,4 +152,15 @@ public class UserController {
         emailService.sendHtmlEmail(email, subject, content);
     }
 
+    @PostMapping("/payout-credit")
+    public ResponseEntity<ModelResponse> payout(@RequestBody Map<String, String> params) {
+        Double credit = Double.parseDouble(params.get("credit"));
+        credit = userService.findByUsername(params.get("username")).get(0).getCredit() - credit;
+        User user = userService.updateCreditByUsername(params.get("username"), credit);
+        if (user != null) {
+            return ResponseEntity.ok(new ModelResponse(200, "Change password successful", mapper.toResponse(user)));
+        } else {
+            return ResponseEntity.ok(new ModelResponse(400, "Change password failed", null));
+        }
+    }
 }

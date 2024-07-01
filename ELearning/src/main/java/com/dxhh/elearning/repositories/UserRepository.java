@@ -2,12 +2,10 @@ package com.dxhh.elearning.repositories;
 
 import com.dxhh.elearning.pojos.User;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,4 +26,22 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
             "ORDER BY COUNT(c) DESC ")
     List<User> findTopLecturersByCoursesCount(Pageable pageable);
     boolean existsByUsername(String username);
+
+    @Query("SELECT u.credit FROM User u WHERE u.id = :id")
+    Double findCreditByUserId(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.credit = :credit WHERE u.id = :id")
+    void updateCreditByUserId(@Param("id") Integer id, @Param("credit") Double credit);
+
+    @Query("SELECT u.credit FROM User u WHERE u.username = :username")
+    Double findCreditByUsername(@Param("username") String username);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.credit = :credit WHERE u.username = :username")
+    void updateCreditByUsername(@Param("username") String username, @Param("credit") Double credit);
+
+
 }

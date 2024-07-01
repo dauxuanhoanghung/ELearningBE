@@ -21,5 +21,7 @@ public class UserResponse implements Serializable {
     private String lastName;
     private String slug;
     private Integer countCourse;
+    private Double credit;
+    private String creditNumber;
     private List<?> roles;
 }

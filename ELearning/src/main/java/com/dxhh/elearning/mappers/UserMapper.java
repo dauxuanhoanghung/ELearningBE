@@ -36,6 +36,8 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .slug(user.getSlug())
+                .credit(user.getCredit())
+                .creditNumber(user.getCreditNumber())
                 .build();
 
         if (showRoles) {

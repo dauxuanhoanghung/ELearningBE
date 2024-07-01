@@ -21,4 +21,10 @@ public interface UserService extends UserDetailsService {
     Integer count(Map<String, String> params);
 
     User changePassword(String password, String newPassword);
+
+    public Double getCreditByUserId(Integer id);
+    public User updateCreditByUserId(Integer id, Double credit);
+
+    public Double getCreditByUsername(String username);
+    public User updateCreditByUsername(String username, Double credit);
 }

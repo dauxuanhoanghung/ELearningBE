@@ -63,6 +63,10 @@ public class User implements Serializable {
     @Basic
     @Column(name = "deleted")
     private Boolean deleted;
+    @Column(name = "credit")
+    private Double credit;
+    @Column(name = "credit_number")
+    private String creditNumber;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
