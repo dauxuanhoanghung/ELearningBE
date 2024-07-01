@@ -199,6 +199,28 @@ public class UserServiceImpl extends CurrentUserService implements UserService {
     }
 
     @Override
+    public Double getCreditByUserId(Integer id) {
+        return userRepository.findCreditByUserId(id);
+    }
+
+    @Override
+    @Transactional
+    public User updateCreditByUserId(Integer id, Double credit) {
+        userRepository.updateCreditByUserId(id, credit);
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public Double getCreditByUsername(String username) {
+        return userRepository.findCreditByUsername(username);
+    }
+
+    @Transactional
+    public User updateCreditByUsername(String username, Double credit) {
+        userRepository.updateCreditByUsername(username, credit);
+        return userRepository.findByUsername(username).get(0);
+    }
+
+    @Override
     @Cacheable(cacheNames = "user.list")
     public List<User> findAll(Map<String, String> params) {
         int page = Integer.parseInt(params.get("page"));
